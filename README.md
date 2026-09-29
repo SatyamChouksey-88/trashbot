@@ -22,7 +22,11 @@ python -m platformio run -d firmware -e xiao
 cd agent && npm ci && npm run build && npm test
 python -m pip install -r tools/requirements.txt -r tools/requirements-dev.txt
 python -m pytest tools/tests -q
+python tools/sim/build_sim_brain.py
+python tools/sim/run.py --scenario bright_light --gif docs/media/sim_demo.gif
 ```
+
+![Sim demo](docs/media/sim_demo.gif)
 
 ## Bill of materials (approx.)
 

@@ -3,6 +3,8 @@ references/
 node_modules/
 dist/
 tools/.core_test_build/
+tools/sim/sim_brain
+tools/sim/sim_brain.exe
 dataset/*
 !dataset/README.md
 firmware/include/secrets.h

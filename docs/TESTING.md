@@ -49,6 +49,18 @@ Hardware tests are yours; mark pass/fail in the tables below.
 | Cluttered floor | Many objects | No false scoops | | | |
 | Dark vs light floor | Both surfaces | Stable detection | | | |
 
+## Software sim (digital twin)
+
+Run without hardware:
+
+```bash
+python tools/sim/build_sim_brain.py
+python tools/sim/run.py --scenario all --runs 50
+python tools/sim/run.py --scenario bright_light --gif docs/media/sim_demo.gif
+```
+
+Scenarios match the table below (`bright_light`, `dim_light`, `near_wall`, etc.).
+
 ## G7 — Agent
 
 | Check | Expected | Actual | Pass |
