@@ -1,0 +1,14 @@
+references/
+.pio/
+node_modules/
+dist/
+dataset/*
+!dataset/README.md
+firmware/include/secrets.h
+.env*
+*.mcpb
+firmware/lib/TrashBot_inferencing/
+__pycache__/
+.pytest_cache/
+agent/coverage/
+*.log
