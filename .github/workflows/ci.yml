@@ -44,4 +44,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r tools/requirements.txt -r tools/requirements-dev.txt
-      - run: python -m pytest tools/tests -q
+      - run: python -m pytest tools -q
