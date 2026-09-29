@@ -80,7 +80,5 @@ jobs:
         with:
           node-version: "20"
       - run: cd agent && npm ci
-      - run: cd agent && npm run mock &
-      - run: sleep 2
       - run: cd e2e && npm ci && npx playwright install chromium
       - run: cd e2e && TRASHBOT_URL=http://127.0.0.1:8787 npm test
