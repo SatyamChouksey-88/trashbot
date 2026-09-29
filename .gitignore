@@ -6,6 +6,8 @@ tools/.core_test_build/
 tools/sim/sim_brain
 tools/sim/sim_brain.exe
 *.pdb
+e2e/test-results/
+e2e/node_modules/
 dataset/*
 !dataset/README.md
 firmware/include/secrets.h
