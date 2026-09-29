@@ -23,9 +23,17 @@
 
 ## Blockers (fix before treating software as “release ready”)
 
-1. **CI `e2e` job failing** (GitHub run `36634404796`, commit `2ee4fcc`): 3/11 Playwright tests fail because UI labels changed in v4 Bolo (`web_index.h`) but `e2e/tests/ui.spec.ts` still expects `"STOP"` (exact), `"Start clean"`, and calibrate flow timing. Evidence: CI log `ui.spec.ts:30`, `:46`, `:59`; UI has `■ RUKO · STOP` and `Saaf karo · Clean` (`firmware/lib/net/web_index.h:38`, `:54`).
-2. **`PIN_BUMPER` pin map error** — `PIN_BUMPER = 6` duplicates `PIN_BIN1 = 6` while comment says GPIO43 (`firmware/include/config.h:7-10`). Safe only while `BUMPER_ENABLED = false`; enabling bumper without fixing this is a **hardware safety** blocker.
-3. **Part A hygiene expectation vs repo** — audit prompt asked for no remote; `origin` → `https://github.com/SatyamChouksey-88/trashbot.git` (`git remote -v`). Not a firmware blocker; document for office/policy checklist.
+**Status: all three FIXED** in commit **`d819208`** (post-audit blocker patch).
+
+1. **CI `e2e` job** — **FIXED.** `e2e/tests/ui.spec.ts` uses `data-testid` (`drive-stop`, `auto-clean`, `calib-zone-xmin`, `drive-estop`) on `web_index.h` without changing visible labels. Calibrate test waits for `dialog` before accept. Re-verify on CI after push.
+2. **`PIN_BUMPER` pin map** — **FIXED.** `PIN_BUMPER = 43` (`config.h`); `test_pin_map` Unity + `tools/tests/test_pin_map.py` assert unique GPIOs and bumper ≠ echo (44).
+3. **Git remote vs Part A checklist** — **FIXED (documented).** `docs/DECISIONS.md` paragraph + `README.md` “GitHub and pushing”; remote retained for CI, push is owner/IT choice.
+
+### Historical (pre-fix)
+
+1. CI `e2e` failed at run `36634404796` / `2ee4fcc` (stale Playwright selectors).
+2. `PIN_BUMPER = 6` duplicated `PIN_BIN1`.
+3. Remote present but not documented for office policy.
 
 ## Risks (should fix)
 
@@ -37,7 +45,7 @@
 ## Notes
 
 - v3 phases A–I and v4 J–N are marked complete in `docs/PLAN.md`; hardware gates remain user-pending.
-- Latest CI: all jobs **success** except **e2e** on `main` push `2ee4fcc`.
+- Pre-fix CI: all jobs **success** except **e2e** on `main` push `2ee4fcc`. Post-fix e2e: see latest Actions run after `d819208`.
 
 ---
 

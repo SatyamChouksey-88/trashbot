@@ -7,7 +7,7 @@ constexpr int PIN_PWMA = 1, PIN_AIN1 = 2, PIN_AIN2 = 4;
 constexpr int PIN_PWMB = 5, PIN_BIN1 = 6, PIN_BIN2 = 7;
 constexpr int PIN_SERVO = 8, PIN_US_TRIG = 9, PIN_US_ECHO = 44;
 constexpr int PIN_BATTERY_ADC = 3, PIN_STATUS_LED = 21;
-constexpr int PIN_BUMPER = 6; // GPIO43 — boot log pin; use 1 kΩ series to GND if wired
+constexpr int PIN_BUMPER = 43; // D6 / GPIO43 — INPUT_PULLUP; 1 kΩ series to bumper switch if wired
 // LEDC
 constexpr int LEDC_CH_MOTOR_A = 0, LEDC_CH_MOTOR_B = 1, LEDC_CH_SERVO = 2; // camera uses ch7 + timer 3
 constexpr uint32_t MOTOR_PWM_HZ = 20000; constexpr uint8_t MOTOR_PWM_BITS = 10;

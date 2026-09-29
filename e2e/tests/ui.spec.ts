@@ -28,11 +28,11 @@ test.describe("TrashBot web UI", () => {
     await page.goto("/");
     await Promise.all([
       page.waitForResponse((r) => r.url().includes("/api/stop") && r.ok()),
-      page.getByRole("button", { name: "STOP", exact: true }).click(),
+      page.getByTestId("drive-stop").click(),
     ]);
     await Promise.all([
       page.waitForResponse((r) => r.url().includes("/api/estop") && r.ok()),
-      page.getByRole("button", { name: "ESTOP", exact: true }).click(),
+      page.getByTestId("drive-estop").click(),
     ]);
     await Promise.all([
       page.waitForResponse((r) => r.url().includes("/api/estop/reset") && r.ok()),
@@ -43,7 +43,10 @@ test.describe("TrashBot web UI", () => {
   test("Auto tab start updates session pre", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Auto" }).click();
-    await page.getByRole("button", { name: "Start clean" }).click();
+    await Promise.all([
+      page.waitForResponse((r) => r.url().includes("/api/clean") && r.ok()),
+      page.getByTestId("auto-clean").click(),
+    ]);
     await page.waitForTimeout(800);
     await expect(page.locator("#sess")).not.toHaveText("");
   });
@@ -56,8 +59,10 @@ test.describe("TrashBot web UI", () => {
     });
     await page.goto("/");
     await page.getByRole("button", { name: "Calibrate" }).click();
-    page.once("dialog", (d) => d.accept());
-    await page.getByRole("button", { name: "Save scoop zone from target" }).click();
+    const dialogPromise = page.waitForEvent("dialog");
+    await page.getByTestId("calib-zone-xmin").click();
+    const dialog = await dialogPromise;
+    await dialog.accept();
     expect(posts.some((p) => p.includes("/api/calib/zone_xmin"))).toBeTruthy();
   });
 

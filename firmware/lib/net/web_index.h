@@ -35,11 +35,11 @@ mountBolo(document.getElementById('bolo'), { L });
 <div class=grid>
 <button onmousedown="hold(0,gspd())" onmouseup="stop()" ontouchstart="hold(0,gspd())" ontouchend="stop()">FWD</button>
 <button onmousedown="hold(-gspd(),0)" onmouseup="stop()">LEFT</button>
-<button class=danger onclick="stop()">■ RUKO · STOP</button>
+<button class=danger data-testid=drive-stop onclick="stop()">■ RUKO · STOP</button>
 <button onmousedown="hold(gspd(),0)" onmouseup="stop()">RIGHT</button>
 <button onmousedown="hold(0,-gspd())" onmouseup="stop()">BACK</button>
 </div>
-<button class=danger onclick="estop()">ESTOP</button>
+<button class=danger data-testid=drive-estop onclick="estop()">ESTOP</button>
 <button onclick="estopReset()">Reset ESTOP</button>
 </section>
 <section id=cam class=tab>
@@ -51,13 +51,13 @@ mountBolo(document.getElementById('bolo'), { L });
 <p id=autowarn style="color:#c62828"></p>
 <label>Max items <input id=mi type=number value=5 min=1 max=20></label>
 <label>Max time(s) <input id=mt type=number value=180 min=10></label>
-<button onclick="clean()">Saaf karo · Clean</button><button onclick="stop()">Stop</button>
+<button data-testid=auto-clean onclick="clean()">Saaf karo · Clean</button><button onclick="stop()">Stop</button>
 <pre id=sess></pre>
 </section>
 <section id=cal class=tab>
 <label>Profile <select id=prof><option>tile</option><option>carpet</option><option>custom</option></select>
 <button onclick="loadProf()">Load</button><button onclick="saveProf()">Save</button></label>
-<button onclick="calib('zone_xmin',{from:'current_target'})">Save scoop zone from target</button>
+<button data-testid=calib-zone-xmin onclick="calib('zone_xmin',{from:'current_target'})">Save scoop zone from target</button>
 <label>Servo DOWN <input id=sd type=range min=5 max=175 value=20><button onclick="calib('servo_down',{value:+sd.value})">Save</button></label>
 <label>CARRY <input id=sc type=range min=5 max=175 value=100><button onclick="calib('servo_carry',{value:+sc.value})">Save</button></label>
 <label>TIP <input id=st type=range min=5 max=175 value=165><button onclick="calib('servo_tip',{value:+st.value})">Save</button></label>

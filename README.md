@@ -61,6 +61,16 @@ Examples: `kachra saaf karo`, `20 cm aage chalo`, `photo lo`, `battery kitni hai
 - Try without hardware: `cd shared/lang && npm run dev` → http://localhost:8790
 - Future upgrades backlog: [docs/UPGRADES.md](docs/UPGRADES.md)
 
+## GitHub and pushing
+
+`origin` points at [github.com/SatyamChouksey-88/trashbot](https://github.com/SatyamChouksey-88/trashbot) for CI. Nothing pushes by itself. After `pio run`, `pytest`, and `npm test` pass locally, push from a machine where your IT policy allows:
+
+```bash
+git push origin main
+```
+
+See [docs/DECISIONS.md](docs/DECISIONS.md) for the remote note. Audit status: [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md).
+
 ## Docs
 
 - [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md) — full spec  
