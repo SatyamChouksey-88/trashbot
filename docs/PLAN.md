@@ -10,6 +10,7 @@
 | 2026-09-29 | v3-B | JSON scenarios (16), fault engine, episode runner, `sim_latest.md` + fault matrix; CI `--suite all`. |
 | 2026-09-29 | v3-C | G8: motor lease, WDT heartbeats, stuck detect, recovery manager, SAFE_PAUSE, `/api/health`, invariant tripwire. |
 | 2026-09-29 | v3-D | G0 POST, bring-up wizard tab + API, pre-flight on clean, `release_check.py` full gate. |
+| 2026-09-29 | v3-E | Missions + history API, event reason codes, profile slots API/UI. |
 | 2026-09-29 | 0–7 | Software build complete. Native Unity on Windows host blocked (no g++). Hardware tests pending user. |
 
 ## Phase checklist
@@ -29,7 +30,7 @@
 - [x] **B** — Simulator JSON scenarios + fault injection framework
 - [x] **C** — Reliability (G8): motor lease, WDT, recovery, health
 - [x] **D** — Bring-up wizard, pre-flight, release_check GO
-- [ ] **E** — Missions, api_version 2, reason codes
+- [x] **E** — Missions, api_version 2, reason codes
 - [ ] **F** — Confidence zones, agent lessons
 - [ ] **G** — Learning bandit + model gate
 - [ ] **H** — E2E expansion (bring-up, health, learning)

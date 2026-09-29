@@ -12,6 +12,9 @@ export const statusSchema = z.object({
   fw: z.string(),
   mode: z.string(),
   state: z.union([z.string(), z.number()]),
+  api_version: z.number().optional(),
+  bringup_done: z.boolean().optional(),
+  post_ok: z.boolean().optional(),
   distance_cm: z.number().optional(),
   detections: z.array(detectionSchema).optional(),
   detections_age_ms: z.number().optional(),
@@ -32,9 +35,21 @@ export const logSchema = z.object({
       type: z.union([z.string(), z.number()]),
       a: z.number().optional(),
       b: z.number().optional(),
+      reason: z.string().optional(),
+      reason_text: z.string().optional(),
     }),
   ),
   last_seq: z.number(),
+});
+
+export const missionSchema = z.object({
+  mission_id: z.string().optional(),
+  goal: z.string().optional(),
+  label: z.string().optional(),
+  active: z.boolean().optional(),
+  items_collected: z.number().optional(),
+  items_failed: z.number().optional(),
+  termination_reason: z.string().optional(),
 });
 
 export type RobotStatus = z.infer<typeof statusSchema>;

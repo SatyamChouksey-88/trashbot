@@ -117,6 +117,7 @@ private:
     int last_distance_cm_ = 400;
     uint32_t last_distance_ms_ = 0;
     void runRecoveryStep(BrainOutput& out, const BrainInput& in);
-    void pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a = 0, int32_t b = 0);
+    void pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a = 0, int32_t b = 0,
+                   const char* reason = nullptr);
     ScoopZone zone(const BrainCalib& c) const;
 };

@@ -74,4 +74,5 @@ struct Event {
     EventType type;
     int32_t a;
     int32_t b;
+    char reason[48]{};
 };

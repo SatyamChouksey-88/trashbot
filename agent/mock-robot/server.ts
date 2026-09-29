@@ -15,6 +15,9 @@ let mode: Mode = "idle";
 let state = "IDLE";
 let estop = false;
 let bringupDone = true;
+let missionSeq = 0;
+let currentMission: Record<string, unknown> | null = null;
+const missionHistory: Record<string, unknown>[] = [];
 let seq = 0;
 let collected = 0;
 let failed = 0;
@@ -62,6 +65,16 @@ function simulateSession(maxItems: number, maxTimeS: number) {
       mode = "idle";
       state = "DONE";
       push("session_done", collected, failed);
+      if (currentMission) {
+        missionHistory.push({
+          ...currentMission,
+          active: false,
+          items_collected: collected,
+          items_failed: failed,
+          termination_reason: collected >= maxItems ? "item_limit" : "time_limit",
+        });
+        currentMission = { ...currentMission, active: false, termination_reason: "completed" };
+      }
       return;
     }
     itemIndex++;
@@ -126,6 +139,29 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ok: true });
   }
 
+  if (req.method === "GET" && url.pathname === "/api/mission/current") {
+    return json(res, 200, currentMission ?? { active: false, mission_id: "", items_collected: 0 });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/mission/history") {
+    return json(res, 200, { missions: missionHistory.slice(-10) });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/profile") {
+    const slot = url.searchParams.get("slot") ?? "tile";
+    return json(res, 200, { slot, active: "tile", max_duty: 70, obstacle_stop_cm: 15, detection_min_score: 0.6 });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/profile/load") {
+    await readBody(req);
+    return json(res, 200, { ok: true, slot: "tile" });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/profile") {
+    await readBody(req);
+    return json(res, 200, { ok: true });
+  }
+
   if (req.method === "GET" && url.pathname === "/api/health") {
     return json(res, 200, {
       overall: estop ? "CRITICAL" : "OK",
@@ -184,6 +220,18 @@ const server = http.createServer(async (req, res) => {
       return json(res, 409, { error: "preflight_failed", failed: ["bringup_required"] });
     }
     const body = JSON.parse(await readBody(req));
+    missionSeq++;
+    currentMission = {
+      mission_id: `TB-1-${missionSeq}`,
+      goal: "clean",
+      label: body.label ?? "",
+      active: true,
+      items_collected: 0,
+      items_failed: 0,
+      items_skipped: 0,
+      recoveries: 0,
+      termination_reason: "",
+    };
     simulateSession(body.max_items ?? 5, body.max_time_s ?? 180);
     return json(res, 200, { ok: true });
   }

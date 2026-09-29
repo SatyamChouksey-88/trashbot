@@ -5,7 +5,10 @@
 #include "camera.h"
 #include "config.h"
 #include "preflight_core.h"
+#include "mission_store.h"
 #include "post_report.h"
+#include "profile_store.h"
+#include "reason_text.h"
 #include "shared_state.h"
 #include "target.h"
 #include "web_index.h"
@@ -165,6 +168,79 @@ void httpApiBegin(WebServer& server) {
         bringupSave(bu);
         cameraApplyOrientation(bu.camera_vflip, bu.camera_hmirror);
         server.send(200, "application/json", "{\"ok\":true}");
+    });
+
+    server.on("/api/mission/current", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        const MissionRecord& m = missionCurrent();
+        JsonDocument doc;
+        doc["mission_id"] = m.mission_id;
+        doc["goal"] = m.goal;
+        doc["label"] = m.label;
+        doc["active"] = m.active;
+        doc["started_uptime_ms"] = m.started_uptime_ms;
+        doc["duration_s"] = m.duration_s;
+        doc["items_collected"] = m.items_collected;
+        doc["items_failed"] = m.items_failed;
+        doc["items_skipped"] = m.items_skipped;
+        doc["recoveries"] = m.recoveries;
+        doc["termination_reason"] = m.termination_reason;
+        String out;
+        serializeJson(doc, out);
+        server.send(200, "application/json", out);
+    });
+
+    server.on("/api/mission/history", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        int limit = server.hasArg("limit") ? server.arg("limit").toInt() : cfg::MISSION_HISTORY;
+        char buf[4096];
+        missionHistoryJson(buf, sizeof(buf), limit);
+        server.send(200, "application/json", buf);
+    });
+
+    server.on("/api/profile", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        const char* slot = server.hasArg("slot") ? server.arg("slot").c_str() : profileActiveSlot();
+        ProfileTunables t = profileReadSlot(slot);
+        JsonDocument doc;
+        doc["slot"] = slot;
+        doc["active"] = profileActiveSlot();
+        doc["zone_xmin"] = t.zone_xmin;
+        doc["zone_xmax"] = t.zone_xmax;
+        doc["zone_ymin"] = t.zone_ymin;
+        doc["max_duty"] = t.max_duty;
+        doc["obstacle_stop_cm"] = t.obstacle_stop_cm;
+        doc["detection_min_score"] = t.detection_min_score;
+        String out;
+        serializeJson(doc, out);
+        server.send(200, "application/json", out);
+    });
+
+    server.on("/api/profile", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        JsonDocument doc;
+        if (!parseBody(server, doc)) return;
+        const char* slot = doc["slot"] | profileActiveSlot();
+        ProfileTunables t = profileReadSlot(slot);
+        if (!doc["zone_xmin"].isNull()) t.zone_xmin = doc["zone_xmin"].as<float>();
+        if (!doc["max_duty"].isNull()) t.max_duty = doc["max_duty"].as<int>();
+        if (!doc["obstacle_stop_cm"].isNull()) t.obstacle_stop_cm = doc["obstacle_stop_cm"].as<int>();
+        if (!doc["detection_min_score"].isNull()) t.detection_min_score = doc["detection_min_score"].as<float>();
+        profileSaveSlot(slot, t);
+        if (strcmp(slot, profileActiveSlot()) == 0) profileApplyToCalib(profileReadSlot(slot));
+        server.send(200, "application/json", "{\"ok\":true}");
+    });
+
+    server.on("/api/profile/load", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        JsonDocument doc;
+        if (!parseBody(server, doc)) return;
+        const char* slot = doc["slot"] | "tile";
+        if (!profileLoadSlot(slot)) {
+            server.send(400, "application/json", "{\"error\":\"bad slot\"}");
+            return;
+        }
+        server.send(200, "application/json", String("{\"ok\":true,\"slot\":\"") + slot + "\"}");
     });
 
     server.on("/api/bringup/complete", HTTP_POST, [&]() {
@@ -330,6 +406,10 @@ void httpApiBegin(WebServer& server) {
             o["type"] = eventTypeToString(ev[i].type);
             o["a"] = ev[i].a;
             o["b"] = ev[i].b;
+            if (ev[i].reason[0]) o["reason"] = ev[i].reason;
+            char rtxt[64];
+            eventReasonText(ev[i], rtxt, sizeof(rtxt));
+            o["reason_text"] = rtxt;
         }
         doc["last_seq"] = sharedEvents().lastSeq();
         String out;

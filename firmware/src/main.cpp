@@ -19,6 +19,9 @@
 #include "ultrasonic.h"
 #include "wifi_setup.h"
 #include "invariant_monitor.h"
+#include "mission_core.h"
+#include "mission_store.h"
+#include "profile_store.h"
 #include "stuck_detect.h"
 #include <WebServer.h>
 #include <esp_task_wdt.h>
@@ -35,7 +38,31 @@ static bool leaseExpiredReported = false;
 static void applyBrainEvents(const BrainOutput& bout, uint32_t now) {
     for (int i = 0; i < bout.event_count; i++) {
         const Event& e = bout.events[i];
-        sharedEvents().push(e.type, e.t_ms ? e.t_ms : now, e.a, e.b);
+        uint32_t t = e.t_ms ? e.t_ms : now;
+        const char* rs = e.reason[0] ? e.reason : nullptr;
+        sharedEvents().push(e.type, t, e.a, e.b, rs);
+        switch (e.type) {
+        case EventType::session_start:
+            missionOnStart("", bout.session.max_items, "clean", now);
+            break;
+        case EventType::recovery_started:
+            missionOnRecovery();
+            break;
+        case EventType::session_done:
+            missionOnSessionStats(bout.session.collected, bout.session.failed, bout.session.skipped);
+            missionOnEnd(terminationFromStrings(rs ? rs : "completed"), now);
+            break;
+        case EventType::estop:
+            missionOnEnd(TerminationReason::Estop, now);
+            break;
+        case EventType::vision_unavailable:
+            missionOnEnd(TerminationReason::VisionUnavailable, now);
+            break;
+        default:
+            break;
+        }
+        if (bout.session.active)
+            missionOnSessionStats(bout.session.collected, bout.session.failed, bout.session.skipped);
     }
 }
 
@@ -109,7 +136,13 @@ static void controlTask(void*) {
         RobotCommand cmd{};
         while (xQueueReceive(commandQueue(), &cmd, 0) == pdTRUE) {
             BrainCommands bc = commandToBrain(cmd);
-            if (bc.stop) merged.stop = true;
+            if (bc.stop) {
+                merged.stop = true;
+                sharedStateLock();
+                bool active = sharedStatus().session.active;
+                sharedStateUnlock();
+                if (active) missionOnEnd(TerminationReason::Stopped, millis());
+            }
             if (bc.estop) merged.estop = true;
             if (bc.estop_reset) merged.estop_reset = true;
             if (bc.set_mode) {
@@ -226,7 +259,10 @@ static void controlTask(void*) {
         st.state = bout.state;
         st.session = bout.session;
         st.scoop_deg = bout.servo_deg;
-        if (merged.start && merged.start_label) strncpy(st.session_label, merged.start_label, sizeof(st.session_label) - 1);
+        if (merged.start && merged.start_label) {
+            strncpy(st.session_label, merged.start_label, sizeof(st.session_label) - 1);
+            missionSetLabel(merged.start_label);
+        }
         strncpy(st.detector, activeDetector->name(), sizeof(st.detector) - 1);
         st.model_loaded = activeDetector->modelLoaded();
         st.heartbeat_control_ms = now;
@@ -301,6 +337,9 @@ void setup() {
     sharedStateBegin();
     calibBegin();
     bringupBegin();
+    missionStoreBegin();
+    profileStoreBegin();
+    profileLoadSlot(profileActiveSlot());
     motorsBegin();
     servoBegin();
     ultrasonicBegin();

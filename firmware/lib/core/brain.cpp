@@ -4,9 +4,15 @@
 #include <cmath>
 #include <cstring>
 
-void Brain::pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a, int32_t b) {
+void Brain::pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a, int32_t b, const char* reason) {
     if (out.event_count >= 4) return;
-    out.events[out.event_count++] = {0, now, t, a, b};
+    Event& e = out.events[out.event_count++];
+    e = {};
+    e.t_ms = now;
+    e.type = t;
+    e.a = a;
+    e.b = b;
+    if (reason) strncpy(e.reason, reason, sizeof(e.reason) - 1);
 }
 
 ScoopZone Brain::zone(const BrainCalib& c) const {
@@ -181,7 +187,8 @@ BrainOutput Brain::step(const BrainInput& in) {
     case State::SEARCH:
         if (valid) {
             state_ = State::APPROACH;
-            pushEvent(out, EventType::target_found, in.now_ms);
+            pushEvent(out, EventType::target_found, in.now_ms, (int)(det.score * 100), (int)(det.x * 100),
+                      "target_chosen");
             lost_frames_ = 0;
         } else if (in.now_ms >= search_pause_until_) {
             timed_ = turnDegrees(cfg::SEARCH_STEP_DEG, cfg::TURN_SPEED_PCT, in.calib.turn_dps);
@@ -344,14 +351,18 @@ BrainOutput Brain::step(const BrainInput& in) {
         state_ = State::SEARCH;
         break;
 
-    case State::DONE:
+    case State::DONE: {
         out.motor = {0, 0};
         servo_deg_ = in.calib.servo_carry;
         session_.active = false;
-        pushEvent(out, EventType::session_done, in.now_ms, session_.collected, session_.failed);
+        const char* term = "completed";
+        if (session_.collected >= session_.max_items) term = "item_limit";
+        else if (out.session.elapsed_s >= session_.max_time_s) term = "time_limit";
+        pushEvent(out, EventType::session_done, in.now_ms, session_.collected, session_.failed, term);
         state_ = State::IDLE;
         mode_ = Mode::Idle;
         break;
+    }
 
     case State::ESTOP:
         out.motor = {0, 0};

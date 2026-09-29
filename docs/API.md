@@ -58,6 +58,19 @@ Always allowed (except drive semantics).
 
 ## GET /api/log?since=<seq>
 
+Events may include `reason` and `reason_text`.
+
+## Missions
+
+- `GET /api/mission/current`
+- `GET /api/mission/history?limit=20`
+
+Mission ids: `TB-<boot_count>-<n>`.
+
+## Profiles
+
+Slots: `tile`, `carpet`, `custom`. `GET /api/profile`, `POST /api/profile`, `POST /api/profile/load`.
+
 ## GET /api/calib — POST /api/calib/<key>
 
 Body: `{"value": number}` or `{"from":"current_target"|"current_distance"}`

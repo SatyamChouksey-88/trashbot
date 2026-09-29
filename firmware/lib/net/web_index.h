@@ -47,6 +47,8 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <pre id=sess></pre>
 </section>
 <section id=cal class=tab>
+<label>Profile <select id=prof><option>tile</option><option>carpet</option><option>custom</option></select>
+<button onclick="loadProf()">Load</button><button onclick="saveProf()">Save</button></label>
 <button onclick="calib('zone_xmin',{from:'current_target'})">Save scoop zone from target</button>
 <label>Servo DOWN <input id=sd type=range min=5 max=175 value=20><button onclick="calib('servo_down',{value:+sd.value})">Save</button></label>
 <label>CARRY <input id=sc type=range min=5 max=175 value=100><button onclick="calib('servo_carry',{value:+sc.value})">Save</button></label>
@@ -92,6 +94,8 @@ async function saveBring(){await api('bringup',{motor_left_invert:mli.checked,mo
 async function pulseLeft(){await ensureManual();await api('drive',{left:30,right:0,duration_ms:300},'POST');}
 async function pulseRight(){await ensureManual();await api('drive',{left:0,right:30,duration_ms:300},'POST');}
 async function bringComplete(){await ensureManual();await api('bringup/complete',{},'POST');alert('Bring-up saved');loadBring();}
+async function loadProf(){const s=prof.value;await api('profile/load',{slot:s},'POST');alert('Loaded '+s);}
+async function saveProf(){const s=prof.value;await api('profile',{slot:s},'POST');alert('Saved '+s);}
 async function poll(){try{
 const s=await api('status');
 autowarn.textContent=s.bringup_done?'':'Complete Bring-up before auto clean.';
@@ -103,7 +107,7 @@ if(activeTab==='cam')shot.src='/api/photo?'+Date.now();
 if(activeTab==='health')loadHealth();
 if(activeTab==='bring')loadBring();
 const lg=await api('log?since=0');
-logpre.textContent=lg.events.slice(-50).map(e=>e.seq+' '+e.type).join('\n');
+logpre.textContent=lg.events.slice(-50).map(e=>e.seq+' '+e.type+(e.reason_text?' '+e.reason_text:'')).join('\n');
 }catch(e){status.textContent='API error'}}
 setInterval(poll,500);poll();
 </script></body></html>

@@ -4,7 +4,7 @@
 class EventRing {
 public:
     explicit EventRing(int capacity);
-    void push(EventType type, uint32_t t_ms, int32_t a = 0, int32_t b = 0);
+    void push(EventType type, uint32_t t_ms, int32_t a = 0, int32_t b = 0, const char* reason = nullptr);
     int since(uint32_t seq, Event* out, int maxOut) const;
     uint32_t lastSeq() const { return seq_; }
 

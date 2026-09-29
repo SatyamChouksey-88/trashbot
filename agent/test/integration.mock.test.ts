@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { spawn, type ChildProcess } from "node:child_process";
 import { join } from "node:path";
 import { RobotClient } from "../src/robotClient.js";
-import { logSchema, statusSchema } from "../src/contract.js";
+import { logSchema, missionSchema, statusSchema } from "../src/contract.js";
 
 const agentRoot = join(import.meta.dirname, "..");
 let mockProc: ChildProcess;
@@ -76,6 +76,12 @@ describe("mock robot contract", () => {
     await c.postJson("/api/estop/reset", {});
     const log = await c.getLog(0);
     logSchema.parse(log);
+  });
+
+  it("mission current API", async () => {
+    const c = client();
+    const m = missionSchema.parse(await c.getJson("/api/mission/current"));
+    expect(m.active === false || m.mission_id !== undefined).toBe(true);
   });
 
   it("start_cleaning session events", async () => {
