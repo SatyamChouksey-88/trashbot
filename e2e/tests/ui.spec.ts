@@ -52,8 +52,7 @@ test.describe("TrashBot web UI", () => {
     const posts: string[] = [];
     await page.route("**/api/calib/**", async (route) => {
       posts.push(route.request().url());
-      const res = await route.fetch();
-      await route.fulfill({ response: res });
+      await route.continue();
     });
     await page.goto("/");
     await page.getByRole("button", { name: "Calibrate" }).click();
