@@ -14,3 +14,5 @@
 | 2026-09-29 | E2E local optional on Windows | Playwright browser install may be blocked | CI `e2e` job; local only if `TRASHBOT_E2E_LOCAL=1` |
 | 2026-09-29 | `TRASHBOT_MODE` default `dry_run` | Agent safety on shared laptop | Set `full` in `.cursor/mcp.json` only when robot is ready |
 | 2026-09-29 | No OTA in v3 | USB flash only per MASTER_PROMPT_V3 | Recorded in v3 MUST NOT |
+| 2026-09-29 | `long_mission_100_items` uses 12 balls in sim | Full 100-item episode exceeds CI time budget | Raise `n_trash` in JSON when running long soak locally |
+| 2026-09-29 | Sim `max_violations` on bumper/corner | Bumper forces dist=0 while brain may still command turn-in-place | Tighten when G8 safety + brain cap asymmetric wheels (see I1) |

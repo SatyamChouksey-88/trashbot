@@ -46,7 +46,7 @@ jobs:
       - run: pip install -r tools/requirements.txt -r tools/requirements-dev.txt
       - run: python tools/run_core_tests.py
       - run: python tools/sim/build_sim_brain.py
-      - run: python tools/sim/run.py --scenario bright_light --runs 3
+      - run: python tools/sim/run.py --suite all --runs 5
       - run: python -m pytest tools -q
 
   agent-verify:

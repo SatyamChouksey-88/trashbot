@@ -1,0 +1,8 @@
+{
+  "name": "bumper_hit",
+  "description": "Front bumper pressed",
+  "max_time_s": 60,
+  "room": { "n_trash": 1, "scoop_p": 0.9 },
+  "faults": [{ "at_s": 3.0, "type": "bumper_hit", "duration_s": 2.0 }],
+  "expected": { "max_violations": 40 }
+}

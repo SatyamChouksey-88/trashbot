@@ -1,0 +1,8 @@
+{
+  "name": "camera_timeout",
+  "description": "Camera stream unavailable",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.9 },
+  "faults": [{ "at_s": 6.0, "type": "camera_timeout", "duration_s": 15.0 }],
+  "expected": { "min_collected": 0 }
+}

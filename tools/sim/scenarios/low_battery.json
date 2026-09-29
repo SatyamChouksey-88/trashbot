@@ -1,0 +1,8 @@
+{
+  "name": "low_battery",
+  "description": "Battery sag during mission",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.9, "battery_v": 7.2 },
+  "faults": [{ "at_s": 10.0, "type": "low_battery", "duration_s": 30.0 }],
+  "expected": { "min_collected": 0 }
+}

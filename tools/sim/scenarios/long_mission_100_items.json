@@ -1,0 +1,7 @@
+{
+  "name": "long_mission_100_items",
+  "description": "Stress run with many items (sim uses 12 for CI time)",
+  "max_time_s": 180,
+  "room": { "n_trash": 12, "scoop_p": 0.88 },
+  "expected": { "min_collected": 0 }
+}

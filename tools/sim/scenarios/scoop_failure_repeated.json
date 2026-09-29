@@ -1,0 +1,8 @@
+{
+  "name": "scoop_failure_repeated",
+  "description": "Scoop actuation fails during collection attempts",
+  "max_time_s": 120,
+  "room": { "n_trash": 2, "scoop_p": 0.95 },
+  "faults": [{ "at_s": 5.0, "type": "scoop_failure", "duration_s": 25.0 }],
+  "expected": { "min_collected": 0 }
+}

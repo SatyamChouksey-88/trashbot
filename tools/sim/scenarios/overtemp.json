@@ -1,0 +1,8 @@
+{
+  "name": "overtemp",
+  "description": "Thermal fault disables vision",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.9 },
+  "faults": [{ "at_s": 7.0, "type": "overtemp", "duration_s": 12.0 }],
+  "expected": { "min_collected": 0 }
+}

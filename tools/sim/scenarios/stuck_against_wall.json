@@ -1,0 +1,9 @@
+{
+  "name": "stuck_against_wall",
+  "description": "Motor no-response while near wall (stuck)",
+  "max_time_s": 60,
+  "room": { "n_trash": 1, "scoop_p": 0.85 },
+  "robot": { "x": 0.22, "y": 1.2, "theta": 0.0 },
+  "faults": [{ "at_s": 2.0, "type": "motor_no_response", "duration_s": 8.0 }],
+  "expected": { "allowed_final_states": ["IDLE", "SEARCH", "APPROACH", "DONE", "ESTOP"] }
+}

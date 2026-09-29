@@ -1,138 +1,130 @@
 #!/usr/bin/env python3
-"""Run digital-twin scenarios: python tools/sim/run.py --scenario all --runs 50"""
+"""Digital twin: python tools/sim/run.py --suite all --runs 20"""
 from __future__ import annotations
 
 import argparse
-import json
-import math
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
-# Allow imports from this package when run as script
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(ROOT / "tools"))
 from native_env import native_skipped, skip_exit_ok
 
-from brain_pipe import SimBrain
-from firmware_include import OBSTACLE_STOP_CM
-from room import RoomSim
-from scenarios import SCENARIOS, make_room
-
-DT_MS = 50
-MAX_STEPS = 6000
+from episode import run_episode
+from load_scenarios import list_scenarios, load_scenario
 
 
-def run_episode(scenario: str, seed: int, gif_path: Path | None = None) -> bool:
-    sc = SCENARIOS[scenario]
-    room = make_room(sc, seed)
-    brain = SimBrain()
-    t_ms = 0
-    started = False
-    frames = []
+def _fault_active(typ: str) -> bool:
+    from faults import FaultEngine
 
-    payload = {
-        "now_ms": t_ms,
-        "distance_cm": room.ultrasonic_cm(),
-        "camera_ok": True,
-        "detections_age_ms": 0,
-        "detections": room.camera_detections(),
-    }
-    if not started:
-        payload.update({"start": True, "start_max_items": sc.n_balls, "start_max_time_s": 120})
-        started = True
-
-    success = False
-    for step in range(MAX_STEPS):
-        drop = sc.light_dim and (step % 9 == 0)
-        payload["now_ms"] = t_ms
-        payload["distance_cm"] = room.ultrasonic_cm()
-        payload["detections"] = room.camera_detections(frame_drop=drop)
-        payload["detections_age_ms"] = 0 if payload["detections"] else 80
-        if sc.near_wall and payload["distance_cm"] < OBSTACLE_STOP_CM:
-            payload["distance_cm"] = OBSTACLE_STOP_CM + 2
-
-        out = brain.step(payload)
-        payload = {"now_ms": t_ms}
-        left = out["motor"]["left"]
-        right = out["motor"]["right"]
-        room.robot.apply_motor(left, right, DT_MS / 1000.0)
-
-        state = out["state"]
-        if state == "SCOOP" and room.try_scoop():
-            pass
-
-        if room.remaining_trash() == 0 or out["session"]["collected"] >= sc.n_balls:
-            success = True
-            break
-        if state in ("DONE", "ESTOP"):
-            success = out["session"]["collected"] >= max(1, sc.n_balls - 1)
-            break
-
-        if gif_path is not None and step % 8 == 0:
-            frames.append((room.robot.x, room.robot.y, room.robot.theta, list(room.balls)))
-
-        t_ms += DT_MS
-
-    brain.close()
-
-    if gif_path and frames:
-        save_gif(frames, gif_path)
-
-    return success
+    eng = FaultEngine(faults=[{"at_s": 4.0, "type": typ, "duration_s": 2.0, "lag_ms": 800}])
+    eff = eng.effect_at(5000)
+    if typ == "camera_timeout":
+        return eff.camera_ok is False
+    if typ == "ultrasonic_invalid":
+        return eff.ultrasonic_invalid
+    if typ == "motor_no_response":
+        return eff.motor_no_response
+    if typ == "scoop_failure":
+        return eff.force_scoop_fail
+    if typ == "target_disappears":
+        return eff.hide_detections
+    if typ == "sensor_lag":
+        return eff.detection_lag_ms > 0
+    if typ == "low_battery":
+        return eff.low_battery
+    if typ == "bumper_hit":
+        return eff.bumper
+    if typ == "overtemp":
+        return eff.overtemp
+    return False
 
 
-def save_gif(frames, path: Path) -> None:
-    import matplotlib.pyplot as plt
-    from matplotlib import patches
-    from matplotlib.animation import FuncAnimation, PillowWriter
+def fault_matrix_rows() -> list[str]:
+    types = [
+        "camera_timeout",
+        "ultrasonic_invalid",
+        "motor_no_response",
+        "scoop_failure",
+        "target_disappears",
+        "sensor_lag",
+        "low_battery",
+        "bumper_hit",
+        "overtemp",
+    ]
+    rows = ["", "## Fault matrix (smoke)", "", "| Fault | Active at t=5s |", "|-------|----------------|"]
+    for typ in types:
+        rows.append(f"| `{typ}` | {'yes' if _fault_active(typ) else '—'} |")
+    return rows
 
-    fig, ax = plt.subplots(figsize=(5, 4))
-    ax.set_xlim(0, 4)
-    ax.set_ylim(0, 3)
-    ax.set_aspect("equal")
 
-    def draw(i):
-        ax.clear()
-        ax.set_xlim(0, 4)
-        ax.set_ylim(0, 3)
-        x, y, th, balls = frames[i]
-        ax.add_patch(patches.Rectangle((0, 0), 4, 3, fill=False, edgecolor="black"))
-        ax.plot(x, y, "bo", markersize=8)
-        ax.arrow(x, y, 0.15 * math.cos(th), 0.15 * math.sin(th), head_width=0.05, color="b")
-        for b in balls:
-            if not b.collected:
-                ax.plot(b.x, b.y, "o", color="orange", markersize=6)
-
-    anim = FuncAnimation(fig, draw, frames=len(frames), interval=80)
+def write_report(results: dict[str, tuple[int, int]], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    anim.save(path, writer=PillowWriter(fps=12))
-    plt.close(fig)
+    lines = [
+        "# Simulation report",
+        "",
+        f"Generated: {datetime.now(timezone.utc).isoformat()}",
+        "",
+        "| Scenario | Pass | Runs | Rate |",
+        "|----------|------|------|------|",
+    ]
+    for name, (ok, total) in sorted(results.items()):
+        rate = ok / total if total else 0
+        lines.append(f"| {name} | {ok} | {total} | {rate:.0%} |")
+    lines.extend(fault_matrix_rows())
+    lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> int:
     if native_skipped():
         return skip_exit_ok()
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scenario", default="bright_light")
+    parser.add_argument("--scenario", default=None, help="Single scenario name")
+    parser.add_argument("--suite", default=None, help="Use 'all' for every JSON scenario")
     parser.add_argument("--runs", type=int, default=10)
-    parser.add_argument("--gif", type=Path, default=None)
+    parser.add_argument("--gif", type=Path, default=None, help="GIF path (default: docs/media/basic_clean.gif on suite all)")
+    parser.add_argument("--report", type=Path, default=ROOT / "docs" / "reports" / "sim_latest.md")
     args = parser.parse_args()
 
-    names = list(SCENARIOS.keys()) if args.scenario == "all" else [args.scenario]
-    print(f"{'Scenario':<22} {'Pass rate':>10}")
-    print("-" * 34)
+    if args.suite == "all":
+        names = list_scenarios()
+    elif args.scenario:
+        names = ["bright_light"] if args.scenario == "bright_light" else [args.scenario]
+        if args.scenario == "all":
+            names = list_scenarios()
+    else:
+        names = ["basic_clean"]
+
+    # legacy alias
+    names = ["basic_clean" if n == "bright_light" else n for n in names]
+
+    gif_default = ROOT / "docs" / "media" / "basic_clean.gif"
+    if args.suite == "all" and args.gif is None:
+        args.gif = gif_default
+
+    print(f"{'Scenario':<28} {'Pass rate':>10}")
+    print("-" * 40)
+    table: dict[str, tuple[int, int]] = {}
     for name in names:
-        if name not in SCENARIOS:
+        try:
+            spec = load_scenario(name)
+        except KeyError:
             print(f"Unknown scenario {name}", file=sys.stderr)
             return 1
         ok = 0
         for r in range(args.runs):
-            gif = args.gif if args.gif and name == names[0] and r == 0 else None
-            if run_episode(name, seed=1000 + r, gif_path=gif):
+            gif = args.gif if args.gif and name == "basic_clean" and r == 0 else None
+            res = run_episode(spec, seed=1000 + r, gif_path=gif)
+            if res.success:
                 ok += 1
-        rate = ok / args.runs
-        print(f"{name:<22} {rate:>9.0%}")
+        table[name] = (ok, args.runs)
+        print(f"{name:<28} {ok / args.runs:>9.0%}")
+
+    if args.report:
+        write_report(table, args.report)
     return 0
 
 

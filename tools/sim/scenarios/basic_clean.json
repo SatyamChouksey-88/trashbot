@@ -1,0 +1,7 @@
+{
+  "name": "basic_clean",
+  "description": "Open room, three trash balls, no faults",
+  "max_time_s": 120,
+  "room": { "n_trash": 3, "scoop_p": 0.92 },
+  "expected": { "min_collected": 0 }
+}

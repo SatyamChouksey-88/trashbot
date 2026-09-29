@@ -1,0 +1,8 @@
+{
+  "name": "corner_trap",
+  "description": "Robot in a corner between two walls",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.88 },
+  "robot": { "x": 0.28, "y": 0.28, "theta": 0.5 },
+  "expected": { "max_violations": 80, "min_collected": 0 }
+}

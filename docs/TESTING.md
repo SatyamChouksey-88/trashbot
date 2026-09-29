@@ -55,11 +55,13 @@ Run without hardware:
 
 ```bash
 python tools/sim/build_sim_brain.py
-python tools/sim/run.py --scenario all --runs 50
-python tools/sim/run.py --scenario bright_light --gif docs/media/sim_demo.gif
+python tools/sim/run.py --suite all --runs 20
+python tools/sim/run.py --scenario basic_clean --gif docs/media/basic_clean.gif
 ```
 
-Scenarios match the table below (`bright_light`, `dim_light`, `near_wall`, etc.).
+JSON scenarios live in `tools/sim/scenarios/` (`basic_clean`, `obstacle_ahead`, …). Report: `docs/reports/sim_latest.md`.
+
+With `TRASHBOT_NO_NATIVE=1`, `run.py` skips the suite (CI builds `sim_brain` and runs the full suite).
 
 ## G7 — Agent
 

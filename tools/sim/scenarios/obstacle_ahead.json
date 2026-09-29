@@ -1,0 +1,8 @@
+{
+  "name": "obstacle_ahead",
+  "description": "Robot starts facing nearby wall",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.9 },
+  "robot": { "x": 0.35, "y": 1.5, "theta": 0.0 },
+  "expected": { "no_uncontrolled_motion": true, "max_violations": 2 }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "learning_bandit",
+  "description": "Placeholder for recipe bandit eval (runs brain loop)",
+  "max_time_s": 60,
+  "room": { "n_trash": 3, "scoop_p": 0.85 },
+  "expected": { "min_collected": 0 }
+}

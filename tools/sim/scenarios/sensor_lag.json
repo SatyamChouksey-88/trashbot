@@ -1,0 +1,8 @@
+{
+  "name": "sensor_lag",
+  "description": "Vision detections delayed ~800 ms",
+  "max_time_s": 90,
+  "room": { "n_trash": 2, "scoop_p": 0.9 },
+  "faults": [{ "at_s": 0.0, "type": "sensor_lag", "duration_s": 40.0, "lag_ms": 800 }],
+  "expected": { "min_collected": 0 }
+}

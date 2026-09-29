@@ -1,0 +1,8 @@
+{
+  "name": "motion_while_still",
+  "description": "Commands issued but wheels do not move",
+  "max_time_s": 45,
+  "room": { "n_trash": 1, "scoop_p": 0.85 },
+  "faults": [{ "at_s": 1.0, "type": "motor_no_response", "duration_s": 20.0 }],
+  "expected": { "min_collected": 0 }
+}

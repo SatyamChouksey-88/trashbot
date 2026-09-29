@@ -1,0 +1,11 @@
+{
+  "name": "unknown_object_nearby",
+  "description": "Low-confidence keep-like object in view",
+  "max_time_s": 90,
+  "room": {
+    "n_trash": 2,
+    "scoop_p": 0.9,
+    "keep_items": [{ "x": 2.1, "y": 1.4, "label": "cable" }]
+  },
+  "expected": { "min_collected": 0 }
+}

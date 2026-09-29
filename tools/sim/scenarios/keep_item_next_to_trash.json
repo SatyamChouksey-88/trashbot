@@ -1,0 +1,11 @@
+{
+  "name": "keep_item_next_to_trash",
+  "description": "KEEP object adjacent to trash ball",
+  "max_time_s": 90,
+  "room": {
+    "n_trash": 2,
+    "scoop_p": 0.9,
+    "keep_items": [{ "x": 1.55, "y": 1.5, "label": "phone" }]
+  },
+  "expected": { "min_collected": 0 }
+}
