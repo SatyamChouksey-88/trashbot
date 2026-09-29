@@ -1,7 +1,7 @@
 # TrashBot v4 (Bolo) — final software report (§11)
 
 **Date:** 2026-09-30  
-**CI (main):** success on run `36638688952` (`3d9bcdf`) — all jobs green including `e2e`, `shared-lang`, `firmware-test`, `agent-verify`.  
+**CI (main):** success on run `36640451045` (`abbd1f6`) — all jobs green including `e2e` (17 tests), `shared-lang`, `firmware-test`, `agent-verify`.  
 **Verdict:** **GO** for software; **G11 hardware** remains user checklist in `docs/TESTING.md` / `docs/USER_STEPS.md` §9.
 
 ## Test counts (this session, office laptop)
