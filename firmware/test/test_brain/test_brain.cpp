@@ -136,6 +136,179 @@ void test_manual_expired(void) {
     in.now_ms = 100;
     auto o = b.step(in);
     TEST_ASSERT_TRUE(o.motor.left == 0 && o.motor.right == 0);
+    TEST_ASSERT_TRUE(hasEvent(o, EventType::manual_expired));
+}
+
+static BrainOutput stepMs(Brain& b, BrainInput& in, uint32_t dt) {
+    in.now_ms += dt;
+    in.commands = {};
+    return b.step(in);
+}
+
+static bool runUntilCollected(Brain& b, BrainInput& in, int maxSteps = 800) {
+    in.detections = oneDet(0.5f, 0.85f, 0.95f, in.now_ms);
+    in.detections_age_ms = 0;
+    for (int i = 0; i < maxSteps; i++) {
+        auto o = stepMs(b, in, 30);
+        if (o.state == State::TIP || o.state == State::VERIFY) {
+            in.detections = {};
+            in.detections.count = 0;
+        } else if (o.state == State::APPROACH || o.state == State::ALIGN || o.state == State::SCOOP) {
+            in.detections = oneDet(0.5f, 0.85f, 0.95f, in.now_ms);
+        }
+        if (hasEvent(o, EventType::item_collected)) return true;
+    }
+    return false;
+}
+
+void test_scoop_cycle_collected(void) {
+    Brain b;
+    b.reset();
+    BrainInput in{};
+    in.calib = defaultCalib();
+    in.now_ms = 0;
+    in.commands.start = true;
+    in.commands.start_max_items = 3;
+    b.step(in);
+    in.commands = {};
+    in.distance_cm = 80;
+    TEST_ASSERT_TRUE(runUntilCollected(b, in));
+}
+
+void test_target_lost_reacquire_search(void) {
+    Brain b;
+    b.reset();
+    BrainInput in{};
+    in.calib = defaultCalib();
+    in.now_ms = 100;
+    in.commands.start = true;
+    b.step(in);
+    in.commands = {};
+    in.detections = oneDet(0.5f, 0.5f, 0.9f, 100);
+    in.detections_age_ms = 0;
+    in.distance_cm = 80;
+    b.step(in);
+    in.detections = {};
+    in.detections.count = 0;
+    bool sawReacquire = false;
+    bool sawLost = false;
+    for (int i = 0; i < 40; i++) {
+        auto o = stepMs(b, in, 50);
+        if (o.state == State::REACQUIRE) sawReacquire = true;
+        if (hasEvent(o, EventType::target_lost)) sawLost = true;
+    }
+    in.now_ms += cfg::REACQUIRE_MS + 100;
+    auto o = b.step(in);
+    TEST_ASSERT_TRUE(sawReacquire || o.state == State::SEARCH);
+    TEST_ASSERT_TRUE(sawLost || o.state == State::SEARCH);
+}
+
+void test_item_failed_after_retries(void) {
+    Brain b;
+    b.reset();
+    BrainInput in{};
+    in.calib = defaultCalib();
+    in.now_ms = 5000;
+    in.distance_cm = 80;
+    in.detections_age_ms = 0;
+    b.testForceVerify(in.now_ms, cfg::MAX_RETRIES - 1);
+    in.detections = oneDet(0.5f, 0.85f, 0.95f, in.now_ms);
+    auto o = b.step(in);
+    TEST_ASSERT_TRUE(hasEvent(o, EventType::item_failed) || o.session.failed >= 1);
+}
+
+void test_max_items_done(void) {
+    Brain b;
+    b.reset();
+    BrainInput in{};
+    in.calib = defaultCalib();
+    in.now_ms = 0;
+    in.commands.start = true;
+    in.commands.start_max_items = 1;
+    b.step(in);
+    in.commands = {};
+    in.distance_cm = 80;
+    runUntilCollected(b, in);
+    bool done = false;
+    for (int i = 0; i < 30; i++) {
+        auto o = stepMs(b, in, 50);
+        if (o.state == State::DONE || hasEvent(o, EventType::session_done)) done = true;
+    }
+    TEST_ASSERT_TRUE(done);
+}
+
+void test_search_full_rotation_forward(void) {
+    Brain b;
+    b.reset();
+    BrainInput in{};
+    in.calib = defaultCalib();
+    in.distance_cm = 50;
+    in.now_ms = 0;
+    in.commands.start = true;
+    b.step(in);
+    in.commands = {};
+    in.detections = {};
+    in.detections.count = 0;
+    bool forward = false;
+    for (int i = 0; i < 100; i++) {
+        auto o = stepMs(b, in, 350);
+        if (o.motor.left > 0 && o.motor.right > 0) forward = true;
+    }
+    TEST_ASSERT_TRUE(forward);
+}
+
+static void startSearch(Brain& b, BrainInput& in) {
+    b.reset();
+    in = {};
+    in.calib = defaultCalib();
+    in.now_ms = 10;
+    in.commands.start = true;
+    b.step(in);
+    in.commands = {};
+}
+
+static State stateAfterEstop(Brain& b, BrainInput& in) {
+    in.commands.estop = true;
+    auto o = b.step(in);
+    in.commands = {};
+    return o.state;
+}
+
+void test_estop_from_active_states(void) {
+    Brain b;
+    BrainInput in{};
+    startSearch(b, in);
+    TEST_ASSERT_EQUAL((int)State::ESTOP, (int)stateAfterEstop(b, in));
+
+    startSearch(b, in);
+    in.detections = oneDet(0.5f, 0.5f, 0.9f, in.now_ms);
+    in.detections_age_ms = 0;
+    b.step(in);
+    TEST_ASSERT_EQUAL((int)State::ESTOP, (int)stateAfterEstop(b, in));
+
+    b.reset();
+    in = {};
+    in.calib = defaultCalib();
+    in.commands.set_mode = true;
+    in.commands.mode_target = Mode::Manual;
+    b.step(in);
+    TEST_ASSERT_EQUAL((int)State::ESTOP, (int)stateAfterEstop(b, in));
+}
+
+void test_stop_from_active_states(void) {
+    Brain b;
+    BrainInput in{};
+    startSearch(b, in);
+    in.commands.stop = true;
+    auto o = b.step(in);
+    TEST_ASSERT_EQUAL((int)State::IDLE, (int)o.state);
+
+    startSearch(b, in);
+    in.detections = oneDet(0.5f, 0.5f, 0.9f, in.now_ms);
+    b.step(in);
+    in.commands.stop = true;
+    o = b.step(in);
+    TEST_ASSERT_EQUAL((int)State::IDLE, (int)o.state);
 }
 
 int main() {
@@ -147,5 +320,12 @@ int main() {
     RUN_TEST(test_session_time_done);
     RUN_TEST(test_camera_unavailable);
     RUN_TEST(test_manual_expired);
+    RUN_TEST(test_scoop_cycle_collected);
+    RUN_TEST(test_target_lost_reacquire_search);
+    RUN_TEST(test_item_failed_after_retries);
+    RUN_TEST(test_max_items_done);
+    RUN_TEST(test_search_full_rotation_forward);
+    RUN_TEST(test_estop_from_active_states);
+    RUN_TEST(test_stop_from_active_states);
     return UNITY_END();
 }

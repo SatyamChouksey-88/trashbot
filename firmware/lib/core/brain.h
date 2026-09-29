@@ -1,4 +1,5 @@
 #pragma once
+#include "config.h"
 #include "scoop_seq.h"
 #include "target.h"
 #include "timed_move.h"
@@ -65,6 +66,17 @@ class Brain {
 public:
     void reset();
     BrainOutput step(const BrainInput& in);
+#ifdef UNIT_TEST
+    /** Seed VERIFY with retries already accumulated (for unit tests). */
+    void testForceVerify(uint32_t now_ms, int retries_before) {
+        state_ = State::VERIFY;
+        verify_start_ms_ = now_ms - cfg::VERIFY_WAIT_MS - 1;
+        retries_ = retries_before;
+        mode_ = Mode::Auto;
+        session_.active = true;
+        session_.failed = 0;
+    }
+#endif
 
 private:
     State state_ = State::IDLE;

@@ -71,14 +71,14 @@ BrainOutput Brain::step(const BrainInput& in) {
         has_target_ = true;
     }
 
-    if (in.commands.set_mode) {
+    if (in.commands.set_mode && state_ != State::ESTOP) {
         mode_ = in.commands.mode_target;
         if (mode_ == Mode::Manual) state_ = State::MANUAL;
         if (mode_ == Mode::Idle) state_ = State::IDLE;
         pushEvent(out, EventType::mode_changed, in.now_ms, (int)mode_);
     }
 
-    if (in.commands.start) {
+    if (in.commands.start && state_ != State::ESTOP) {
         mode_ = Mode::Auto;
         state_ = State::SEARCH;
         session_.active = true;
