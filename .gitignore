@@ -17,4 +17,5 @@ firmware/lib/TrashBot_inferencing/
 __pycache__/
 .pytest_cache/
 agent/coverage/
+agent/memory/lessons.json
 *.log

@@ -20,6 +20,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <button type=button onclick="show('log')">Log</button>
 <button type=button onclick="show('health')">Health</button>
 <button type=button onclick="show('bring')">Bring-up</button>
+<button type=button onclick="show('learn')">Learning</button>
 </nav>
 <section id=drive class="tab active">
 <div id=status></div>
@@ -57,6 +58,11 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 </section>
 <section id=log class=tab><pre id=logpre></pre></section>
 <section id=health class=tab><pre id=healthpre>Loading…</pre><button onclick="loadHealth()">Refresh</button></section>
+<section id=learn class=tab>
+<pre id=learnpre>Loading…</pre>
+<button onclick="loadLearning()">Refresh</button>
+<button onclick="resetLearning()">Reset bandit stats</button>
+</section>
 <section id=bring class=tab>
 <p>Wheels off the ground. Manual mode only.</p>
 <button onclick="pulseLeft()">Pulse LEFT 30%</button>
@@ -86,6 +92,9 @@ async function estop(){await api('estop',{},'POST');}
 async function estopReset(){await api('estop/reset',{},'POST');}
 async function clean(){await api('clean',{max_items:+mi.value,max_time_s:+mt.value},'POST');}
 async function calib(key,body){await api('calib/'+key,body,'POST');alert('Saved '+key);}
+async function loadLearning(){try{const l=await api('learning');
+learnpre.textContent=JSON.stringify(l,null,2);}catch(e){learnpre.textContent='Learning API unavailable';}}
+async function resetLearning(){await api('learning/reset',{},'POST');loadLearning();}
 async function loadHealth(){try{const h=await api('health');
 healthpre.textContent=h.overall+'\n'+h.checks.map(c=>c.name+': '+c.status+' '+c.value).join('\n');}catch(e){healthpre.textContent='Health error';}}
 async function loadBring(){const b=await api('bringup');mli.checked=b.motor_left_invert;mri.checked=b.motor_right_invert;
@@ -106,6 +115,7 @@ vis.textContent=(s.detector||'')+' '+s.vision_ms+'ms';
 if(activeTab==='cam')shot.src='/api/photo?'+Date.now();
 if(activeTab==='health')loadHealth();
 if(activeTab==='bring')loadBring();
+if(activeTab==='learn')loadLearning();
 const lg=await api('log?since=0');
 logpre.textContent=lg.events.slice(-50).map(e=>e.seq+' '+e.type+(e.reason_text?' '+e.reason_text:'')).join('\n');
 }catch(e){status.textContent='API error'}}

@@ -1,6 +1,27 @@
 #include "target.h"
 #include <cmath>
 
+bool pickTargetZoned(const Detections& dets, float ignore_below, float confident_at, uint32_t maxAgeMs, uint32_t now,
+                     Detection& out, ConfidenceZone& zone) {
+    zone = ConfidenceZone::Ignore;
+    if (dets.count <= 0) return false;
+    if (now - dets.t_ms > maxAgeMs) return false;
+    bool found = false;
+    Detection best{};
+    for (int i = 0; i < dets.count; i++) {
+        const auto& d = dets.items[i];
+        if (d.score < ignore_below) continue;
+        if (!found || d.score > best.score || (d.score == best.score && d.y > best.y)) {
+            best = d;
+            found = true;
+        }
+    }
+    if (!found) return false;
+    out = best;
+    zone = classifyScore(best.score, ignore_below, confident_at);
+    return zone != ConfidenceZone::Ignore;
+}
+
 bool pickTarget(const Detections& dets, float minScore, uint32_t maxAgeMs, uint32_t now, Detection& out) {
     if (dets.count <= 0) return false;
     if (now - dets.t_ms > maxAgeMs) return false;

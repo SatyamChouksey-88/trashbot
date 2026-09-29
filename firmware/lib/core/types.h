@@ -50,6 +50,8 @@ enum class EventType : uint8_t {
     item_collected,
     item_failed,
     item_skipped,
+    uncertain_skip,
+    learning_update,
     session_done,
     estop,
     estop_reset,

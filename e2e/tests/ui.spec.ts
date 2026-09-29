@@ -70,6 +70,20 @@ test.describe("TrashBot web UI", () => {
     await complete;
   });
 
+  test("Health tab loads checks", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Health" }).click();
+    await expect(page.locator("#healthpre")).not.toHaveText("Loading…");
+    await page.getByRole("button", { name: "Refresh" }).click();
+    await expect(page.locator("#healthpre")).toContainText(/OK|CRITICAL|DEGRADED/);
+  });
+
+  test("Learning tab shows bandit JSON", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Learning" }).click();
+    await expect(page.locator("#learnpre")).toContainText("enabled");
+  });
+
   test("Camera and Log tabs render", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Camera" }).click();

@@ -162,6 +162,29 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ok: true });
   }
 
+  if (req.method === "GET" && url.pathname === "/api/learning") {
+    return json(res, 200, {
+      enabled: false,
+      active_recipe: 0,
+      explore_rate: 0.1,
+      recipes: [{ index: 0, creep_cm: 12, creep_speed_pct: 25, align_tolerance: 0.06, tries: 0, successes: 0 }],
+    });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/learning/reset") {
+    await readBody(req);
+    return json(res, 200, { ok: true });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/mistakes") {
+    return json(res, 200, { enabled: false, mistakes: [] });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/mistakes/flag") {
+    await readBody(req);
+    return json(res, 503, { error: "mistake_capture_disabled" });
+  }
+
   if (req.method === "GET" && url.pathname === "/api/health") {
     return json(res, 200, {
       overall: estop ? "CRITICAL" : "OK",

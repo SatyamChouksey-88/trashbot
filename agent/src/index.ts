@@ -4,6 +4,7 @@ import { z } from "zod";
 import { RobotClient } from "./robotClient.js";
 import { CLEAN_ROOM_PROMPT } from "./prompts/cleanRoom.js";
 import { guardTool } from "./toolGuard.js";
+import { confirmedLessons, readLessons, recordLesson, recordUserCorrection } from "./lessons.js";
 
 const client = new RobotClient();
 const server = new McpServer({ name: "trashbot", version: "0.1.0" });
@@ -58,15 +59,62 @@ server.tool(
   async ({ max_items }) => {
     const s = await client.getStatus();
     const buf = await client.getPhoto();
+    const lessons = confirmedLessons();
+    const dets = (s.detections ?? []) as Array<{ score?: number; x?: number; y?: number }>;
+    const zones = dets.map((d) => {
+      const score = d.score ?? 0;
+      const zone = score >= 0.75 ? "CONFIDENT" : score >= 0.5 ? "UNCERTAIN" : "IGNORE";
+      return { ...d, zone };
+    });
+    const lessonText =
+      lessons.length === 0
+        ? "No confirmed lessons yet."
+        : lessons.map((l) => `- ${l.correction} (${l.mistake})`).join("\n");
     return {
       content: [
         {
           type: "text",
-          text: `Plan (robot will NOT move): collect up to ${max_items} trash items if you later set TRASHBOT_MODE=full.\nStatus: ${JSON.stringify(s, null, 2)}`,
+          text:
+            `Plan (robot will NOT move): classify TRASH vs KEEP vs UNKNOWN. ` +
+            `UNCERTAIN detections may be skipped on-robot unless you confirm in full mode.\n` +
+            `Collect up to ${max_items} trash items after TRASHBOT_MODE=full.\n` +
+            `Confirmed lessons:\n${lessonText}\n` +
+            `Detections+zones: ${JSON.stringify(zones, null, 2)}\n` +
+            `Status: ${JSON.stringify(s, null, 2)}`,
         },
         { type: "image", data: buf.toString("base64"), mimeType: "image/jpeg" },
       ],
     };
+  },
+);
+
+server.tool("get_lessons", "Read agent lesson memory (confirmed + pending)", {}, async () => {
+  const lessons = readLessons();
+  return { content: [{ type: "text", text: JSON.stringify(lessons, null, 2) }] };
+});
+
+server.tool(
+  "record_lesson",
+  "Store a lesson from a mission review (set user_confirmed when the user agreed)",
+  {
+    mistake: z.string().min(3),
+    correction: z.string().min(3),
+    mission_id: z.string().optional(),
+    user_confirmed: z.boolean().default(false),
+  },
+  async ({ mistake, correction, mission_id, user_confirmed }) => {
+    const lesson = recordLesson({ mistake, correction, mission_id, user_confirmed });
+    return { content: [{ type: "text", text: JSON.stringify(lesson, null, 2) }] };
+  },
+);
+
+server.tool(
+  "record_user_correction",
+  "Record a user correction (always confirmed)",
+  { note: z.string().min(3), mission_id: z.string().optional() },
+  async ({ note, mission_id }) => {
+    const lesson = recordUserCorrection(note, mission_id);
+    return { content: [{ type: "text", text: JSON.stringify(lesson, null, 2) }] };
   },
 );
 

@@ -76,3 +76,12 @@ Slots: `tile`, `carpet`, `custom`. `GET /api/profile`, `POST /api/profile`, `POS
 Body: `{"value": number}` or `{"from":"current_target"|"current_distance"}`
 
 Keys: `zone_xmin`, `zone_xmax`, `zone_ymin`, `servo_down`, `servo_carry`, `servo_tip`, `turn_dps`, `fwd_cps`, `self_echo_cm`, `max_duty`.
+
+## Learning (v3 G9)
+
+- `GET /api/learning` — bandit recipe table and stats (`enabled` reflects `LEARNING_ENABLED`).
+- `POST /api/learning/reset` — clear bandit counters (emits `learning_update`).
+- `GET /api/mistakes` — mistake ring metadata (empty when `MISTAKE_CAPTURE` is off).
+- `POST /api/mistakes/flag` — queue user/agent flag (503 when capture disabled).
+
+Event types: `uncertain_skip`, `learning_update`.

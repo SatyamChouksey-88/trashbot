@@ -116,6 +116,9 @@ private:
     State state_before_pause_ = State::IDLE;
     int last_distance_cm_ = 400;
     uint32_t last_distance_ms_ = 0;
+    ConfidenceZone target_zone_ = ConfidenceZone::Ignore;
+    int recheck_count_ = 0;
+    bool maybeSkipUncertain(BrainOutput& out, const BrainInput& in, uint32_t now);
     void runRecoveryStep(BrainOutput& out, const BrainInput& in);
     void pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a = 0, int32_t b = 0,
                    const char* reason = nullptr);

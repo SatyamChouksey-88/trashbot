@@ -16,3 +16,5 @@
 | 2026-09-29 | No OTA in v3 | USB flash only per MASTER_PROMPT_V3 | Recorded in v3 MUST NOT |
 | 2026-09-29 | `long_mission_100_items` uses 12 balls in sim | Full 100-item episode exceeds CI time budget | Raise `n_trash` in JSON when running long soak locally |
 | 2026-09-29 | Sim `max_violations` on bumper/corner | Bumper forces dist=0 while brain may still command turn-in-place | Tighten when G8 safety + brain cap asymmetric wheels (see I1) |
+| 2026-09-29 | On-robot uncertain → skip after rechecks | MASTER_PROMPT_V3 §7; agent judges photos in MCP only | Tune `RECHECK_Y` / `MAX_RECHECKS` in `config.h` |
+| 2026-09-29 | `MISTAKE_CAPTURE` default off | PSRAM ring + JPEG capture needs hardware soak | Enable flag after field testing |

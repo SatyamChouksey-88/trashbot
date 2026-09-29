@@ -23,6 +23,8 @@
 #include "mission_store.h"
 #include "profile_store.h"
 #include "stuck_detect.h"
+#include "learning_store.h"
+#include "recipe_bandit.h"
 #include <WebServer.h>
 #include <esp_task_wdt.h>
 
@@ -34,6 +36,7 @@ static MotorCmd lastMotor{0, 0};
 static uint32_t lastDetectionMs = 0;
 static StuckState stuckState{};
 static bool leaseExpiredReported = false;
+static int pending_recipe_ = -1;
 
 static void applyBrainEvents(const BrainOutput& bout, uint32_t now) {
     for (int i = 0; i < bout.event_count; i++) {
@@ -57,6 +60,27 @@ static void applyBrainEvents(const BrainOutput& bout, uint32_t now) {
             break;
         case EventType::vision_unavailable:
             missionOnEnd(TerminationReason::VisionUnavailable, now);
+            break;
+        case EventType::scoop_start:
+            if (cfg::LEARNING_ENABLED) {
+                int idx = banditSelectRecipe(learningBandit(), now, cfg::BANDIT_EXPLORE);
+                learningSetActiveRecipe(idx);
+                pending_recipe_ = idx;
+            }
+            break;
+        case EventType::item_collected:
+            if (cfg::LEARNING_ENABLED && pending_recipe_ >= 0) {
+                banditRecordOutcome(learningBandit(), pending_recipe_, true);
+                sharedEvents().push(EventType::learning_update, now, pending_recipe_, 1, "success");
+                pending_recipe_ = -1;
+            }
+            break;
+        case EventType::item_failed:
+            if (cfg::LEARNING_ENABLED && pending_recipe_ >= 0) {
+                banditRecordOutcome(learningBandit(), pending_recipe_, false);
+                sharedEvents().push(EventType::learning_update, now, pending_recipe_, 0, "fail");
+                pending_recipe_ = -1;
+            }
             break;
         default:
             break;

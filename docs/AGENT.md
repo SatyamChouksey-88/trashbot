@@ -26,6 +26,15 @@ For a physical robot on your LAN later, change `TRASHBOT_URL` in `.cursor/mcp.js
 | set_mode | POST /api/mode |
 | drive / move / turn / scoop | manual API routes |
 | get_events | GET /api/log |
+| get_health | GET /api/health |
+| get_mission | GET /api/mission/current |
+| plan_cleaning | photo + zones + confirmed lessons (no motion) |
+| get_lessons | `agent/memory/lessons.json` (see `lessons.example.json`) |
+| record_lesson / record_user_correction | laptop memory (not blocked in `dry_run`) |
+
+## Lessons memory
+
+Confirmed lessons (`user_confirmed: true`) are applied in `plan_cleaning` and the `clean_room` prompt. Copy `agent/memory/lessons.example.json` to `lessons.json` locally (gitignored).
 
 ## Environment
 

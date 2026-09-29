@@ -8,6 +8,7 @@
 #include "mission_store.h"
 #include "post_report.h"
 #include "profile_store.h"
+#include "learning_store.h"
 #include "reason_text.h"
 #include "shared_state.h"
 #include "target.h"
@@ -391,6 +392,32 @@ void httpApiBegin(WebServer& server) {
         String path = String("/api/calib/") + key;
         server.on(path.c_str(), HTTP_POST, [&, key]() { handleCalibPost(server, key); });
     }
+
+    server.on("/api/learning", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        sendLearningJson(server);
+    });
+
+    server.on("/api/learning/reset", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        learningResetBandit();
+        sharedEvents().push(EventType::learning_update, millis(), 0, 0, "reset");
+        server.send(200, "application/json", "{\"ok\":true}");
+    });
+
+    server.on("/api/mistakes", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        sendMistakesJson(server);
+    });
+
+    server.on("/api/mistakes/flag", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        if (!cfg::MISTAKE_CAPTURE) {
+            server.send(503, "application/json", "{\"error\":\"mistake_capture_disabled\"}");
+            return;
+        }
+        server.send(200, "application/json", "{\"ok\":true,\"queued\":false}");
+    });
 
     server.on("/api/log", HTTP_GET, [&]() {
         if (!checkToken(server)) return;

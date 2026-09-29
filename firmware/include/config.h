@@ -109,6 +109,7 @@ constexpr int MOTOR_MAX_DUTY_MAX = 80;
 constexpr int SPEED_MAX_PCT = 80;
 // Feature flags
 constexpr bool LEARNING_ENABLED = false;
+constexpr bool MISTAKE_CAPTURE = false;
 constexpr bool DEBUG_API = false;
 } // namespace cfg
 

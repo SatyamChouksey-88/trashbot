@@ -34,6 +34,23 @@ void Brain::reset() {
     recovery_.resetSession();
     safe_pause_until_ms_ = 0;
     safe_pause_count_ = 0;
+    recheck_count_ = 0;
+    target_zone_ = ConfidenceZone::Ignore;
+}
+
+bool Brain::maybeSkipUncertain(BrainOutput& out, const BrainInput& in, uint32_t now) {
+    if (target_zone_ != ConfidenceZone::Uncertain) return false;
+    if (target_.y > cfg::RECHECK_Y) return false;
+    recheck_count_++;
+    if (recheck_count_ <= cfg::MAX_RECHECKS) return false;
+    session_.skipped++;
+    pushEvent(out, EventType::uncertain_skip, now, (int)(target_.score * 100), recheck_count_, "uncertain_skip");
+    pushEvent(out, EventType::item_skipped, now, 0, 0, "uncertain");
+    timed_ = turnDegrees(cfg::FAIL_TURN_AWAY_DEG, cfg::TURN_SPEED_PCT, in.calib.turn_dps);
+    timedMoveBegin(timed_, now);
+    state_ = State::SEARCH;
+    recheck_count_ = 0;
+    return true;
 }
 
 BrainOutput Brain::step(const BrainInput& in) {
@@ -126,11 +143,14 @@ BrainOutput Brain::step(const BrainInput& in) {
     }
 
     Detection det{};
-    bool valid = pickTarget(in.detections, cfg::DETECTION_MIN_SCORE, cfg::DETECTION_MAX_AGE_MS,
-                            in.now_ms, det);
+    ConfidenceZone det_zone = ConfidenceZone::Ignore;
+    bool valid = pickTargetZoned(in.detections, cfg::CONF_IGNORE_BELOW, cfg::CONF_CONFIDENT_AT,
+                                 cfg::DETECTION_MAX_AGE_MS, in.now_ms, det, det_zone);
     if (valid) {
         target_ = det;
+        target_zone_ = det_zone;
         has_target_ = true;
+        if (det_zone == ConfidenceZone::Confident) recheck_count_ = 0;
     }
 
     if (in.commands.set_mode && state_ != State::ESTOP) {
@@ -150,6 +170,7 @@ BrainOutput Brain::step(const BrainInput& in) {
         session_start_ms_ = in.now_ms;
         search_step_ = 0;
         search_turned_deg_ = 0;
+        recheck_count_ = 0;
         pushEvent(out, EventType::session_start, in.now_ms, session_.max_items, session_.max_time_s);
     }
 
@@ -187,8 +208,8 @@ BrainOutput Brain::step(const BrainInput& in) {
     case State::SEARCH:
         if (valid) {
             state_ = State::APPROACH;
-            pushEvent(out, EventType::target_found, in.now_ms, (int)(det.score * 100), (int)(det.x * 100),
-                      "target_chosen");
+            const char* why = det_zone == ConfidenceZone::Confident ? "target_confident" : "target_uncertain";
+            pushEvent(out, EventType::target_found, in.now_ms, (int)(det.score * 100), (int)(det.x * 100), why);
             lost_frames_ = 0;
         } else if (in.now_ms >= search_pause_until_) {
             timed_ = turnDegrees(cfg::SEARCH_STEP_DEG, cfg::TURN_SPEED_PCT, in.calib.turn_dps);
@@ -211,6 +232,7 @@ BrainOutput Brain::step(const BrainInput& in) {
         break;
 
     case State::APPROACH: {
+        if (valid && maybeSkipUncertain(out, in, in.now_ms)) break;
         if (in.distance_cm < cfg::OBSTACLE_STOP_CM) {
             obstacle_count_++;
             pushEvent(out, EventType::obstacle, in.now_ms, in.distance_cm);
@@ -270,6 +292,10 @@ BrainOutput Brain::step(const BrainInput& in) {
                 if (timed_.active && !timedMoveStep(timed_, in.now_ms)) out.motor = timed_.cmd;
             }
             if (align_stable_ >= cfg::ALIGN_STABLE_FRAMES) {
+                if (target_zone_ != ConfidenceZone::Confident) {
+                    if (maybeSkipUncertain(out, in, in.now_ms)) break;
+                    break;
+                }
                 state_ = State::SCOOP;
                 pushEvent(out, EventType::scoop_start, in.now_ms);
                 scoop_.reset(in.calib.servo_down, in.calib.servo_carry, in.calib.servo_tip,

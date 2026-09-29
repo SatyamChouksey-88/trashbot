@@ -11,6 +11,10 @@
 | 2026-09-29 | v3-C | G8: motor lease, WDT heartbeats, stuck detect, recovery manager, SAFE_PAUSE, `/api/health`, invariant tripwire. |
 | 2026-09-29 | v3-D | G0 POST, bring-up wizard tab + API, pre-flight on clean, `release_check.py` full gate. |
 | 2026-09-29 | v3-E | Missions + history API, event reason codes, profile slots API/UI. |
+| 2026-09-29 | v3-F | Confidence zones, uncertain_skip, MCP lessons + plan_cleaning zones. |
+| 2026-09-29 | v3-G | Recipe bandit, `/api/learning`, mistake stubs, eval_model + model_gate. |
+| 2026-09-29 | v3-H | E2E health + learning tabs. |
+| 2026-09-29 | v3-I | `V3_FINAL_REPORT.md`, docs pass, release_check GO (software). |
 | 2026-09-29 | 0–7 | Software build complete. Native Unity on Windows host blocked (no g++). Hardware tests pending user. |
 
 ## Phase checklist
@@ -31,10 +35,10 @@
 - [x] **C** — Reliability (G8): motor lease, WDT, recovery, health
 - [x] **D** — Bring-up wizard, pre-flight, release_check GO
 - [x] **E** — Missions, api_version 2, reason codes
-- [ ] **F** — Confidence zones, agent lessons
-- [ ] **G** — Learning bandit + model gate
-- [ ] **H** — E2E expansion (bring-up, health, learning)
-- [ ] **I** — Final release_check, CHANGELOG, Section 16 report
+- [x] **F** — Confidence zones, agent lessons
+- [x] **G** — Learning bandit + model gate
+- [x] **H** — E2E expansion (bring-up, health, learning)
+- [x] **I** — Final release_check, CHANGELOG, Section 16 report
 
 ## Definition of done (software)
 

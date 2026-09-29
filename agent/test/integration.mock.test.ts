@@ -47,6 +47,11 @@ afterAll(() => {
 describe("mock robot contract", () => {
   const client = () => new RobotClient(baseUrl);
 
+  it("GET /api/learning parses", async () => {
+    const body = await client().getJson("/api/learning");
+    expect(body).toMatchObject({ enabled: false, recipes: expect.any(Array) });
+  });
+
   it("GET /api/status parses", async () => {
     const s = await client().getStatus();
     statusSchema.parse(s);

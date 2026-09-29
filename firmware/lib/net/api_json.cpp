@@ -1,8 +1,10 @@
 #include "api_json.h"
 #include "bringup.h"
 #include "config.h"
+#include "learning_store.h"
 #include "motors.h"
 #include "post_report.h"
+#include "recipe_bandit.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -44,6 +46,8 @@ const char* eventTypeToString(EventType t) {
     case EventType::item_collected: return "item_collected";
     case EventType::item_failed: return "item_failed";
     case EventType::item_skipped: return "item_skipped";
+    case EventType::uncertain_skip: return "uncertain_skip";
+    case EventType::learning_update: return "learning_update";
     case EventType::session_done: return "session_done";
     case EventType::estop: return "estop";
     case EventType::estop_reset: return "estop_reset";
@@ -209,5 +213,36 @@ void sendStatusJson(WebServer& server) {
     String out;
     serializeJson(doc, out);
     sharedStateUnlock();
+    server.send(200, "application/json", out);
+}
+
+void sendLearningJson(WebServer& server) {
+    auto& st = learningBandit();
+    JsonDocument doc;
+    doc["enabled"] = cfg::LEARNING_ENABLED;
+    doc["active_recipe"] = learningActiveRecipe();
+    doc["explore_rate"] = cfg::BANDIT_EXPLORE;
+    JsonArray recipes = doc["recipes"].to<JsonArray>();
+    for (int i = 0; i < RECIPE_COUNT; i++) {
+        ScoopRecipe r = recipeAt(i);
+        JsonObject o = recipes.add<JsonObject>();
+        o["index"] = i;
+        o["creep_cm"] = r.creep_cm;
+        o["creep_speed_pct"] = r.creep_speed_pct;
+        o["align_tolerance"] = r.align_tolerance;
+        o["tries"] = st.tries[i];
+        o["successes"] = st.successes[i];
+    }
+    String out;
+    serializeJson(doc, out);
+    server.send(200, "application/json", out);
+}
+
+void sendMistakesJson(WebServer& server) {
+    JsonDocument doc;
+    doc["enabled"] = cfg::MISTAKE_CAPTURE;
+    doc["mistakes"] = JsonArray();
+    String out;
+    serializeJson(doc, out);
     server.send(200, "application/json", out);
 }

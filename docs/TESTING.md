@@ -87,3 +87,19 @@ With `TRASHBOT_NO_NATIVE=1`, `run.py` skips the suite (CI builds `sim_brain` and
 | MCP get_status | JSON | | |
 | clean_room prompt | Safety steps | | |
 | Mock MOCK_FAIL_EVERY | item_failed events | | |
+
+## G9 — Learning (software)
+
+| Check | How |
+|-------|-----|
+| Bandit + confidence core | `python tools/run_core_tests.py` (`test_recipe_bandit`, `test_confidence_zone`, `test_target`) |
+| Model gate scripts | `python -m pytest tools/test_model_gate.py -q` |
+| Learning API | Mock `GET /api/learning`; UI Learning tab (e2e) |
+| Hardware | Enable `LEARNING_ENABLED` only after baseline missions on device |
+
+## G10 — Confidence + agent lessons
+
+| Check | How |
+|-------|-----|
+| `uncertain_skip` event | Core brain + sim `unknown_object_nearby` |
+| Agent lessons | `cd agent && npm test` (`lessons.test.ts`) |

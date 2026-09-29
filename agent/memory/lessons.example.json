@@ -1,0 +1,13 @@
+{
+  "lessons": [
+    {
+      "id": "L-example",
+      "created": "2026-01-01T00:00:00.000Z",
+      "last_seen": "2026-01-01T00:00:00.000Z",
+      "count": 1,
+      "mistake": "Classified phone cable as trash",
+      "correction": "Leave cables and chargers; ask user if unsure",
+      "evidence": { "user_confirmed": true }
+    }
+  ]
+}
