@@ -43,8 +43,12 @@ struct RobotStatus {
     bool model_loaded = false;
     char camera[16] = "error";
     int scoop_deg = 100;
+    int servo_down_calib = 20;
     bool estop = false;
     char last_error[64]{};
+    char session_label[32]{};
+    float battery_v = -1.0f;
+    bool use_fake_detector = true;
     uint8_t* photo = nullptr;
     size_t photo_len = 0;
 };

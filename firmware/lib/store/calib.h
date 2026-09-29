@@ -1,6 +1,9 @@
 #pragma once
 #include "brain.h"
+#include <ArduinoJson.h>
 
 void calibBegin();
 BrainCalib calibLoad();
-bool calibSaveKey(const char* key, float value);
+bool calibSaveFloat(const char* key, float value);
+bool calibSaveInt(const char* key, int value);
+void calibToJson(JsonObject obj);

@@ -5,7 +5,6 @@ import { RobotClient } from "./robotClient.js";
 import { CLEAN_ROOM_PROMPT } from "./prompts/cleanRoom.js";
 
 const client = new RobotClient();
-
 const server = new McpServer({ name: "trashbot", version: "0.1.0" });
 
 server.tool("get_status", "Read robot status", {}, async () => {
@@ -15,20 +14,16 @@ server.tool("get_status", "Read robot status", {}, async () => {
   };
 });
 
-server.tool(
-  "take_photo",
-  "Capture a JPEG from the robot camera",
-  {},
-  async () => {
-    const buf = await client.getPhoto();
-    return {
-      content: [
-        { type: "text", text: "Latest frame from TrashBot." },
-        { type: "image", data: buf.toString("base64"), mimeType: "image/jpeg" },
-      ],
-    };
-  },
-);
+server.tool("take_photo", "Capture a JPEG from the robot camera", {}, async () => {
+  const buf = await client.getPhoto();
+  const s = await client.getStatus();
+  return {
+    content: [
+      { type: "text", text: `Detections: ${JSON.stringify(s.detections ?? [])}` },
+      { type: "image", data: buf.toString("base64"), mimeType: "image/jpeg" },
+    ],
+  };
+});
 
 server.tool(
   "start_cleaning",
@@ -48,6 +43,42 @@ server.tool("stop", "Stop the robot and return to idle", {}, async () => {
   await client.stop();
   return { content: [{ type: "text", text: "Stop sent." }] };
 });
+
+server.tool(
+  "set_mode",
+  "Set idle or manual mode",
+  { mode: z.enum(["idle", "manual"]) },
+  async ({ mode }) => {
+    await client.setMode(mode);
+    return { content: [{ type: "text", text: `Mode set to ${mode}.` }] };
+  },
+);
+
+server.tool(
+  "drive",
+  "Small manual nudges only; prefer start_cleaning; forward blocked near obstacles",
+  {
+    direction: z.enum(["forward", "back", "left", "right"]),
+    speed: z.number().min(10).max(80).default(40),
+    duration_ms: z.number().min(100).max(1000).default(500),
+  },
+  async ({ direction, speed, duration_ms }) => {
+    await client.drive(direction, speed, duration_ms);
+    return { content: [{ type: "text", text: `Drive ${direction} sent.` }] };
+  },
+);
+
+server.tool(
+  "get_events",
+  "Read recent robot event log",
+  { limit: z.number().min(1).max(100).default(20), since: z.number().optional() },
+  async ({ limit, since }) => {
+    const log = await client.getLog(since ?? 0);
+    const list = log.events.slice(-limit);
+    const text = list.map((e) => `${e.seq} ${e.type} a=${e.a ?? 0} b=${e.b ?? 0}`).join("\n");
+    return { content: [{ type: "text", text: `${text}\nlast_seq=${log.last_seq}` }] };
+  },
+);
 
 server.prompt("clean_room", "Clean a room with TrashBot safely", async () => ({
   messages: [{ role: "user", content: { type: "text", text: CLEAN_ROOM_PROMPT } }],

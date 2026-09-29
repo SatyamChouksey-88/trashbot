@@ -29,9 +29,30 @@ BrainCalib calibLoad() {
     return c;
 }
 
-bool calibSaveKey(const char* key, float value) {
+bool calibSaveFloat(const char* key, float value) {
     xSemaphoreTake(mtx, portMAX_DELAY);
     prefs.putFloat(key, value);
     xSemaphoreGive(mtx);
     return true;
+}
+
+bool calibSaveInt(const char* key, int value) {
+    xSemaphoreTake(mtx, portMAX_DELAY);
+    prefs.putInt(key, value);
+    xSemaphoreGive(mtx);
+    return true;
+}
+
+void calibToJson(JsonObject obj) {
+    BrainCalib c = calibLoad();
+    obj["zone_xmin"] = c.zone_xmin;
+    obj["zone_xmax"] = c.zone_xmax;
+    obj["zone_ymin"] = c.zone_ymin;
+    obj["servo_down"] = c.servo_down;
+    obj["servo_carry"] = c.servo_carry;
+    obj["servo_tip"] = c.servo_tip;
+    obj["turn_dps"] = c.turn_dps;
+    obj["fwd_cps"] = c.fwd_cps;
+    obj["self_echo_cm"] = c.self_echo_cm;
+    obj["max_duty"] = c.max_duty;
 }

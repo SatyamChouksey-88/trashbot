@@ -9,9 +9,10 @@ export class RobotClient {
     private token = process.env.TRASHBOT_TOKEN ?? "",
   ) {}
 
-  private headers(): HeadersInit {
+  private headers(json = false): HeadersInit {
     const h: Record<string, string> = {};
     if (this.token) h["X-TrashBot-Token"] = this.token;
+    if (json) h["Content-Type"] = "application/json";
     return h;
   }
 
@@ -30,15 +31,14 @@ export class RobotClient {
       clearTimeout(t);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
-    } catch (e) {
+    } catch {
       if (retry) return this.getJson(path, false);
       throw this.friendlyNetworkError();
     }
   }
 
   async getStatus() {
-    const data = await this.getJson("/api/status");
-    return statusSchema.parse(data);
+    return statusSchema.parse(await this.getJson("/api/status"));
   }
 
   async getPhoto(): Promise<Buffer> {
@@ -55,7 +55,7 @@ export class RobotClient {
     }
   }
 
-  async postJson(path: string, body: unknown, retries = 0): Promise<unknown> {
+  async postJson(path: string, body: unknown = {}, retries = 0): Promise<unknown> {
     const url = `${this.baseUrl}${path}`;
     let lastErr: unknown;
     for (let i = 0; i <= retries; i++) {
@@ -64,13 +64,14 @@ export class RobotClient {
         const t = setTimeout(() => ctrl.abort(), DEFAULT_TIMEOUT_MS);
         const res = await fetch(url, {
           method: "POST",
-          headers: { ...this.headers(), "Content-Type": "application/json" },
+          headers: this.headers(true),
           body: JSON.stringify(body),
           signal: ctrl.signal,
         });
         clearTimeout(t);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
+        const text = await res.text();
+        return text ? JSON.parse(text) : {};
       } catch (e) {
         lastErr = e;
       }
@@ -82,8 +83,23 @@ export class RobotClient {
     return this.postJson("/api/stop", {}, 2);
   }
 
+  async setMode(mode: "idle" | "manual") {
+    return this.postJson("/api/mode", { mode });
+  }
+
+  async drive(direction: string, speed: number, duration_ms: number) {
+    await this.setMode("manual");
+    const map: Record<string, [number, number]> = {
+      forward: [speed, speed],
+      back: [-speed, -speed],
+      left: [-speed, speed],
+      right: [speed, -speed],
+    };
+    const [left, right] = map[direction] ?? [0, 0];
+    return this.postJson("/api/drive", { left, right, duration_ms });
+  }
+
   async getLog(since = 0) {
-    const data = await this.getJson(`/api/log?since=${since}`);
-    return logSchema.parse(data);
+    return logSchema.parse(await this.getJson(`/api/log?since=${since}`));
   }
 }

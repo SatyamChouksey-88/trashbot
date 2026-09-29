@@ -1,0 +1,32 @@
+{
+  "manifest_version": "0.2",
+  "name": "trashbot",
+  "display_name": "TrashBot",
+  "version": "0.1.0",
+  "description": "Control TrashBot robot dustbin via MCP",
+  "author": { "name": "Satyam Chouksey" },
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "TRASHBOT_URL": "${user_config.robot_url}",
+        "TRASHBOT_TOKEN": "${user_config.token}"
+      }
+    }
+  },
+  "user_config": {
+    "robot_url": {
+      "type": "string",
+      "title": "Robot URL",
+      "default": "http://trashbot.local"
+    },
+    "token": {
+      "type": "string",
+      "title": "API token (optional)",
+      "sensitive": true
+    }
+  }
+}
