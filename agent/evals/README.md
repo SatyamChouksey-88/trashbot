@@ -1,8 +1,8 @@
 # TrashBot agent evals
 
-## Manual (Claude Desktop)
+## Manual (MCP client)
 
-1. Install the `.mcpb` package (see `docs/AGENT.md`).
+1. Install the `.mcpb` package (see `docs/reference/AGENT.md`).
 2. For each image in `photos/trash/` and `photos/keep/`, ask: "Is this trash or keep?"
 3. Record results:
 
@@ -13,11 +13,11 @@
 
 **Most important metric:** false "trash" on keep items.
 
-## API eval
+## API eval (optional)
 
 ```bash
-export ANTHROPIC_API_KEY=...
+export ANTHROPIC_API_KEY=...   # optional API eval key; billed by your provider
 npm run eval
 ```
 
-Without `ANTHROPIC_API_KEY`, the script exits 0 with instructions.
+Without that key set, the script exits 0 with instructions.

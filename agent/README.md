@@ -24,10 +24,10 @@ npm run mock
 TRASHBOT_URL=http://127.0.0.1:8787 npm start
 ```
 
-## Package for Claude Desktop
+## MCP bundle (optional desktop app)
 
 ```bash
 npm run pack
 ```
 
-Install the generated `agent.mcpb` (see `docs/AGENT.md`).
+Install the generated `agent.mcpb` (see `docs/reference/AGENT.md`).

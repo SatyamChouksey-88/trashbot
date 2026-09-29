@@ -93,7 +93,7 @@ With `TRASHBOT_NO_NATIVE=1`, `run.py` skips the suite (CI builds `sim_brain` and
 | Check | How |
 |-------|-----|
 | Bandit + confidence core | `python tools/run_core_tests.py` (`test_recipe_bandit`, `test_confidence_zone`, `test_target`) |
-| Model gate scripts | `python -m pytest tools/test_model_gate.py -q` |
+| Model gate scripts | `python -m pytest tools/tests/test_model_gate.py -q` |
 | Learning API | Mock `GET /api/learning`; UI Learning tab (e2e) |
 | Hardware | Enable `LEARNING_ENABLED` only after baseline missions on device |
 
@@ -112,4 +112,4 @@ With `TRASHBOT_NO_NATIVE=1`, `run.py` skips the suite (CI builds `sim_brain` and
 | Embedded JS fresh | `python tools/embed_lang.py --check` |
 | MCP `run_command` | `cd agent && npm test` (`bolo.test.ts`) |
 | E2E Bolo box | CI `e2e` job (`bolo.spec.ts`) |
-| Hardware G11 | `docs/MASTER_PROMPT_V4.md` §8 checklist (wheels up first) |
+| Hardware G11 | `docs/dev/prompts/MASTER_PROMPT_V4.md` §8 checklist (wheels up first) |

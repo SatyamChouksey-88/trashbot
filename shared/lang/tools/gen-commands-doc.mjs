@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// Generates docs/COMMANDS.md (the bilingual command cheat sheet) from trashbot-lang.mjs.
+// Generates docs/reference/COMMANDS.md (the bilingual command cheat sheet) from trashbot-lang.mjs.
 // Usage (from the repo root):
-//   node shared/lang/tools/gen-commands-doc.mjs           write docs/COMMANDS.md
-//   node shared/lang/tools/gen-commands-doc.mjs --check   exit 1 if docs/COMMANDS.md is stale
+//   node shared/lang/tools/gen-commands-doc.mjs           write docs/reference/COMMANDS.md
+//   node shared/lang/tools/gen-commands-doc.mjs --check   exit 1 if docs/reference/COMMANDS.md is stale
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { EXAMPLES, LIMITS, LANG_VERSION } from '../trashbot-lang.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
-export const DEFAULT_OUT = resolve(here, '../../../docs/COMMANDS.md');
+export const DEFAULT_OUT = resolve(here, '../../../docs/reference/COMMANDS.md');
 
 const DESC = {
   STOP: ['Stops the motors now. Always wins, in any sentence.', 'Motor turant band. Kisi bhi sentence me ho, ye jeetega.'],

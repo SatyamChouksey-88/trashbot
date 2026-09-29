@@ -4,7 +4,7 @@
 
 You are the lead engineer for TrashBot. This document is complete: every choice you would normally ask me about has already been made below. Build the whole project, end to end, on your own, in the folder that is open in Cursor.
 
-First read the whole document once. Then save it **verbatim** as `docs/MASTER_PROMPT.md` and execute Section 13 phase by phase.
+First read the whole document once. Then save it **verbatim** as `docs/dev/prompts/MASTER_PROMPT.md` and execute Section 13 phase by phase.
 
 ---
 
@@ -40,12 +40,12 @@ First read the whole document once. Then save it **verbatim** as `docs/MASTER_PR
    4. cheapest,
    5. easiest to test.
 
-   Write the decision in `docs/DECISIONS.md` (what, why, how to change it) and continue.
-3. **Things only a human can do** (buying, wiring, flashing, taking photos, clicking in Edge Impulse Studio, installing into Claude Desktop) → write exact numbered steps in `docs/USER_STEPS.md`, use clearly named stubs/mocks so builds and tests still pass, and continue.
-4. **A command fails** → read the error, fix, retry, up to 3 different fixes. Still failing → isolate it, record it in `docs/DECISIONS.md` and under "Known issues" in `docs/PLAN.md`, and continue with the next item. One failure never stops the whole run.
-5. **After every phase:** build → test → fix → commit → update the progress log at the top of `docs/PLAN.md` → start the next phase immediately.
+   Write the decision in `docs/project/DECISIONS.md` (what, why, how to change it) and continue.
+3. **Things only a human can do** (buying, wiring, flashing, taking photos, clicking in Edge Impulse Studio, installing into Claude Desktop) → write exact numbered steps in `docs/getting-started/USER_STEPS.md`, use clearly named stubs/mocks so builds and tests still pass, and continue.
+4. **A command fails** → read the error, fix, retry, up to 3 different fixes. Still failing → isolate it, record it in `docs/project/DECISIONS.md` and under "Known issues" in `docs/project/PLAN.md`, and continue with the next item. One failure never stops the whole run.
+5. **After every phase:** build → test → fix → commit → update the progress log at the top of `docs/project/PLAN.md` → start the next phase immediately.
 6. Your **only** final message is the report in Section 16.
-7. **If interrupted:** when I type `continue`, re-read `docs/MASTER_PROMPT.md` and the progress log in `docs/PLAN.md`, then resume from the first unfinished item.
+7. **If interrupted:** when I type `continue`, re-read `docs/dev/prompts/MASTER_PROMPT.md` and the progress log in `docs/project/PLAN.md`, then resume from the first unfinished item.
 
 > The robot's AI agent (Gate 7) is designed to ask the user at runtime when it isn't sure whether something is trash. That is product behaviour. The rules above are about **you**, while building.
 
@@ -80,7 +80,7 @@ First read the whole document once. Then save it **verbatim** as `docs/MASTER_PR
 | No host C++ compiler for native tests (Windows)? | Try installing one non-interactively (for example WinLibs or MSYS2 via winget). If that's impossible, keep the tests, document the install in `USER_STEPS.md`, and continue. |
 | Git identity not set? | Set it for this repo only: name `Satyam Chouksey`, email `satyamchouksey9907@gmail.com`. |
 | Push to GitHub / create a remote? | Never. Local commits only. |
-| Licence for our code? | MIT — `LICENSE` at the root, "Copyright (c) 2026 Satyam Chouksey". Third-party code keeps its own licence in `third_party/`. |
+| Licence for our code? | MIT — `LICENSE` at the root, "Copyright (c) 2026 Satyam Chouksey". Third-party code keeps its own licence in `THIRD_PARTY_NOTICES.md`. |
 | Can I delete files? | Only `references/` and files you created. Never anything outside the project folder. |
 | Can I install packages? | Yes: pip packages, project-local npm packages, PlatformIO platforms and libraries, a host compiler if needed. No global system-setting changes. |
 | Large downloads (toolchains ~1 GB)? | Fine. |
@@ -100,7 +100,7 @@ TrashBot is a small, low-budget robot dustbin (about ₹3,500–4,300 in parts).
 
 **Owner:** QA automation engineer (Node.js, Java, Playwright), new to embedded C++. Write readable code, comments that explain *why*, strong automated tests, and beginner-proof docs.
 
-**Out of scope:** catching thrown trash mid-air — research notes only (`docs/FUTURE_CATCH_MODE.md`).
+**Out of scope:** catching thrown trash mid-air — research notes only (`docs/project/FUTURE_CATCH_MODE.md`).
 
 ### Gates (product plan)
 
@@ -111,10 +111,10 @@ TrashBot is a small, low-budget robot dustbin (about ₹3,500–4,300 in parts).
 | G3 It chases trash | Search + approach + align | In scoop position for ≥ 8/10 items placed ≤ 1.5 m away |
 | G4 It scoops into the bin | Scoop + tip + verify | ≥ 8/10 paper balls end up in the bin |
 | G5 Full autonomy | The whole loop | Clears ≥ 4/5 scattered paper balls with no help |
-| G6 Extras | Event log, scenario suite, clap-to-start | Scenario results recorded in `docs/TESTING.md` |
+| G6 Extras | Event log, scenario suite, clap-to-start | Scenario results recorded in `docs/reference/TESTING.md` |
 | G7 Agent | Robot API + MCP server + mock robot + `.mcpb` | From one chat message: checks the area, collects trash, leaves ≥ 4/5 look-alike non-trash items alone, recovers from one failed scoop, reports |
 
-You implement **all software for G1–G7 now**. In `docs/PLAN.md` each gate has two statuses: *software* (yours) and *hardware test* (mine — always "pending user test").
+You implement **all software for G1–G7 now**. In `docs/project/PLAN.md` each gate has two statuses: *software* (yours) and *hardware test* (mine — always "pending user test").
 
 ---
 
@@ -171,7 +171,7 @@ Verify this map against Seeed's pinout sheet and Mjrovai's code. Change it only 
 - Python ≥ 3.10; PlatformIO Core (latest via pip); `platform = espressif32 @ 7.0.1`; ArduinoJson 7.x (pinned exactly after the first install).
 - Node 20 LTS or newer; TypeScript 5.x; `@modelcontextprotocol/sdk` latest 1.x; the zod version the SDK expects; vitest; tsx; `@anthropic-ai/mcpb` via npx.
 - Python tools: `requests`, `pillow`, `tqdm`; dev: `pytest`.
-- Record every resolved version in `docs/DECISIONS.md`.
+- Record every resolved version in `docs/project/DECISIONS.md`.
 
 ---
 
@@ -227,7 +227,7 @@ Verify this map against Seeed's pinout sheet and Mjrovai's code. Change it only 
     test/*.test.ts
     evals/README.md  evals/photos/trash/.gitkeep  evals/photos/keep/.gitkeep  evals/run_api_eval.ts
   dataset/README.md                    everything else under dataset/ is gitignored
-  third_party/<repo-name>/LICENSE
+  THIRD_PARTY_NOTICES.md
 ```
 
 **Rule:** `lib/core` never includes `Arduino.h` or any ESP header. The `native` env compiles only `lib/core` plus the tests. `lib/hw`, `lib/net` and `lib/store` are thin wrappers around core logic.
@@ -441,7 +441,7 @@ Serial banner (fw version, PSRAM size, camera sensor, detector name + `model_loa
 
 ---
 
-## 7. Robot HTTP API (contract — write it once in `docs/API.md` and `agent/src/contract.ts`)
+## 7. Robot HTTP API (contract — write it once in `docs/reference/API.md` and `agent/src/contract.ts`)
 
 JSON everywhere. Errors: `{"error": "message"}` with 400 (bad body), 401 (bad token), 409 (not allowed in the current mode, e.g. drive while auto), 503 (camera unavailable).
 
@@ -548,8 +548,8 @@ You control TrashBot, a small robot dustbin, through tools. People's belongings 
 ### 8.5 Packaging (`.mcpb`) and Claude Desktop
 - `manifest.json` for the `mcpb` CLI: name `trashbot`, display name "TrashBot", Node server entry `dist/index.js`, user config `robot_url` (default `http://trashbot.local`) and `token` (optional, sensitive) mapped to `TRASHBOT_URL` / `TRASHBOT_TOKEN`. Validate it with the CLI.
 - `npm run pack` produces `trashbot.mcpb`. If packaging fails, document the manual `claude_desktop_config.json` entry (command `node`, absolute path to `dist/index.js`, env vars) instead.
-- Installation steps go in `USER_STEPS.md` and `docs/AGENT.md`, following Anthropic's help article "Getting Started with Local MCP Servers on Claude Desktop". Never edit my Claude Desktop settings.
-- `docs/AGENT.md` must explain that Gate 7 needs the robot on the home WiFi (station mode via `secrets.h`), because the laptop needs internet for Claude.
+- Installation steps go in `USER_STEPS.md` and `docs/reference/AGENT.md`, following Anthropic's help article "Getting Started with Local MCP Servers on Claude Desktop". Never edit my Claude Desktop settings.
+- `docs/reference/AGENT.md` must explain that Gate 7 needs the robot on the home WiFi (station mode via `secrets.h`), because the laptop needs internet for Claude.
 
 ### 8.6 Evals
 - `evals/photos/trash/` and `evals/photos/keep/` (empty, with `.gitkeep`), plus `evals/README.md`: how to run the manual eval in Claude Desktop (show each photo, ask trash-or-keep, record the answers) and a results table template (accuracy, false "trash" on keep items — the most important number).
@@ -569,7 +569,7 @@ You control TrashBot, a small robot dustbin, through tools. People's belongings 
 
 ## 10. Reference repositories — download, reuse, delete
 
-Run `git clone --depth 1 <url> references/<name>` for each, and record `git -C references/<name> rev-parse HEAD` in `docs/REFERENCES.md`. If a clone fails, note it and continue.
+Run `git clone --depth 1 <url> references/<name>` for each, and record `git -C references/<name> rev-parse HEAD` in `docs/project/REFERENCES.md`. If a clone fails, note it and continue.
 
 | # | Repository | Licence (verify the actual LICENSE file) | Take | Ignore |
 |---|---|---|---|---|
@@ -580,18 +580,18 @@ Run `git clone --depth 1 <url> references/<name>` for each, and record `git -C r
 | 5 | https://github.com/dngvmnh/Trash_Collecting_Robot | Apache-2.0 | Running detection and obstacle checks concurrently; the camera-distance idea (adapted to vertical image position — FOMO has no real box sizes) | Jetson, TinyYOLOv3, RPLidar, CAD |
 | 6 | https://github.com/NVIDIA-Jetson/jetson-trashformers | mixed → **read only** | The pick-up trigger idea (notes only) | All code |
 | 7 | https://github.com/pedropro/TACO | MIT for code; record the data licence from its README | Annotation format + download approach → `tools/taco_subset.py` | Mask R-CNN detector, notebooks |
-| 8 | https://github.com/ConeNDev/AI-Powered-Thrash-Can | none found → **read only** | HSV + ballistic-fit ideas → `docs/FUTURE_CATCH_MODE.md` in your own words | All code |
-| 9 | https://github.com/Sanjith1009/trash-catcher | none found → **read only** | Notes for `docs/FUTURE_CATCH_MODE.md` | All code |
+| 8 | https://github.com/ConeNDev/AI-Powered-Thrash-Can | none found → **read only** | HSV + ballistic-fit ideas → `docs/project/FUTURE_CATCH_MODE.md` in your own words | All code |
+| 9 | https://github.com/Sanjith1009/trash-catcher | none found → **read only** | Notes for `docs/project/FUTURE_CATCH_MODE.md` | All code |
 | 10 | https://github.com/Vedant28082005/esp32-mcp-server | none found → **read only** | How ESP32 HTTP endpoints map to MCP tools | All code |
 
 **Licence rules**
-- MIT / Apache-2.0: you may copy and adapt. In each copied or adapted file keep the original copyright/licence header and add `Adapted from <repo> (<licence>). Changes: <summary>`. Save the licence text to `third_party/<repo-name>/LICENSE`.
+- MIT / Apache-2.0: you may copy and adapt. In each copied or adapted file keep the original copyright/licence header and add `Adapted from <repo> (<licence>). Changes: <summary>`. Save the licence text to `THIRD_PARTY_NOTICES.md`.
 - No licence / unclear: never copy code or long passages; write your own implementation and notes in your own words.
 - If a repo's real LICENSE differs from this table, trust the file and apply the stricter rule.
 
-**Then:** write in `docs/REFERENCES.md`, for each repo, the commit, licence, what you reused and where it lives now, and what you ignored and why. **Delete the whole `references/` folder.**
+**Then:** write in `docs/project/REFERENCES.md`, for each repo, the commit, licence, what you reused and where it lives now, and what you ignored and why. **Delete the whole `references/` folder.**
 
-`docs/FUTURE_CATCH_MODE.md` (own words, marked "not implemented"): an external camera mounted high, directly above the thrower's spot, so each throw appears as a nearly straight line in the image; fit the track after 4–6 frames; predict where it crosses the bin's line; the bin drives along a taped line like a goalkeeper; start with a physics fit, then add a learned correction from logged throws; realistic limits (gentle lobs, roughly 30–40 cm of bin travel).
+`docs/project/FUTURE_CATCH_MODE.md` (own words, marked "not implemented"): an external camera mounted high, directly above the thrower's spot, so each throw appears as a nearly straight line in the image; fit the track after 4–6 frames; predict where it crosses the bin's line; the bin drives along a taped line like a goalkeeper; start with a physics fit, then add a learned correction from logged throws; realistic limits (gentle lobs, roughly 30–40 cm of bin travel).
 
 ---
 
@@ -633,16 +633,16 @@ Run `git clone --depth 1 <url> references/<name>` for each, and record `git -C r
 
 ## 12. Documents to write (all mandatory)
 - `README.md` — what it is, architecture (Mermaid: robot reflexes ↔ HTTP API ↔ MCP server ↔ Claude), BOM, quick start, gate status table, links to every doc.
-- `docs/PLAN.md` — progress log at the top (dated entries), gate table (software status / hardware test status), known issues.
-- `docs/USER_STEPS.md` — one ordered checklist from buying parts to the Gate 7 demo: tools to install; assembly; setting buck voltages with a multimeter; wiring per `WIRING.md`; first power-on checks; flashing (`python -m platformio run -d firmware -e xiao -t upload`, USB-C, power switch OFF, how to enter bootloader mode if the upload fails); joining the `TrashBot-XXXX` WiFi and opening `192.168.4.1`; G1 checklist; calibration; photo collection; Edge Impulse training and export (project named `TrashBot`); dropping the library into `firmware/lib/`; G2–G6 tests; filling `secrets.h` for home WiFi; building and installing the `.mcpb`; the G7 demo and eval.
-- `docs/DECISIONS.md` — every decision and assumption (date, decision, why, how to change).
-- `docs/REFERENCES.md` — Section 10 results.
-- `docs/API.md` — Section 7, with an example for each route in both PowerShell (`Invoke-RestMethod`) and `curl`.
-- `docs/WIRING.md` — pin table, power table, ASCII wiring diagram, safety notes (buck voltages, common ground, echo divider, heatsink, capacitors, servo on its own supply, USB + battery warning).
-- `docs/TESTING.md` — per-gate checklists (G1: each direction, turn in place, obstacle stop at 15 cm, release → stops within about 0.3 s, STOP button, ESTOP; …) and the scenario suite table (bright light, dim light, near a wall, in a corner, two items close together, look-alike non-trash next to trash, cluttered floor, dark vs light floor) with columns: setup, expected, actual, pass/fail, notes.
-- `docs/DATASET.md` — ≥ 150 photos with trash taken **by the robot's own camera at its mounting height** + ≥ 50 without trash; leave-alone items (phone, keys, slippers, charger, earphones) included **unlabelled**; variety of light, floor, distance (20–100 cm) and angle; one label `trash`; Edge Impulse steps (free Developer plan; project **TrashBot**; upload; label; impulse = 96×96 image, object detection, FOMO MobileNetV2 0.35; try grayscale if too slow; target F1 ≥ 0.8; export Arduino library, quantised int8); where to put the library and how to rebuild; optional TACO experiment (with vs without, compare F1); check Edge Impulse's current docs for a recommended Arduino-ESP32 core version and note it.
-- `docs/AGENT.md` — architecture, tools table, the `clean_room` prompt, WiFi requirement, install steps, troubleshooting, evals.
-- `docs/FUTURE_CATCH_MODE.md` — Section 10.
+- `docs/project/PLAN.md` — progress log at the top (dated entries), gate table (software status / hardware test status), known issues.
+- `docs/getting-started/USER_STEPS.md` — one ordered checklist from buying parts to the Gate 7 demo: tools to install; assembly; setting buck voltages with a multimeter; wiring per `WIRING.md`; first power-on checks; flashing (`python -m platformio run -d firmware -e xiao -t upload`, USB-C, power switch OFF, how to enter bootloader mode if the upload fails); joining the `TrashBot-XXXX` WiFi and opening `192.168.4.1`; G1 checklist; calibration; photo collection; Edge Impulse training and export (project named `TrashBot`); dropping the library into `firmware/lib/`; G2–G6 tests; filling `secrets.h` for home WiFi; building and installing the `.mcpb`; the G7 demo and eval.
+- `docs/project/DECISIONS.md` — every decision and assumption (date, decision, why, how to change).
+- `docs/project/REFERENCES.md` — Section 10 results.
+- `docs/reference/API.md` — Section 7, with an example for each route in both PowerShell (`Invoke-RestMethod`) and `curl`.
+- `docs/getting-started/WIRING.md` — pin table, power table, ASCII wiring diagram, safety notes (buck voltages, common ground, echo divider, heatsink, capacitors, servo on its own supply, USB + battery warning).
+- `docs/reference/TESTING.md` — per-gate checklists (G1: each direction, turn in place, obstacle stop at 15 cm, release → stops within about 0.3 s, STOP button, ESTOP; …) and the scenario suite table (bright light, dim light, near a wall, in a corner, two items close together, look-alike non-trash next to trash, cluttered floor, dark vs light floor) with columns: setup, expected, actual, pass/fail, notes.
+- `docs/reference/DATASET.md` — ≥ 150 photos with trash taken **by the robot's own camera at its mounting height** + ≥ 50 without trash; leave-alone items (phone, keys, slippers, charger, earphones) included **unlabelled**; variety of light, floor, distance (20–100 cm) and angle; one label `trash`; Edge Impulse steps (free Developer plan; project **TrashBot**; upload; label; impulse = 96×96 image, object detection, FOMO MobileNetV2 0.35; try grayscale if too slow; target F1 ≥ 0.8; export Arduino library, quantised int8); where to put the library and how to rebuild; optional TACO experiment (with vs without, compare F1); check Edge Impulse's current docs for a recommended Arduino-ESP32 core version and note it.
+- `docs/reference/AGENT.md` — architecture, tools table, the `clean_room` prompt, WiFi requirement, install steps, troubleshooting, evals.
+- `docs/project/FUTURE_CATCH_MODE.md` — Section 10.
 - `AGENTS.md` — a short version of Sections 0, 14 and the `lib/core` purity rule.
 - `dataset/README.md` — folder conventions.
 
@@ -650,16 +650,16 @@ Run `git clone --depth 1 <url> references/<name>` for each, and record `git -C r
 
 ## 13. Phases, commands and commits
 
-Before Phase 0, create the checklist of all phases in `docs/PLAN.md` and tick items off as you go.
+Before Phase 0, create the checklist of all phases in `docs/project/PLAN.md` and tick items off as you go.
 
 **Phase 0 — Environment and skeleton**
 1. `git --version`, `python --version`, `node --version`, `npm --version` → install anything missing (Section 1).
 2. `python -m pip install --upgrade pip platformio` → `python -m platformio --version`.
-3. `git init`; set the repo-local identity if none exists; create `.gitignore`, `.gitattributes`, `LICENSE`, `AGENTS.md`, the `docs/` skeleton, and `docs/MASTER_PROMPT.md` (this document, verbatim).
+3. `git init`; set the repo-local identity if none exists; create `.gitignore`, `.gitattributes`, `LICENSE`, `AGENTS.md`, the `docs/` skeleton, and `docs/dev/prompts/MASTER_PROMPT.md` (this document, verbatim).
 4. Commit `chore: project skeleton`.
 
 **Phase 1 — References**
-1. Section 10 end to end, including `third_party/` licences, `docs/REFERENCES.md` and `docs/FUTURE_CATCH_MODE.md`.
+1. Section 10 end to end, including `THIRD_PARTY_NOTICES.md` licences, `docs/project/REFERENCES.md` and `docs/project/FUTURE_CATCH_MODE.md`.
 2. Delete `references/`.
 3. Commit `chore: reuse reference code with attribution, remove downloads`.
 
@@ -688,7 +688,7 @@ Before Phase 0, create the checklist of all phases in `docs/PLAN.md` and tick it
 **Phase 6 — Gate 7 agent**
 1. `agent/` per Section 8: contract, client, tools, prompt, mock robot, tests, manifest, evals.
 2. `npm install`, `npm run build`, `npm test`, `npm run pack` (or the documented fallback).
-3. `docs/AGENT.md`, G7 sections of `TESTING.md` and `USER_STEPS.md`; finalise `API.md`.
+3. `docs/reference/AGENT.md`, G7 sections of `TESTING.md` and `USER_STEPS.md`; finalise `API.md`.
 4. Commit `feat(agent): MCP server, mock robot, evals and .mcpb package (Gate 7)`.
 
 **Phase 7 — CI and final pass**
@@ -702,7 +702,7 @@ Before Phase 0, create the checklist of all phases in `docs/PLAN.md` and tick it
 ## 14. MUST / MUST NOT
 
 **MUST**
-- Save this document as `docs/MASTER_PROMPT.md` first; re-read it at the start of every phase.
+- Save this document as `docs/dev/prompts/MASTER_PROMPT.md` first; re-read it at the start of every phase.
 - Keep `lib/core` free of Arduino/ESP headers and fully tested.
 - Put every number in `config.h` (units in names or comments); calibration overrides via NVS.
 - Route every motor command through `safety_logic`.
@@ -736,7 +736,7 @@ Before Phase 0, create the checklist of all phases in `docs/PLAN.md` and tick it
 - [ ] `agent/`: `npm ci`, `npm run build`, `npm test` → all pass; `npm run mock` starts
 - [ ] `trashbot.mcpb` built, or the manual config fallback documented
 - [ ] `python -m pytest tools/tests -q` → all pass
-- [ ] `references/` deleted; `REFERENCES.md` and `third_party/` complete
+- [ ] `references/` deleted; `docs/project/REFERENCES.md` and `THIRD_PARTY_NOTICES.md` complete
 - [ ] Every document in Section 12 exists and is filled in
 - [ ] Every gate: software status + "hardware test: pending user test"
 - [ ] One commit per phase; working tree clean

@@ -2,7 +2,7 @@
 
 Node 20+ MCP server in `agent/`. It talks to the robot over HTTP only; firmware safety is unchanged.
 
-## Gate 7 in Cursor (primary — office laptop)
+## Gate 7 in Cursor (primary dev path)
 
 1. Build the bundled server: `cd agent && npm ci && npm run build`.
 2. Start the mock robot in a terminal: `npm run mock` (listens on http://localhost:8787).
@@ -39,7 +39,7 @@ For a physical robot on your LAN later, change `TRASHBOT_URL` in `.cursor/mcp.js
 - Modes: `read_only` (info + **stop always works**), `dry_run` (default), `full` (motion).
 - Set `TRASHBOT_LANG=auto|en|hi` in `.cursor/mcp.json`.
 - Chat is **not** an emergency stop — use the phone **■ RUKO · STOP** button or power switch.
-- Operator behaviour when *you* chat with the robot: `docs/OPERATOR.md`.
+- Operator behaviour when *you* chat with the robot: `docs/reference/OPERATOR.md`.
 
 ## Lessons memory
 
@@ -63,9 +63,9 @@ npm run verify:mcpb   # smoke: mock + initialize + tools/list
 
 The `.mcpb` contains a single bundled `dist/index.js` (all runtime deps inlined via esbuild).
 
-### Claude Desktop (optional — personal PC only)
+### MCP desktop app (optional)
 
-Not available on locked-down work laptops. On your own machine you can install `trashbot.mcpb` per Anthropic’s local MCP guide, or use the same `node agent/dist/index.js` entry with env vars.
+On a machine that allows local MCP servers, install the `trashbot.mcpb` bundle or run `node agent/dist/index.js` with the same env vars as `.cursor/mcp.json`.
 
 ## Mock robot
 

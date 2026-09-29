@@ -2,11 +2,14 @@
 
 ## Progress log
 
-**v4 active** — executing `docs/MASTER_PROMPT_V4.md` (phases J–N). v3 (A–I) complete.
+Software build v2–v4 complete; hardware gates pending owner.
 
 | Date | Phase | Notes |
 |------|-------|-------|
-| 2026-09-29 | v3-A | EPDR: `TRASHBOT_NO_NATIVE=1`; CI runs zig core + sim. Agent dry_run + reconnect backoff. |
+| 2026-09-30 | docs | Repo layout + README cleanup; `THIRD_PARTY_NOTICES.md`. |
+| 2026-09-30 | v4-J..N | Bolo shared/lang, firmware embed + aliases, MCP run_command, CI G11. |
+| 2026-09-29 | 0–7 | v2 software gates. Native Unity on some Windows hosts blocked (no g++). |
+| 2026-09-29 | v3-A | `TRASHBOT_NO_NATIVE=1`; CI runs zig core + sim. Agent dry_run + reconnect backoff. |
 | 2026-09-29 | v3-B | JSON scenarios (16), fault engine, episode runner, `sim_latest.md` + fault matrix; CI `--suite all`. |
 | 2026-09-29 | v3-C | G8: motor lease, WDT heartbeats, stuck detect, recovery manager, SAFE_PAUSE, `/api/health`, invariant tripwire. |
 | 2026-09-29 | v3-D | G0 POST, bring-up wizard tab + API, pre-flight on clean, `release_check.py` full gate. |
@@ -15,8 +18,6 @@
 | 2026-09-29 | v3-G | Recipe bandit, `/api/learning`, mistake stubs, eval_model + model_gate. |
 | 2026-09-29 | v3-H | E2E health + learning tabs. |
 | 2026-09-29 | v3-I | `V3_FINAL_REPORT.md`, docs pass, release_check GO (software). |
-| 2026-09-30 | v4-J..N | Bolo shared/lang, firmware embed + aliases, MCP run_command, CI G11. |
-| 2026-09-29 | 0–7 | Software build complete. Native Unity on Windows host blocked (no g++). Hardware tests pending user. |
 
 ## Phase checklist
 
@@ -55,7 +56,7 @@
 - [x] Native tests documented / run in CI (not on this Windows host)
 - [x] `agent/`: build + test; mock server; `npm run pack`
 - [x] `python -m pytest tools -q`
-- [x] `references/` removed; `REFERENCES.md` + `third_party/`
+- [x] `references/` removed; `REFERENCES.md` + `THIRD_PARTY_NOTICES.md
 - [x] Section 12 docs present
 - [x] All gates: software done; hardware **pending user test**
 

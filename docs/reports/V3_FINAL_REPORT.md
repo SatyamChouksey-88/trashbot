@@ -1,7 +1,7 @@
 # TrashBot v3 — final software report
 
 **Date:** 2026-09-29  
-**Verdict:** **GO** for software release (hardware validation still user-owned per `docs/USER_STEPS.md`).
+**Verdict:** **GO** for software release (hardware validation still user-owned per `docs/getting-started/USER_STEPS.md`).
 
 ## Phases delivered (A–I)
 
@@ -35,6 +35,6 @@ See `docs/sim_latest.md` (generated in CI). Core paths: obstacle, stuck, bumper,
 - Edge Impulse model export → `TrashBot_inferencing` (optional).
 - Set `TRASHBOT_MODE=full` only after `plan_cleaning` + user OK.
 
-## CI / office laptop
+## CI / restricted dev machine
 
 Set `TRASHBOT_NO_NATIVE=1` locally; rely on GitHub Actions for zig core tests, sim, and e2e.

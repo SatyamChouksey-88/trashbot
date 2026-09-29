@@ -17,7 +17,7 @@ Ideas for later, ordered by value for money. **Nothing here is built in v4.** Sa
 | A3 | **"Desi kachra" dataset** | Add typical Indian litter to the dataset: chips packets, chai cups, biscuit wrappers, bottle caps, tissue, toffee wrappers. Better detection at home. | M (photos) | Keep the v3 model regression gate (F1 and false-trash rate must not get worse). |
 | A4 | **Telegram bot** — status, photo, stop only | `/status`, `/photo`, `/ruko` from anywhere. | M | Home WiFi + internet; token in `secrets.h`. **No remote driving** on purpose: you can't see the room. |
 | A5 | **Scheduled cleaning** | "Roz shaam 7 baje saaf karo" from Settings. | M | Needs NTP time (home WiFi). Runs only if health OK, bring-up done, pre-flight passes; the phone gets a notice. Think about kids and pets first. |
-| A6 | **Visual go-to (beta)** | "sofa ki taraf jao" via the agent looking at photos step by step. | XS | Already described in `docs/OPERATOR.md`; slow and approximate; `full` mode only. |
+| A6 | **Visual go-to (beta)** | "sofa ki taraf jao" via the agent looking at photos step by step. | XS | Already described in `docs/reference/OPERATOR.md`; slow and approximate; `full` mode only. |
 | A7 | **More languages** | Marathi / Bengali / Tamil words in the lexicon. | S per language | Same safety tests; add golden cases per language. |
 
 ## B. Cheap hardware
@@ -39,7 +39,7 @@ Ideas for later, ordered by value for money. **Nothing here is built in v4.** Sa
 | C2 | **Small gripper arm** for bottles and cans | The scoop can't lift tall items. Roughly ₹800–1,500 in servos and parts. |
 | C3 | **Mapping** (LiDAR + a companion computer) for "kitchen me jao" | Several thousand rupees, and a much bigger software change. |
 | C4 | **Alexa / Google Home** start/stop (e.g. via Sinric Pro) | Cloud + home WiFi; same safety caveats as A4/A5. |
-| C5 | **Catch mode** | See `docs/FUTURE_CATCH_MODE.md`. |
+| C5 | **Catch mode** | See `docs/project/FUTURE_CATCH_MODE.md`. |
 | C6 | **OTA updates** | Out of scope until the robot is stable (v3 decision). USB flashing only. |
 
 ## Suggested order

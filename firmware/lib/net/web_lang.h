@@ -3,7 +3,7 @@
 #pragma once
 #include <pgmspace.h>
 
-// /lang.mjs  ←  shared/lang/trashbot-lang.mjs  (82935 bytes, sha256 a1e865875423b263)
+// /lang.mjs  ←  shared/lang/trashbot-lang.mjs  (82945 bytes, sha256 f2f625c655f48d62)
 static const char WEB_LANG_MJS[] PROGMEM = R"TBJS(/*
  * TrashBot "Bolo" — bilingual command parser (Hinglish + English + Devanagari)
  * ---------------------------------------------------------------------------
@@ -1441,7 +1441,7 @@ export function formatError(status, lang = 'hi', body = null) {
 }
 
 // ---------------------------------------------------------------------------
-// Examples — used for docs/COMMANDS.md and tested to parse as listed
+// Examples — used for docs/reference/COMMANDS.md and tested to parse as listed
 // ---------------------------------------------------------------------------
 export const EXAMPLES = Object.freeze([
   { intent: 'STOP', hi: ['ruko', 'ruk jao', 'bas karo', 'band karo', 'रुको'], en: ['stop', 'wait', 'hold on'] },

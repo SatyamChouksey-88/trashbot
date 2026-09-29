@@ -8,7 +8,7 @@ Delivered **pre-built and pre-tested** with the v4 prompt. One source of truth, 
 | `executor.mjs` | Cursor agent (MCP) | Runs a message: stop-first, `read_only` / `dry_run` / `full`, pending questions, learned phrases. Takes an injected `http` function. |
 | `web/bolo-ui.mjs` | phone browser (robot serves it as `/bolo-ui.mjs`) | The "Bolo" box: text input, chips, big STOP, settings, learned phrases, history. |
 | `web/dev-server.mjs` | laptop | Try the Bolo box with a fake robot: `node shared/lang/web/dev-server.mjs` → http://localhost:8790. Nothing moves. |
-| `tools/gen-commands-doc.mjs` | laptop / CI | Writes `docs/COMMANDS.md` (the cheat sheet); `--check` fails if stale. |
+| `tools/gen-commands-doc.mjs` | laptop / CI | Writes `docs/reference/COMMANDS.md` (the cheat sheet); `--check` fails if stale. |
 | `*.d.mts` | TypeScript | Types for the agent. |
 
 Zero dependencies. Node ≥ 18 for tests. **No native executables are built** (office-laptop safe).
@@ -32,7 +32,7 @@ cd shared/lang
 npm test            # golden (325 phrases) + property/fuzz + lexicon lint + executor  (~8 s)
 npm run test:fuzz   # 50,000 random inputs × 3 seeds per safety property
 npm run test:web    # browser test of the Bolo box (needs playwright-core + Chromium; skips if missing)
-npm run docs:check  # docs/COMMANDS.md up to date?
+npm run docs:check  # docs/reference/COMMANDS.md up to date?
 ```
 
 `npm test` only uses `node --test` — nothing to install.
@@ -42,7 +42,7 @@ npm run docs:check  # docs/COMMANDS.md up to date?
 1. Add the spelling to the right list in `LEXICON` (`en` or `hi`). One token per entry.
 2. Add a golden case to `test/golden.json` for the new phrase (what it must do).
 3. `npm test` — the lint test fails if the word creates a dangerous overlap (e.g. a stop word that is also an action word).
-4. `npm run docs` to refresh `docs/COMMANDS.md`, then `python tools/embed_lang.py` to refresh the firmware header.
+4. `npm run docs` to refresh `docs/reference/COMMANDS.md`, then `python tools/embed_lang.py` to refresh the firmware header.
 
 Never loosen S1–S7 to make a phrase work; add words or teach a learned phrase instead.
 

@@ -2,9 +2,9 @@
 
 **Date:** 2026-09-30  
 **CI (main):** success on run `36640451045` (`abbd1f6`) — all jobs green including `e2e` (17 tests), `shared-lang`, `firmware-test`, `agent-verify`.  
-**Verdict:** **GO** for software; **G11 hardware** remains user checklist in `docs/TESTING.md` / `docs/USER_STEPS.md` §9.
+**Verdict:** **GO** for software; **G11 hardware** remains user checklist in `docs/reference/TESTING.md` / `docs/getting-started/USER_STEPS.md` §9.
 
-## Test counts (this session, office laptop)
+## Test counts (this session, restricted dev machine)
 
 | Suite | Result |
 |-------|--------|
@@ -45,8 +45,8 @@ Audit + blockers: `151ea07` … `3d9bcdf`; blocker fix `7d038ef`. Post-audit v4 
 
 ## For you next (hardware, in order)
 
-1. **G11 checklist** (`docs/TESTING.md`): wheels up — `ruko` / `रुको`, negation, move/turn calibration, voice via Gboard, learned phrases after reboot, Cursor `/trashbot` in `dry_run` then `full`.
-2. **G0–G7** gates on real hardware (`docs/USER_STEPS.md`).
+1. **G11 checklist** (`docs/reference/TESTING.md`): wheels up — `ruko` / `रुको`, negation, move/turn calibration, voice via Gboard, learned phrases after reboot, Cursor `/trashbot` in `dry_run` then `full`.
+2. **G0–G7** gates on real hardware (`docs/getting-started/USER_STEPS.md`).
 3. Run `release_check.py` on a machine with full Node PATH before field flash if you want local GO (optional; CI already green).
 
 ## NOT VERIFIED (needs hardware or full dev PC)

@@ -2,14 +2,14 @@
 
 **Extends v2. Same zero-questions rules. Office-laptop safe.**
 
-This document upgrades the existing TrashBot repository. `docs/MASTER_PROMPT.md` (v2) stays the base: everything in it still applies unless this document changes it. First save this file verbatim as `docs/MASTER_PROMPT_V3.md`, add "v3 active" at the top of the progress log in `docs/PLAN.md`, then execute Section 14 phase by phase.
+This document upgrades the existing TrashBot repository. `docs/dev/prompts/MASTER_PROMPT.md` (v2) stays the base: everything in it still applies unless this document changes it. First save this file verbatim as `docs/dev/prompts/MASTER_PROMPT_V3.md`, add "v3 active" at the top of the progress log in `docs/project/PLAN.md`, then execute Section 14 phase by phase.
 
 ---
 
 ## 0. Rules (in addition to v2 Section 0)
 
-1. **Never ask me anything.** Never wait for approval. Never end a message with a question. When something isn't specified, decide with the v2 priority order (safety → fits the hardware → simplest → cheapest → easiest to test) and record it in `docs/DECISIONS.md`.
-2. **Office laptop:** no admin rights, no installers, no WSL, no Claude Desktop. Use only pip (user install or a venv), project-local npm, PlatformIO and Cursor. If something needs admin rights, skip it, write the alternative in `docs/USER_STEPS.md`, and continue.
+1. **Never ask me anything.** Never wait for approval. Never end a message with a question. When something isn't specified, decide with the v2 priority order (safety → fits the hardware → simplest → cheapest → easiest to test) and record it in `docs/project/DECISIONS.md`.
+2. **Office laptop:** no admin rights, no installers, no WSL, no Claude Desktop. Use only pip (user install or a venv), project-local npm, PlatformIO and Cursor. If something needs admin rights, skip it, write the alternative in `docs/getting-started/USER_STEPS.md`, and continue.
 3. **Already done?** If an item exists from an earlier round, verify it against this spec, fill the gaps, and don't redo it.
 4. **Every new feature follows the Feature Template (Section 2).** No exceptions.
 5. **Safety is never learned, tuned by profiles, or relaxed by the agent.** Hard limits live in `config.h` and are enforced in firmware.
@@ -32,8 +32,8 @@ A feature is done only when it has all of these:
 2. Pure logic in `lib/core` with unit tests, plus at least one property test if it can affect motion.
 3. A simulation scenario (`tools/sim/scenarios/*.json`) covering the happy path and at least one failure path.
 4. Events with **reason codes** (Section 6.2), so every decision is explainable in the log.
-5. API changes are additive: new fields only; any rename/removal bumps `api_version` in `/api/status`. Update `docs/API.md`, `agent/src/contract.ts` and the contract tests together.
-6. Docs: rows in `docs/TESTING.md`, and steps in `docs/USER_STEPS.md` if a human is involved.
+5. API changes are additive: new fields only; any rename/removal bumps `api_version` in `/api/status`. Update `docs/reference/API.md`, `agent/src/contract.ts` and the contract tests together.
+6. Docs: rows in `docs/reference/TESTING.md`, and steps in `docs/getting-started/USER_STEPS.md` if a human is involved.
 
 Copy this template into `AGENTS.md`.
 
@@ -54,7 +54,7 @@ Copy this template into `AGENTS.md`.
      }
    }
    ```
-   `docs/AGENT.md`: Cursor is the main path (enable the server in Cursor's MCP settings, start the mock, run the `clean_room` prompt). Claude Desktop becomes an optional section for a personal machine.
+   `docs/reference/AGENT.md`: Cursor is the main path (enable the server in Cursor's MCP settings, start the mock, run the `clean_room` prompt). Claude Desktop becomes an optional section for a personal machine.
 2. **Fix the `.mcpb` for later use:** bundle all runtime dependencies into `dist/index.js` with esbuild, name the output `trashbot.mcpb`, and add `npm run verify:mcpb` (unpack into a temp folder, start it against the mock, check MCP `initialize` + `tools/list` over stdio).
 3. **Core tests without admin rights:** `python -m pip install ziglang`. Add `tools/run_core_tests.py`: compile every `firmware/test/*` suite with `python -m ziglang c++ -std=c++17` against `firmware/lib/core` and a vendored Unity (MIT, `firmware/test/unity/` with its licence), run each executable, print a summary, exit non-zero on failure. Keep the PlatformIO `native` job in CI.
 4. **Finish v2 Section 11:** the missing brain scenarios (STOP and ESTOP from every state, MANUAL command expiry, full 360° search → forward step, camera unavailable → DONE, time and item limits) and the missing agent tests (robot offline, timeout, bad JSON, token header, `take_photo` data starts with FF D8, stop retries, contract check of every mock route, `MOCK_FAIL_EVERY` shows `item_failed`).
@@ -200,7 +200,7 @@ In agent mode, uncertain targets are left for the agent to judge from a photo.
 ### 7.2 TRASH / KEEP / UNKNOWN (agent side)
 - **UNKNOWN is never scooped**; the agent asks the user.
 - Protected list (always KEEP): phone, wallet, keys, earphones, cables, chargers, documents, money, medicine, jewellery, remote, toys, pet items, clothing, electronics.
-- Put both in the `clean_room` prompt and in `docs/AGENT.md`.
+- Put both in the `clean_room` prompt and in `docs/reference/AGENT.md`.
 
 ### 7.3 Agent modes and dry run (MCP server)
 - `TRASHBOT_MODE` = `read_only` | `dry_run` | `full` (default `dry_run`):
@@ -328,11 +328,11 @@ Randomised with fixed seeds, ≥ 10,000 cases each, in the core tests:
 
 ## 11. References round 2
 
-Clone each into `references/` (`--depth 1`), read, write notes into `docs/REFERENCES.md` (commit, licence, what we learned, where it applies), then delete `references/` again. **Verify each actual LICENSE file.** Copy code only from MIT / Apache-2.0 repos, with attribution. Everything else is ideas only, in your own words.
+Clone each into `references/` (`--depth 1`), read, write notes into `docs/project/REFERENCES.md` (commit, licence, what we learned, where it applies), then delete `references/` again. **Verify each actual LICENSE file.** Copy code only from MIT / Apache-2.0 repos, with attribution. Everything else is ideas only, in your own words.
 
 | Repository | Licence (as seen) | Use |
 |---|---|---|
-| https://github.com/Tiny-Prism-Labs/ESP32-S3_MultiImpulse | Apache-2.0 | Keyword spotting + FOMO together on this exact board (ESP-IDF 4.4, Edge Impulse multi-impulse) → write `docs/FUTURE_VOICE.md` ("TrashBot, clean" wake word). Not implemented in v3. |
+| https://github.com/Tiny-Prism-Labs/ESP32-S3_MultiImpulse | Apache-2.0 | Keyword spotting + FOMO together on this exact board (ESP-IDF 4.4, Edge Impulse multi-impulse) → write `docs/project/FUTURE_VOICE.md` ("TrashBot, clean" wake word). Not implemented in v3. |
 | https://github.com/mpous/xiao-esp32s3-camera-edgeimpulse | none found → ideas only | Exact-board Edge Impulse workflow and PSRAM notes → improve `DATASET.md` |
 | https://github.com/WAH-ISHAN/smart-trashcan-server | unclear → ideas only | Same pipeline shape (QVGA → 96×96 FOMO, AP web UI with box overlay, vision/motion split) → validation notes |
 | https://github.com/neyamulhasan/Automatic-Garbage-Collector-with-Live-Image-Detection-using-ESP32 | **GPL-3.0 → ideas only, never copy code** (it would force GPL on our MIT project) | Comms-loss failsafe, collection mechanism ideas |
@@ -340,7 +340,7 @@ Clone each into `references/` (`--depth 1`), read, write notes into `docs/REFERE
 | https://github.com/robotmcp/ros-mcp-server | Apache-2.0 | Tool design for robot state discovery and monitoring; note that its permissions are still planned (ours exist) |
 | https://github.com/jonajoy142/embodied-agent-chaos | none found → ideas only | Fault classes for LLM-driven robots (sensor lag, grip slip, unreachable targets, corrupted planner output) → mapped into 9.3 |
 | https://github.com/madou003/ESP32_TrashAI | MIT | Classification on a classic ESP32 at about 2 s per image → note in `DECISIONS.md` why FOMO detection fits a moving robot better |
-| https://github.com/bhoke/FOMO | MIT | FOMO in Keras (MobileNetV2/V3, MobileViT) → `docs/FUTURE_MODEL.md` for training outside Edge Impulse |
+| https://github.com/bhoke/FOMO | MIT | FOMO in Keras (MobileNetV2/V3, MobileViT) → `docs/project/FUTURE_MODEL.md` for training outside Edge Impulse |
 | https://github.com/San279/object-detect-FOMO-stream-Esp32 and https://github.com/San279/train-object-detect-FOMO-esp32 | check the files | FOMO streaming and training tips → `DATASET.md` |
 
 Skip https://github.com/abdullah-engg/Smart-Waste-Segregation (its ML runs on a Raspberry Pi with a fixed sorting bin — not our architecture); mention it in one line.
@@ -448,4 +448,4 @@ The office laptop's security software (WatchGuard EPDR) blocks every new .exe we
 3. Make sure the GitHub Actions workflow runs the core C++ tests and the simulator suite, so nothing is lost.
 4. Keep doing everything else here: PlatformIO firmware build, pytest, agent npm build and tests.
 5. Playwright: try the browser install once. If the security software blocks it, skip e2e locally and keep it in CI only. Never retry blocked programs.
-6. Record all of this in docs/DECISIONS.md and docs/USER_STEPS.md, then continue with v3.
+6. Record all of this in docs/project/DECISIONS.md and docs/getting-started/USER_STEPS.md, then continue with v3.

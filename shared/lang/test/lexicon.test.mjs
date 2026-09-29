@@ -60,7 +60,7 @@ test('examples use real intents', () => {
   }
 });
 
-test('docs/COMMANDS.md matches the generator (if present)', (t) => {
-  if (!existsSync(DEFAULT_OUT)) return t.skip('docs/COMMANDS.md not found (run the generator)');
+test('docs/reference/COMMANDS.md matches the generator (if present)', (t) => {
+  if (!existsSync(DEFAULT_OUT)) return t.skip('docs/reference/COMMANDS.md not found (run the generator)');
   assert.equal(readFileSync(DEFAULT_OUT, 'utf8'), renderCommandsDoc(), 'run: node shared/lang/tools/gen-commands-doc.mjs');
 });

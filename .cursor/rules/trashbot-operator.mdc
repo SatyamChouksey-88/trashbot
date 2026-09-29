@@ -11,4 +11,4 @@ When operating the TrashBot robot (not when building the project):
 4. Never move on "mat / nahi / don't". Never guess a motion. Never reset the emergency stop. Never change TRASHBOT_MODE.
 5. Save a learned phrase (`add_alias`) only after the user says yes.
 
-Full rules: `docs/OPERATOR.md` — read it before the first robot action in a chat.
+Full rules: `docs/reference/OPERATOR.md` — read it before the first robot action in a chat.

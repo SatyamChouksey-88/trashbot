@@ -1,6 +1,6 @@
 # TrashBot repository audit report
 
-**Date:** 2026-09-30 (office laptop, `TRASHBOT_NO_NATIVE=1`)  
+**Date:** 2026-09-30 (restricted dev machine, `TRASHBOT_NO_NATIVE=1`)  
 **Scope:** AUDIT ONLY per Part A checklist (v2 + v3 + v4 Bolo as present in tree).  
 **Auditor:** Cursor agent session (no hardware flash, no native Unity/sim `.exe` locally).
 
@@ -27,7 +27,7 @@
 
 1. **CI `e2e` job** — **FIXED.** `e2e/tests/ui.spec.ts` uses `data-testid` (`drive-stop`, `auto-clean`, `calib-zone-xmin`, `drive-estop`) on `web_index.h` without changing visible labels. Calibrate test waits for `dialog` before accept. Re-verify on CI after push.
 2. **`PIN_BUMPER` pin map** — **FIXED.** `PIN_BUMPER = 43` (`config.h`); `test_pin_map` Unity + `tools/tests/test_pin_map.py` assert unique GPIOs and bumper ≠ echo (44).
-3. **Git remote vs Part A checklist** — **FIXED (documented).** `docs/DECISIONS.md` paragraph + `README.md` “GitHub and pushing”; remote retained for CI, push is owner/IT choice.
+3. **Git remote vs Part A checklist** — **FIXED (documented).** `docs/project/DECISIONS.md` paragraph + `README.md` “GitHub and pushing”; remote retained for CI, push is owner/IT choice.
 
 ### Historical (pre-fix)
 
@@ -39,12 +39,12 @@
 
 - `.gitignore` omits audit-listed patterns `*.obj`, `.zig-cache/` (present: `.gitignore:1-21`).
 - No `[env:xiao_debug]` in `firmware/platformio.ini` — cannot ship a separate debug env with fault endpoints; release `xiao` has `DEBUG_API = false` (`config.h:116`) which is correct for production.
-- `docs/TESTING.md` / e2e still describe pre-v4 button names (doc drift).
+- `docs/reference/TESTING.md` / e2e still describe pre-v4 button names (doc drift).
 - `release_check.py` not re-run locally on this machine (PATH/npm constraints documented in prior sessions).
 
 ## Notes
 
-- v3 phases A–I and v4 J–N are marked complete in `docs/PLAN.md`; hardware gates remain user-pending.
+- v3 phases A–I and v4 J–N are marked complete in `docs/project/PLAN.md`; hardware gates remain user-pending.
 - Pre-fix CI: all jobs **success** except **e2e** on `main` push `2ee4fcc`. Post-fix e2e: see latest Actions run after `7d038ef`.
 
 ---
@@ -63,12 +63,12 @@
 | `__pycache__`, `.pytest_cache/` | PASS | `.gitignore:17-18` |
 | `*.exe`, `*.pdb`, sim artifacts | PARTIAL | `*.pdb`, `sim_brain.exe` in `.gitignore:7-8`; **`*.obj`**, **`.zig-cache/`** missing |
 | No secrets/binaries tracked | PASS | `git ls-files "*.exe" "*.pdb" "firmware/include/secrets.h"` → empty |
-| WiFi default password only in docs | PASS | `trashbot123` in `docs/USER_STEPS.md`, `config.h:61` (documented default AP password, not home WiFi) |
+| WiFi default password only in docs | PASS | `trashbot123` in `docs/getting-started/USER_STEPS.md`, `config.h:61` (documented default AP password, not home WiFi) |
 | `secrets.h` not committed | PASS | gitignored; `secrets.example.h` has empty tokens |
 | LICENSE MIT 2026 Satyam Chouksey | PASS | `LICENSE:1-3` |
-| `third_party/` license files | PASS | e.g. `third_party/TACO/LICENSE`, etc. (5 LICENSE files) |
+| `THIRD_PARTY_NOTICES.md license files | PASS | e.g. `THIRD_PARTY_NOTICES.md (TACO section`, etc. (5 LICENSE files) |
 | `references/` deleted | PASS | folder absent; `.gitignore:1` still lists it |
-| GPL / unlicensed copy check | NOT VERIFIED | `docs/REFERENCES.md` not line-audited against every source file this session |
+| GPL / unlicensed copy check | NOT VERIFIED | `docs/project/REFERENCES.md` not line-audited against every source file this session |
 
 ---
 
@@ -105,7 +105,7 @@
 |-------|--------|----------|
 | `python -m pytest tools -q` | PASS | 14 passed (2026-09-30) |
 | `agent` npm ci/build/test | PASS | 27 passed (vitest) |
-| Playwright e2e local | NOT VERIFIED | Not run on office laptop this session (CI is source of truth) |
+| Playwright e2e local | NOT VERIFIED | Not run locally this session (CI is source of truth) |
 | Playwright CI | **FAIL** | Run `36634404796`: 3 failed, 8 passed in `ui.spec.ts` |
 | Firmware Unity `native` | NOT VERIFIED | `TRASHBOT_NO_NATIVE=1`; CI job `firmware-test` **success** on same run |
 | Simulator / `run_core_tests.py` | NOT VERIFIED | Local; CI `tools` job **success** |
@@ -123,7 +123,7 @@
 
 ### v2 §11 / v3 §9.4 gaps (high level)
 
-- **NOT VERIFIED:** exhaustive crosswalk to every named test in `docs/MASTER_PROMPT.md` §11 and invariants I1–I8 — not re-enumerated line-by-line; native + sim coverage exists in CI.
+- **NOT VERIFIED:** exhaustive crosswalk to every named test in `docs/dev/prompts/MASTER_PROMPT.md` §11 and invariants I1–I8 — not re-enumerated line-by-line; native + sim coverage exists in CI.
 - **MISSING (process):** no automated test proving `PIN_BUMPER` ≠ motor pins when `BUMPER_ENABLED=true`.
 
 ### Weak / brittle tests
@@ -160,7 +160,7 @@
 | Mock robot routes | PASS | `agent/mock-robot/server.ts` aliases + status |
 | Full 4-way JSON shape audit | NOT VERIFIED | Every error code 400/401/409/503 not exhaustively diffed |
 | Token header when `API_TOKEN` set | PASS | `http_api.cpp:28-30`, `checkToken` on `/api/*` handlers |
-| v4-only routes documented in `docs/API.md` | PASS | aliases section present |
+| v4-only routes documented in `docs/reference/API.md` | PASS | aliases section present |
 
 ---
 
@@ -202,7 +202,7 @@
 | `FakeDetector` default | PASS | `main.cpp:34` |
 | EI header gated | PASS | `config.h:119` `TRASHBOT_EI_HEADER`; no `TrashBot_inferencing/` in tree (gitignored) |
 | `tools/collect_photos.py`, `taco_subset.py` | NOT VERIFIED | not executed offline this session |
-| `docs/DATASET.md` | PASS | file exists |
+| `docs/reference/DATASET.md` | PASS | file exists |
 
 ---
 
@@ -212,7 +212,7 @@
 |-------|--------|----------|
 | No committed secrets | PASS | ls-files + grep |
 | `secrets.example.h` empty | PASS | `API_TOKEN ""` |
-| API token optional documented | PASS | `docs/API.md:4` |
+| API token optional documented | PASS | `docs/reference/API.md:4` |
 | AP password documented as changeable default | PASS | `USER_STEPS.md`, master prompt |
 | No CDN in web UI | PASS | inline HTML/JS in `web_index.h`; `web_lang.h` comment “no CDN” |
 
@@ -224,10 +224,10 @@ None (report only; no rule-3a/3b code or doc edits).
 
 ---
 
-## Not verified here (office laptop limits)
+## Not verified here (restricted dev machine limits)
 
 - Native Unity tests (`platformio test -e native`) and `sim_brain` executable.
-- Playwright browser install/run locally (WatchGuard / policy).
+- Playwright browser install/run locally (may be blocked on some hosts).
 - Full manual API 4-way contract diff for every error body.
 - `collect_photos.py` / network download failure paths.
 - Hardware gates G0–G11 on physical robot.
@@ -239,13 +239,13 @@ None (report only; no rule-3a/3b code or doc edits).
 1. Update `e2e/tests/ui.spec.ts` selectors to match v4 UI (`■ RUKO · STOP`, `Saaf karo · Clean`, calibrate dialog order).
 2. Set `PIN_BUMPER` to **43** (or remove duplicate `6`) and align `WIRING.md` + comment.
 3. Add `*.obj` and `.zig-cache/` to `.gitignore`.
-4. Align `docs/TESTING.md` UI checklist strings with `web_index.h`.
+4. Align `docs/reference/TESTING.md` UI checklist strings with `web_index.h`.
 5. Re-run GitHub Actions on `main` and confirm all jobs green.
 6. Run `python tools/release_check.py` locally on a machine with full PATH or add optional CI job.
 7. Optional: add `[env:xiao_debug]` with `DEBUG_API` if spec still required for bench debug only.
 8. User: complete Part C hardware checklist before flash.
-9. User: confirm IT policy before further pushes to GitHub.
-10. Part B: after blockers 1–2 cleared, execute remaining v4 verification per `docs/AUDIT_REPORT.md` + `MASTER_PROMPT_V4.md` §11.
+9. User: push from a network/host that allows `git push` when ready.
+10. Part B: after blockers 1–2 cleared, execute remaining v4 verification per `docs/reports/AUDIT_REPORT.md` + `MASTER_PROMPT_V4.md` §11.
 
 ---
 

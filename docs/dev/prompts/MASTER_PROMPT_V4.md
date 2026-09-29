@@ -2,14 +2,14 @@
 
 **Extends v2 + v3. Same zero-questions rules. Office-laptop safe. Most of the code is delivered pre-built and pre-tested.**
 
-This file arrived in a package together with ready code. Execute Section 12 phase by phase. Add "v4 active" at the top of the progress log in `docs/PLAN.md` first.
+This file arrived in a package together with ready code. Execute Section 12 phase by phase. Add "v4 active" at the top of the progress log in `docs/project/PLAN.md` first.
 
 ---
 
 ## 0. Rules (in addition to v2 §0, v3 §0 and the office-laptop rules)
 
-1. **Never ask me anything while building.** Never wait for approval, never end a message with a question. Undecided details: use the v2 priority order (safety → fits the hardware → simplest → cheapest → easiest to test) and record them in `docs/DECISIONS.md`.
-   The **operator** role in `docs/OPERATOR.md` is different: it's how the AI behaves when I *operate the robot* in a chat, and it does ask when a robot command is unclear. It never applies to you while you build.
+1. **Never ask me anything while building.** Never wait for approval, never end a message with a question. Undecided details: use the v2 priority order (safety → fits the hardware → simplest → cheapest → easiest to test) and record them in `docs/project/DECISIONS.md`.
+   The **operator** role in `docs/reference/OPERATOR.md` is different: it's how the AI behaves when I *operate the robot* in a chat, and it does ask when a robot command is unclear. It never applies to you while you build.
 2. **Delivered files are pre-tested — integrate, don't rewrite.** The files listed in Section 2 passed 359 automated tests, a TypeScript/vitest/esbuild integration check and 9 browser tests before delivery. Don't port, copy or re-implement them (e.g. no TypeScript copy of the parser). You may fix a real bug only by first adding a failing test (a golden case in `shared/lang/test/golden.json` or a unit test), then the fix; record it in `DECISIONS.md`. **Never delete or weaken a golden case, a safety property (S1–S7) or a limit.**
 3. **Office laptop:** keep `TRASHBOT_NO_NATIVE=1`. Build **no** native executables here. Everything new in v4 runs with `node`, `npm`, `python` and PlatformIO's firmware build. The new C++ core tests run in GitHub Actions only.
 4. **v3 first.** If v3 phases (A–I) aren't finished yet, finish them first, then start v4. Phase J (package check-in) may run any time.
@@ -58,12 +58,12 @@ This file arrived in a package together with ready code. Execute Section 12 phas
 | `shared/lang/web/test/bolo-ui.e2e.mjs` | Browser test vs the fake robot (skips without playwright-core) | Port scenarios to `e2e/` (Phase N) |
 | `shared/lang/tools/gen-commands-doc.mjs`, `tools/fuzz.mjs` | Cheat-sheet generator, heavy fuzz runner | Use in release_check |
 | `tools/embed_lang.py` + `tools/tests/test_embed_lang.py` | Generates `firmware/lib/net/web_lang.h` from the two JS files; `--check` mode | Run + add to release_check |
-| `docs/COMMANDS.md` | Bilingual command cheat sheet (generated) | Link from README |
-| `docs/OPERATOR.md` | Operator rules for Cursor chats | Link from AGENTS.md / AGENT.md |
-| `docs/UPGRADES.md` | Upgrade backlog (not built in v4) | Link from README |
+| `docs/reference/COMMANDS.md` | Bilingual command cheat sheet (generated) | Link from README |
+| `docs/reference/OPERATOR.md` | Operator rules for Cursor chats | Link from AGENTS.md / AGENT.md |
+| `docs/project/UPGRADES.md` | Upgrade backlog (not built in v4) | Link from README |
 | `.cursor/commands/trashbot.md`, `ruko.md`, `saaf-karo.md` | Slash commands `/trashbot`, `/ruko`, `/saaf-karo` | Keep |
 | `.cursor/rules/trashbot-operator.mdc` | "Apply intelligently" rule for robot chats | Keep |
-| `docs/MASTER_PROMPT_V4.md` | This file | — |
+| `docs/dev/prompts/MASTER_PROMPT_V4.md` | This file | — |
 
 ---
 
@@ -223,7 +223,7 @@ Robot errors are normal results (`isError: false`). Only exceptions are errors.
 **`list_aliases {}`** and **`remove_alias { phrase }`**.
 
 ### 4.5 Mode fix (v3 gap)
-`stop` and `estop` work in **every** mode, including `read_only`. Stopping must never be blocked. Update the mode table in `docs/AGENT.md` and the tests.
+`stop` and `estop` work in **every** mode, including `read_only`. Stopping must never be blocked. Update the mode table in `docs/reference/AGENT.md` and the tests.
 
 ### 4.6 Existing tools: bilingual descriptions and safer schemas
 Append these trigger phrases to the existing descriptions:
@@ -265,8 +265,8 @@ For any other instruction, first try run_command with the user's exact words.
 ---
 
 ## 5. Cursor operator setup
-- `AGENTS.md`: add "Operating the robot from chat: see `docs/OPERATOR.md` (operator role ≠ build role; while building, never ask)."
-- `docs/AGENT.md`: new section "Talking to TrashBot in Hinglish / English". Cover:
+- `AGENTS.md`: add "Operating the robot from chat: see `docs/reference/OPERATOR.md` (operator role ≠ build role; while building, never ask)."
+- `docs/reference/AGENT.md`: new section "Talking to TrashBot in Hinglish / English". Cover:
   - `/trashbot`, `/ruko`, `/saaf-karo`, and `@trashbot-operator`;
   - modes;
   - Cursor's tool-approval prompts stay on for motion. If Cursor offers "always allow" for single tools, it's fine for `stop`, `estop`, `get_status`, `take_photo` only;
@@ -276,8 +276,8 @@ For any other instruction, first try run_command with the user's exact words.
 ---
 
 ## 6. Docs
-- `README.md`: a "Bolo — Hinglish + English commands" section with 5 examples, a link to `docs/COMMANDS.md`, the dev preview (`cd shared/lang && npm run dev`), and a link to `docs/UPGRADES.md`.
-- `docs/DECISIONS.md`:
+- `README.md`: a "Bolo — Hinglish + English commands" section with 5 examples, a link to `docs/reference/COMMANDS.md`, the dev preview (`cd shared/lang && npm run dev`), and a link to `docs/project/UPGRADES.md`.
+- `docs/project/DECISIONS.md`:
   - JS-at-the-edges;
   - no in-page mic (HTTPS + internet) → keyboard mic;
   - stop words win even inside questions (fail-safe; "why did you stop" also stops);
@@ -285,9 +285,9 @@ For any other instruction, first try run_command with the user's exact words.
   - aliases are data-only;
   - `move` schema tightened;
   - stop allowed in `read_only`.
-- `docs/API.md`: `/lang.mjs`, `/bolo-ui.mjs`, `/api/aliases*`, the new status fields.
-- `docs/TESTING.md`: G11 rows. `docs/USER_STEPS.md`: G11 steps. `CHANGELOG.md`: v4. `docs/PLAN.md`: G11.
-- `docs/COMMANDS.md` stays generated. After any lexicon change, run `node shared/lang/tools/gen-commands-doc.mjs`.
+- `docs/reference/API.md`: `/lang.mjs`, `/bolo-ui.mjs`, `/api/aliases*`, the new status fields.
+- `docs/reference/TESTING.md`: G11 rows. `docs/getting-started/USER_STEPS.md`: G11 steps. `CHANGELOG.md`: v4. `docs/project/PLAN.md`: G11.
+- `docs/reference/COMMANDS.md` stays generated. After any lexicon change, run `node shared/lang/tools/gen-commands-doc.mjs`.
 
 ---
 
@@ -314,7 +314,7 @@ For any other instruction, first try run_command with the user's exact words.
 | | Pass criteria |
 |---|---|
 | **Software (you)** | All tests above green; `release_check.py` → GO; the parity test passes; `verify:mcpb` runs `run_command` against the mock. |
-| **Hardware (me)** | The checklist below, in `docs/TESTING.md`. |
+| **Hardware (me)** | The checklist below, in `docs/reference/TESTING.md`. |
 
 **G11 hardware checklist** (wheels in the air first, then on the floor):
 1. Phone: start "50 cm aage", then type "ruko" → it stops within about 0.5 s.
@@ -340,7 +340,7 @@ For any other instruction, first try run_command with the user's exact words.
 - Let the agent reset the emergency stop, change `TRASHBOT_MODE`, or save a learned phrase without a "yes".
 - Add CDN scripts, an in-page mic/Web Speech recognition, or native executables built on the office laptop.
 - Break existing tabs, buttons, API routes or tests.
-- Implement anything from `docs/UPGRADES.md`.
+- Implement anything from `docs/project/UPGRADES.md`.
 - Push to any remote.
 
 ---

@@ -1,21 +1,43 @@
+# Reference clones (removed after notes)
 references/
+
+# Firmware / embedded builds
 .pio/
+firmware/lib/TrashBot_inferencing/
+
+# Node / front-end
 node_modules/
 dist/
+agent/coverage/
+e2e/node_modules/
+e2e/test-results/
+
+# Python
+__pycache__/
+.pytest_cache/
 tools/.core_test_build/
+
+# Secrets and local env
+firmware/include/secrets.h
+.env*
+agent/memory/lessons.json
+
+# Datasets (large binaries)
+dataset/*
+!dataset/README.md
+
+# MCP bundle artifacts
+*.mcpb
+
+# Native sim / test binaries
 tools/sim/sim_brain
 tools/sim/sim_brain.exe
 *.pdb
-e2e/test-results/
-e2e/node_modules/
-dataset/*
-!dataset/README.md
-firmware/include/secrets.h
-.env*
-*.mcpb
-firmware/lib/TrashBot_inferencing/
-__pycache__/
-.pytest_cache/
-agent/coverage/
-agent/memory/lessons.json
+*.obj
+.zig-cache/
+
+# Generated reports (CI writes fresh)
+docs/reports/sim_latest.md
+
+# Logs
 *.log

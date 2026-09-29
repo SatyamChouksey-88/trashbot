@@ -1435,7 +1435,7 @@ export function formatError(status, lang = 'hi', body = null) {
 }
 
 // ---------------------------------------------------------------------------
-// Examples — used for docs/COMMANDS.md and tested to parse as listed
+// Examples — used for docs/reference/COMMANDS.md and tested to parse as listed
 // ---------------------------------------------------------------------------
 export const EXAMPLES = Object.freeze([
   { intent: 'STOP', hi: ['ruko', 'ruk jao', 'bas karo', 'band karo', 'रुको'], en: ['stop', 'wait', 'hold on'] },
