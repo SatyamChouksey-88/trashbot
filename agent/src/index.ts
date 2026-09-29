@@ -80,6 +80,36 @@ server.tool(
   },
 );
 
+server.tool(
+  "move",
+  "Drive a set distance in cm (manual)",
+  { distance_cm: z.number().min(-100).max(100), speed: z.number().min(10).max(80).default(40) },
+  async ({ distance_cm, speed }) => {
+    const r = await client.move(distance_cm, speed);
+    return { content: [{ type: "text", text: JSON.stringify(r) }] };
+  },
+);
+
+server.tool(
+  "turn",
+  "Turn in place by degrees (manual)",
+  { degrees: z.number().min(-180).max(180), speed: z.number().min(10).max(80).default(40) },
+  async ({ degrees, speed }) => {
+    const r = await client.turn(degrees, speed);
+    return { content: [{ type: "text", text: JSON.stringify(r) }] };
+  },
+);
+
+server.tool(
+  "scoop",
+  "Move the dustpan arm",
+  { action: z.enum(["down", "carry", "tip", "cycle"]) },
+  async ({ action }) => {
+    await client.scoop(action);
+    return { content: [{ type: "text", text: `Scoop ${action} sent.` }] };
+  },
+);
+
 server.prompt("clean_room", "Clean a room with TrashBot safely", async () => ({
   messages: [{ role: "user", content: { type: "text", text: CLEAN_ROOM_PROMPT } }],
 }));

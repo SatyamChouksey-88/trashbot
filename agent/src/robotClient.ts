@@ -102,4 +102,19 @@ export class RobotClient {
   async getLog(since = 0) {
     return logSchema.parse(await this.getJson(`/api/log?since=${since}`));
   }
+
+  async move(distance_cm: number, speed = 40) {
+    await this.setMode("manual");
+    return this.postJson("/api/move", { distance_cm, speed });
+  }
+
+  async turn(degrees: number, speed = 40) {
+    await this.setMode("manual");
+    return this.postJson("/api/turn", { degrees, speed });
+  }
+
+  async scoop(action: "down" | "carry" | "tip" | "cycle") {
+    await this.setMode("manual");
+    return this.postJson("/api/scoop", { action });
+  }
 }

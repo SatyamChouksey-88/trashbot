@@ -148,6 +148,24 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { ok: true });
   }
 
+  if (req.method === "POST" && url.pathname === "/api/drive") {
+    if (mode !== "manual") return json(res, 409, { error: "manual only" });
+    return json(res, 200, { ok: true });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/move") {
+    const body = JSON.parse(await readBody(req));
+    return json(res, 200, { ok: true, duration_ms: Math.abs(body.distance_cm ?? 10) * 40 });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/turn") {
+    return json(res, 200, { ok: true, duration_ms: 500 });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/scoop") {
+    return json(res, 200, { ok: true });
+  }
+
   json(res, 404, { error: "not found" });
 });
 

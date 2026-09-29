@@ -1,6 +1,18 @@
 # TrashBot
 
-Small ESP32-S3 robot dustbin: on-device vision, autonomous scooping, and an optional Claude MCP agent on your laptop.
+Small ESP32-S3 robot dustbin with on-device vision and an optional Claude MCP agent on your laptop.
+
+```mermaid
+flowchart LR
+  subgraph robot [Robot]
+    CAM[Camera + FOMO]
+    BR[Brain / safety]
+    CAM --> BR
+  end
+  BR --> API[HTTP API]
+  API --> MCP[MCP server]
+  MCP --> Claude[Claude]
+```
 
 ## Quick start (software)
 
@@ -12,17 +24,32 @@ python -m pip install -r tools/requirements.txt -r tools/requirements-dev.txt
 python -m pytest tools/tests -q
 ```
 
-Hardware assembly, flashing, and Gate checklists: `docs/USER_STEPS.md`.
+## Bill of materials (approx.)
 
-## Docs
-
-| Doc | Purpose |
-|-----|---------|
-| [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md) | Full build specification |
-| [docs/PLAN.md](docs/PLAN.md) | Progress and gate status |
-| [docs/WIRING.md](docs/WIRING.md) | Pin map and power (to be expanded) |
-| [docs/API.md](docs/API.md) | Robot HTTP API |
+| Part | Price (INR) |
+|------|-------------|
+| XIAO ESP32S3 Sense | ~1,585 |
+| TB6612FNG | ~157–194 |
+| 4WD chassis + motors | ~499–649 |
+| MG996R 180° servo | ~212 |
+| HC-SR04 + resistors | ~99 |
+| 2× 18650 + holder + charger | ~500–800 |
+| 2× buck converters | ~200–400 |
+| Bin, wire, switch, caps | ~200–300 |
 
 ## Gates
 
-Software is in progress; hardware validation is always **pending user test** until you run the checklists on the physical robot.
+| Gate | Software | Hardware |
+|------|----------|----------|
+| G1 Drive | done | pending user test |
+| G2 Vision | done | pending user test |
+| G3–G5 Autonomy | done | pending user test |
+| G6 Extras | done | pending user test |
+| G7 Agent | done | pending user test |
+
+## Docs
+
+- [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md) — full spec  
+- [docs/USER_STEPS.md](docs/USER_STEPS.md) — assembly → Gate 7  
+- [docs/API.md](docs/API.md) · [docs/WIRING.md](docs/WIRING.md) · [docs/TESTING.md](docs/TESTING.md)  
+- [docs/DATASET.md](docs/DATASET.md) · [docs/AGENT.md](docs/AGENT.md) · [docs/PLAN.md](docs/PLAN.md)

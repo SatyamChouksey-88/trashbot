@@ -21,11 +21,13 @@
     "robot_url": {
       "type": "string",
       "title": "Robot URL",
+      "description": "HTTP base URL for TrashBot (e.g. http://trashbot.local)",
       "default": "http://trashbot.local"
     },
     "token": {
       "type": "string",
       "title": "API token (optional)",
+      "description": "Value for X-TrashBot-Token if configured in secrets.h",
       "sensitive": true
     }
   }
