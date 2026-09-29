@@ -2,6 +2,7 @@ references/
 .pio/
 node_modules/
 dist/
+tools/.core_test_build/
 dataset/*
 !dataset/README.md
 firmware/include/secrets.h

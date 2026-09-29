@@ -77,6 +77,9 @@ void test_obstacle_avoid(void) {
     b.step(in);
     in.commands = {};
     in.detections = oneDet(0.5f, 0.5f, 0.9f, 100);
+    in.detections_age_ms = 0;
+    in.distance_cm = 100;
+    b.step(in);
     in.distance_cm = 10;
     auto o = b.step(in);
     TEST_ASSERT_TRUE(o.state == State::AVOID || hasEvent(o, EventType::obstacle));
