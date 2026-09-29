@@ -9,7 +9,7 @@ Node 20+ MCP server in `agent/`. It talks to the robot over HTTP only; firmware 
 3. Enable MCP in **Cursor Settings → MCP**. This repo ships `.cursor/mcp.json`:
    - Server name: `trashbot`
    - Command: `node` with args `${workspaceFolder}/agent/dist/index.js`
-   - Env: `TRASHBOT_URL=http://localhost:8787`
+   - Env: `TRASHBOT_URL=http://localhost:8787`, `TRASHBOT_MODE=dry_run` (motion tools log “DRY RUN” until you set `full`)
 4. Reload MCP if needed; confirm `trashbot` shows tools.
 5. In chat, use the **`clean_room`** prompt (or ask the agent to run those steps). It will call tools against the mock until you point `TRASHBOT_URL` at a real robot.
 
@@ -30,7 +30,10 @@ For a physical robot on your LAN later, change `TRASHBOT_URL` in `.cursor/mcp.js
 ## Environment
 
 - `TRASHBOT_URL` (default `http://trashbot.local`)
+- `TRASHBOT_MODE` — `read_only` | `dry_run` (default) | `full`
 - `TRASHBOT_TOKEN` optional
+
+Reconnect: the client retries with backoff (0.5 s → 1 s → 2 s → 5 s) and reports **robot offline** instead of crashing.
 
 ## Pack for personal machines (optional)
 

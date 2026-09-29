@@ -2,6 +2,11 @@ import { logSchema, statusSchema } from "./contract.js";
 
 const DEFAULT_TIMEOUT_MS = 5000;
 const PHOTO_TIMEOUT_MS = 8000;
+const BACKOFF_MS = [500, 1000, 2000, 5000];
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
 
 export class RobotClient {
   constructor(
@@ -16,25 +21,39 @@ export class RobotClient {
     return h;
   }
 
-  private friendlyNetworkError(): Error {
+  robotOfflineError(): Error {
     return new Error(
-      `Robot not reachable at ${this.baseUrl} — is it switched on and on the same WiFi as this laptop?`,
+      `Robot offline or not reachable at ${this.baseUrl} — is it powered on and on the same network?`,
     );
   }
 
-  async getJson(path: string, retry = true): Promise<unknown> {
-    const url = `${this.baseUrl}${path}`;
-    try {
+  private async withBackoff<T>(fn: () => Promise<T>): Promise<T> {
+    let last: unknown;
+    for (let i = 0; i < BACKOFF_MS.length; i++) {
+      try {
+        return await fn();
+      } catch (e) {
+        last = e;
+        if (i < BACKOFF_MS.length - 1) await sleep(BACKOFF_MS[i]);
+      }
+    }
+    throw last instanceof Error ? last : this.robotOfflineError();
+  }
+
+  async getJson(path: string): Promise<unknown> {
+    return this.withBackoff(async () => {
+      const url = `${this.baseUrl}${path}`;
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), DEFAULT_TIMEOUT_MS);
-      const res = await fetch(url, { headers: this.headers(), signal: ctrl.signal });
-      clearTimeout(t);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
-    } catch {
-      if (retry) return this.getJson(path, false);
-      throw this.friendlyNetworkError();
-    }
+      try {
+        const res = await fetch(url, { headers: this.headers(), signal: ctrl.signal });
+        clearTimeout(t);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      } catch {
+        throw this.robotOfflineError();
+      }
+    });
   }
 
   async getStatus() {
@@ -42,41 +61,49 @@ export class RobotClient {
   }
 
   async getPhoto(): Promise<Buffer> {
-    const url = `${this.baseUrl}/api/photo`;
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), PHOTO_TIMEOUT_MS);
-    try {
-      const res = await fetch(url, { headers: this.headers(), signal: ctrl.signal });
-      clearTimeout(t);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return Buffer.from(await res.arrayBuffer());
-    } catch {
-      throw this.friendlyNetworkError();
-    }
+    return this.withBackoff(async () => {
+      const url = `${this.baseUrl}/api/photo`;
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), PHOTO_TIMEOUT_MS);
+      try {
+        const res = await fetch(url, { headers: this.headers(), signal: ctrl.signal });
+        clearTimeout(t);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return Buffer.from(await res.arrayBuffer());
+      } catch {
+        throw this.robotOfflineError();
+      }
+    });
   }
 
   async postJson(path: string, body: unknown = {}, retries = 0): Promise<unknown> {
-    const url = `${this.baseUrl}${path}`;
     let lastErr: unknown;
-    for (let i = 0; i <= retries; i++) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
       try {
-        const ctrl = new AbortController();
-        const t = setTimeout(() => ctrl.abort(), DEFAULT_TIMEOUT_MS);
-        const res = await fetch(url, {
-          method: "POST",
-          headers: this.headers(true),
-          body: JSON.stringify(body),
-          signal: ctrl.signal,
+        return await this.withBackoff(async () => {
+          const url = `${this.baseUrl}${path}`;
+          const ctrl = new AbortController();
+          const t = setTimeout(() => ctrl.abort(), DEFAULT_TIMEOUT_MS);
+          try {
+            const res = await fetch(url, {
+              method: "POST",
+              headers: this.headers(true),
+              body: JSON.stringify(body),
+              signal: ctrl.signal,
+            });
+            clearTimeout(t);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const text = await res.text();
+            return text ? JSON.parse(text) : {};
+          } catch {
+            throw this.robotOfflineError();
+          }
         });
-        clearTimeout(t);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        return text ? JSON.parse(text) : {};
       } catch (e) {
         lastErr = e;
       }
     }
-    throw lastErr instanceof Error ? lastErr : this.friendlyNetworkError();
+    throw lastErr instanceof Error ? lastErr : this.robotOfflineError();
   }
 
   async stop() {

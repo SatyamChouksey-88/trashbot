@@ -5,9 +5,10 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 ## 1. Tools on your PC
 
 1. Git, Python 3.10+, Node 20 LTS (no admin installers required on a locked-down laptop).
-2. `python -m pip install platformio ziglang` (use `python -m platformio`, not bare `pio`).
-3. Core firmware unit tests (no MSVC/WSL): `python tools/run_core_tests.py` (uses `python -m ziglang c++`). CI also runs `platformio test -e native` on Linux.
-4. Verify: `python -m platformio run -d firmware -e xiao`, `python tools/run_core_tests.py`, `python -m pytest tools -q`, `cd agent && npm ci && npm test`.
+2. **Office laptop (WatchGuard / EPDR):** set user env `TRASHBOT_NO_NATIVE=1` so zig test binaries are not built locally (they are blocked). Core tests and the simulator run in **GitHub Actions** instead.
+3. `python -m pip install platformio` (and `ziglang` only on machines that allow compiling test `.exe` files).
+4. Verify locally: `python -m platformio run -d firmware -e xiao`, `python -m pytest tools -q`, `cd agent && npm ci && npm run build && npm test`. Skip `tools/run_core_tests.py` when `TRASHBOT_NO_NATIVE=1` (it prints a skip message). E2E: CI only unless `TRASHBOT_E2E_LOCAL=1` and Playwright installed.
+5. Before flashing hardware: `python tools/release_check.py` must print **GO** (on CI or a personal PC with native tools enabled).
 
 ## 2. Parts and mechanical
 

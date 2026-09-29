@@ -9,7 +9,10 @@ import sys
 from pathlib import Path
 
 # Allow imports from this package when run as script
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(ROOT / "tools"))
+from native_env import native_skipped, skip_exit_ok
 
 from brain_pipe import SimBrain
 from firmware_include import OBSTACLE_STOP_CM
@@ -108,6 +111,8 @@ def save_gif(frames, path: Path) -> None:
 
 
 def main() -> int:
+    if native_skipped():
+        return skip_exit_ok()
     parser = argparse.ArgumentParser()
     parser.add_argument("--scenario", default="bright_light")
     parser.add_argument("--runs", type=int, default=10)

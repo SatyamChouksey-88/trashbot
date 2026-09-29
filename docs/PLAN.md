@@ -2,8 +2,11 @@
 
 ## Progress log
 
+**v3 active** — executing `docs/MASTER_PROMPT_V3.md` (phases A–I).
+
 | Date | Phase | Notes |
 |------|-------|-------|
+| 2026-09-29 | v3-A (in progress) | EPDR: `TRASHBOT_NO_NATIVE=1`; CI runs zig core + sim. Agent dry_run + reconnect backoff. |
 | 2026-09-29 | 0–7 | Software build complete. Native Unity on Windows host blocked (no g++). Hardware tests pending user. |
 
 ## Phase checklist

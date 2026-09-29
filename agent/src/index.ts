@@ -3,15 +3,41 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { RobotClient } from "./robotClient.js";
 import { CLEAN_ROOM_PROMPT } from "./prompts/cleanRoom.js";
+import { guardTool } from "./toolGuard.js";
 
 const client = new RobotClient();
 const server = new McpServer({ name: "trashbot", version: "0.1.0" });
+
+function guard(name: string) {
+  const g = guardTool(name);
+  if (g.blocked) return { content: [{ type: "text" as const, text: g.blocked }] };
+  if (g.dryRun) return { content: [{ type: "text" as const, text: g.dryRun }] };
+  return null;
+}
 
 server.tool("get_status", "Read robot status", {}, async () => {
   const s = await client.getStatus();
   return {
     content: [{ type: "text", text: `mode=${s.mode} state=${s.state}\n${JSON.stringify(s, null, 2)}` }],
   };
+});
+
+server.tool("get_health", "Read robot health checks", {}, async () => {
+  try {
+    const h = await client.getJson("/api/health");
+    return { content: [{ type: "text", text: JSON.stringify(h, null, 2) }] };
+  } catch {
+    return { content: [{ type: "text", text: "Health endpoint not available on this firmware build yet." }] };
+  }
+});
+
+server.tool("get_mission", "Read current mission summary", {}, async () => {
+  try {
+    const m = await client.getJson("/api/mission/current");
+    return { content: [{ type: "text", text: JSON.stringify(m, null, 2) }] };
+  } catch {
+    return { content: [{ type: "text", text: "Mission API not available on this firmware build yet." }] };
+  }
 });
 
 server.tool("take_photo", "Capture a JPEG from the robot camera", {}, async () => {
@@ -26,6 +52,25 @@ server.tool("take_photo", "Capture a JPEG from the robot camera", {}, async () =
 });
 
 server.tool(
+  "plan_cleaning",
+  "Photo + detections + lessons; no motion (use before full mode)",
+  { max_items: z.number().min(1).max(20).default(5) },
+  async ({ max_items }) => {
+    const s = await client.getStatus();
+    const buf = await client.getPhoto();
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Plan (robot will NOT move): collect up to ${max_items} trash items if you later set TRASHBOT_MODE=full.\nStatus: ${JSON.stringify(s, null, 2)}`,
+        },
+        { type: "image", data: buf.toString("base64"), mimeType: "image/jpeg" },
+      ],
+    };
+  },
+);
+
+server.tool(
   "start_cleaning",
   "Start an autonomous cleaning session",
   {
@@ -34,14 +79,25 @@ server.tool(
     label: z.string().optional(),
   },
   async ({ max_items, max_time_s, label }) => {
+    const g = guard("start_cleaning");
+    if (g) return g;
     await client.postJson("/api/clean", { max_items, max_time_s, label });
     return { content: [{ type: "text", text: "Cleaning started." }] };
   },
 );
 
 server.tool("stop", "Stop the robot and return to idle", {}, async () => {
+  const g = guard("stop");
+  if (g) return g;
   await client.stop();
   return { content: [{ type: "text", text: "Stop sent." }] };
+});
+
+server.tool("estop", "Emergency stop", {}, async () => {
+  const g = guard("estop");
+  if (g) return g;
+  await client.postJson("/api/estop", {});
+  return { content: [{ type: "text", text: "ESTOP sent." }] };
 });
 
 server.tool(
@@ -49,6 +105,8 @@ server.tool(
   "Set idle or manual mode",
   { mode: z.enum(["idle", "manual"]) },
   async ({ mode }) => {
+    const g = guard("set_mode");
+    if (g) return g;
     await client.setMode(mode);
     return { content: [{ type: "text", text: `Mode set to ${mode}.` }] };
   },
@@ -63,6 +121,8 @@ server.tool(
     duration_ms: z.number().min(100).max(1000).default(500),
   },
   async ({ direction, speed, duration_ms }) => {
+    const g = guard("drive");
+    if (g) return g;
     await client.drive(direction, speed, duration_ms);
     return { content: [{ type: "text", text: `Drive ${direction} sent.` }] };
   },
@@ -85,6 +145,8 @@ server.tool(
   "Drive a set distance in cm (manual)",
   { distance_cm: z.number().min(-100).max(100), speed: z.number().min(10).max(80).default(40) },
   async ({ distance_cm, speed }) => {
+    const g = guard("move");
+    if (g) return g;
     const r = await client.move(distance_cm, speed);
     return { content: [{ type: "text", text: JSON.stringify(r) }] };
   },
@@ -95,6 +157,8 @@ server.tool(
   "Turn in place by degrees (manual)",
   { degrees: z.number().min(-180).max(180), speed: z.number().min(10).max(80).default(40) },
   async ({ degrees, speed }) => {
+    const g = guard("turn");
+    if (g) return g;
     const r = await client.turn(degrees, speed);
     return { content: [{ type: "text", text: JSON.stringify(r) }] };
   },
@@ -105,6 +169,8 @@ server.tool(
   "Move the dustpan arm",
   { action: z.enum(["down", "carry", "tip", "cycle"]) },
   async ({ action }) => {
+    const g = guard("scoop");
+    if (g) return g;
     await client.scoop(action);
     return { content: [{ type: "text", text: `Scoop ${action} sent.` }] };
   },
@@ -117,7 +183,7 @@ server.prompt("clean_room", "Clean a room with TrashBot safely", async () => ({
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("TrashBot MCP server running");
+  console.error(`TrashBot MCP server (TRASHBOT_MODE=${process.env.TRASHBOT_MODE ?? "dry_run"})`);
 }
 
 main().catch((e) => {

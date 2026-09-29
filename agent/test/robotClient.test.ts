@@ -13,7 +13,7 @@ describe("robotClient", () => {
   it("friendly error when offline", async () => {
     vi.stubGlobal("fetch", () => Promise.reject(new Error("network")));
     const c = new RobotClient("http://127.0.0.1:1");
-    await expect(c.getStatus()).rejects.toThrow(/not reachable/);
+    await expect(c.getStatus()).rejects.toThrow(/offline|not reachable/i);
   });
 
   it("timeout surfaces as not reachable", async () => {
@@ -24,7 +24,7 @@ describe("robotClient", () => {
       return Promise.reject(err);
     });
     const c = new RobotClient("http://127.0.0.1:9");
-    await expect(c.getStatus()).rejects.toThrow(/not reachable/);
+    await expect(c.getStatus()).rejects.toThrow(/offline|not reachable/i);
   });
 
   it("bad JSON throws", async () => {

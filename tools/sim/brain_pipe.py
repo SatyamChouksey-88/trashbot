@@ -10,6 +10,9 @@ EXE = SIM_DIR / ("sim_brain.exe" if __import__("sys").platform == "win32" else S
 
 class SimBrain:
     def __init__(self) -> None:
+        import os
+        if os.environ.get("TRASHBOT_NO_NATIVE", "").strip().lower() in ("1", "true", "yes"):
+            raise RuntimeError("SimBrain unavailable (TRASHBOT_NO_NATIVE=1)")
         if not EXE.is_file():
             raise FileNotFoundError(f"Run python tools/sim/build_sim_brain.py first ({EXE})")
         self.proc = subprocess.Popen(

@@ -25,6 +25,10 @@
 - MCP server: protocol on stdout only; log to stderr.
 - Do not commit `secrets.h`, API keys, or datasets.
 
+## Feature template (v3)
+
+A feature is done only when it has: (1) config flag/value in `config.h` (experimental default off), (2) pure logic in `lib/core` + unit tests (+ property test if motion-related), (3) sim scenario JSON happy + failure path, (4) events with reason codes, (5) additive API + `contract.ts` + tests, (6) `TESTING.md` / `USER_STEPS.md` updates.
+
 ## Resume
 
-If interrupted, re-read `docs/MASTER_PROMPT.md` and `docs/PLAN.md`, then continue the first unfinished phase.
+If interrupted, re-read `docs/MASTER_PROMPT.md`, `docs/MASTER_PROMPT_V3.md`, and `docs/PLAN.md`, then continue the first unfinished v3 phase.

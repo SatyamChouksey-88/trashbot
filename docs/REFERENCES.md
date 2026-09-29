@@ -16,3 +16,24 @@ Cloned shallow on 2026-09-29, then removed from `references/` per master prompt.
 | Vedant28082005/esp32-mcp-server | `079471374c8c18af2292c3301beda0d4dda3b159` | unclear | HTTP→MCP mapping notes only |
 
 Licence texts for adapted code: `third_party/<name>/LICENSE`.
+
+## Round 2 (v3, 2026-09-29)
+
+Shallow clone + LICENSE check where possible; `references/` removed again after notes.
+
+| Repo | Licence (verified) | Use in TrashBot |
+|------|-------------------|-----------------|
+| Tiny-Prism-Labs/ESP32-S3_MultiImpulse | Apache-2.0 | Ideas → `docs/FUTURE_VOICE.md` (wake word; not implemented) |
+| mpous/xiao-esp32s3-camera-edgeimpulse | none in repo | Ideas → `docs/DATASET.md` PSRAM / EI workflow |
+| WAH-ISHAN/smart-trashcan-server | unclear | Pipeline validation notes (QVGA→96 FOMO, overlay) |
+| neyamulhasan/Automatic-Garbage-Collector-with-Live-Image-Detection-using-ESP32 | **GPL-3.0 — no code copied** | Comms-loss failsafe ideas only |
+| HamzaYslmn/esp-bridge-mcp-robot | check LICENSE file | Agent permission / reconnect patterns vs ours |
+| robotmcp/ros-mcp-server | Apache-2.0 | Tool design for state discovery |
+| jonajoy142/embodied-agent-chaos | none found | Fault classes → sim fault injection (9.3) |
+| madou003/ESP32_TrashAI | MIT | Why FOMO + motion beats slow classification → `DECISIONS.md` |
+| bhoke/FOMO | MIT | `docs/FUTURE_MODEL.md` (Keras FOMO training) |
+| San279/object-detect-FOMO-stream-Esp32 | MIT (per README) | Streaming tips → `DATASET.md` |
+| San279/train-object-detect-FOMO-esp32 | MIT (per README) | Training tips → `DATASET.md` |
+| abdullah-engg/Smart-Waste-Segregation | N/A (Pi + fixed bin) | Skipped — not our architecture |
+
+New docs: `docs/FUTURE_VOICE.md`, `docs/FUTURE_MODEL.md` (stubs from round 2).

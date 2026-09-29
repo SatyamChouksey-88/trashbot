@@ -10,3 +10,7 @@
 | 2026-09-29 | WinLibs winget install failed | Access denied copying to WinGet Packages | Use WSL, manual MinGW, or rely on GitHub Actions `firmware-test` job |
 | 2026-09-29 | MCPB excludes `node_modules` | Smaller `.mcpb`; Claude Desktop must resolve deps from `package.json` on install | Remove entries from `agent/.mcpbignore` if offline bundle needed |
 | 2026-09-29 | ArduinoJson 7.4.3 | First resolved install | Pin in `firmware/platformio.ini` |
+| 2026-09-29 | WatchGuard EPDR blocks new `.exe` | Zig test binaries and `sim_brain` blocked on office laptop | Set `TRASHBOT_NO_NATIVE=1`; core tests + sim run in GitHub Actions only |
+| 2026-09-29 | E2E local optional on Windows | Playwright browser install may be blocked | CI `e2e` job; local only if `TRASHBOT_E2E_LOCAL=1` |
+| 2026-09-29 | `TRASHBOT_MODE` default `dry_run` | Agent safety on shared laptop | Set `full` in `.cursor/mcp.json` only when robot is ready |
+| 2026-09-29 | No OTA in v3 | USB flash only per MASTER_PROMPT_V3 | Recorded in v3 MUST NOT |

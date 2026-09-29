@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from native_env import native_skipped, skip_exit_ok
+
 ROOT = Path(__file__).resolve().parents[1]
 FW = ROOT / "firmware"
 UNITY = FW / "test" / "unity"
@@ -88,6 +90,8 @@ def run_exe(exe: Path) -> tuple[int, str]:
 
 
 def main() -> int:
+    if native_skipped():
+        return skip_exit_ok()
     if not UNITY.joinpath("unity.h").is_file():
         print("Missing vendored Unity in firmware/test/unity/", file=sys.stderr)
         return 1

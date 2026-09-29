@@ -1,10 +1,12 @@
 {
   "mcpServers": {
     "trashbot": {
+      "type": "stdio",
       "command": "node",
       "args": ["${workspaceFolder}/agent/dist/index.js"],
       "env": {
-        "TRASHBOT_URL": "http://localhost:8787"
+        "TRASHBOT_URL": "http://localhost:8787",
+        "TRASHBOT_MODE": "dry_run"
       }
     }
   }

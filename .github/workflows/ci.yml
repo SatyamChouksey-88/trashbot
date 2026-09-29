@@ -45,7 +45,18 @@ jobs:
           python-version: "3.12"
       - run: pip install -r tools/requirements.txt -r tools/requirements-dev.txt
       - run: python tools/run_core_tests.py
+      - run: python tools/sim/build_sim_brain.py
+      - run: python tools/sim/run.py --scenario bright_light --runs 3
       - run: python -m pytest tools -q
+
+  agent-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd agent && npm ci && npm run pack && npm run verify:mcpb
 
   e2e:
     runs-on: ubuntu-latest
