@@ -25,6 +25,9 @@ void Brain::reset() {
     servo_deg_ = cfg::SERVO_CARRY_DEG;
     timed_.active = false;
     manual_until_ms_ = 0;
+    recovery_.resetSession();
+    safe_pause_until_ms_ = 0;
+    safe_pause_count_ = 0;
 }
 
 BrainOutput Brain::step(const BrainInput& in) {
@@ -58,9 +61,62 @@ BrainOutput Brain::step(const BrainInput& in) {
                             session_.collected >= session_.max_items)) {
         state_ = State::DONE;
     }
-    if (mode_ == Mode::Auto && !in.camera_ok) {
-        state_ = State::DONE;
-        pushEvent(out, EventType::vision_unavailable, in.now_ms);
+    if (mode_ == Mode::Auto && !in.camera_ok && state_ != State::ESTOP && state_ != State::SAFE_PAUSE) {
+        state_before_pause_ = state_;
+        state_ = State::SAFE_PAUSE;
+        safe_pause_until_ms_ = in.now_ms + cfg::SAFE_PAUSE_MS;
+        safe_pause_count_++;
+        pushEvent(out, EventType::safe_pause, in.now_ms, 1);
+        if (safe_pause_count_ > cfg::SAFE_PAUSE_MAX) {
+            state_ = State::DONE;
+            pushEvent(out, EventType::vision_unavailable, in.now_ms);
+        }
+    }
+    if (in.health_critical && state_ != State::ESTOP && state_ != State::SAFE_PAUSE) {
+        state_before_pause_ = state_;
+        state_ = State::SAFE_PAUSE;
+        safe_pause_until_ms_ = in.now_ms + cfg::SAFE_PAUSE_MS;
+        pushEvent(out, EventType::safe_pause, in.now_ms, 2);
+    }
+    if (in.chip_temp_c > cfg::OVERTEMP_C && state_ != State::ESTOP) {
+        state_before_pause_ = state_;
+        state_ = State::SAFE_PAUSE;
+        safe_pause_until_ms_ = in.now_ms + cfg::SAFE_PAUSE_MS;
+        pushEvent(out, EventType::safe_pause, in.now_ms, 3);
+    }
+    if (last_distance_ms_ != 0 && in.now_ms - last_distance_ms_ <= 200) {
+        int drop = last_distance_cm_ - in.distance_cm;
+        if (last_distance_cm_ < 100 && drop > cfg::SUDDEN_DROP_CM && in.distance_cm < 30) {
+            state_before_pause_ = state_;
+            state_ = State::SAFE_PAUSE;
+            safe_pause_until_ms_ = in.now_ms + cfg::SAFE_PAUSE_MS;
+            pushEvent(out, EventType::safe_pause, in.now_ms, 4);
+        }
+    }
+    last_distance_cm_ = in.distance_cm;
+    last_distance_ms_ = in.now_ms;
+
+    if (in.stuck_detected && mode_ == Mode::Auto && state_ != State::RECOVERY && state_ != State::ESTOP) {
+        pushEvent(out, EventType::stuck_detected, in.now_ms);
+        if (recovery_.start(RecoveryReason::Stuck, in.now_ms)) {
+            pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::Stuck, 0);
+            state_ = State::RECOVERY;
+            timed_.active = false;
+        }
+    }
+    if (in.bumper_hit && mode_ == Mode::Auto && state_ != State::RECOVERY) {
+        if (recovery_.start(RecoveryReason::Bumper, in.now_ms)) {
+            pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::Bumper, 0);
+            state_ = State::RECOVERY;
+            timed_.active = false;
+        }
+    }
+    if (in.motion_score > cfg::MOTION_WHILE_STILL && out.motor.left == 0 && out.motor.right == 0 &&
+        (state_ == State::SEARCH || state_ == State::APPROACH)) {
+        state_before_pause_ = state_;
+        state_ = State::SAFE_PAUSE;
+        safe_pause_until_ms_ = in.now_ms + cfg::SAFE_PAUSE_MS;
+        pushEvent(out, EventType::safe_pause, in.now_ms, 5);
     }
 
     Detection det{};
@@ -137,8 +193,10 @@ BrainOutput Brain::step(const BrainInput& in) {
                 if (in.distance_cm >= cfg::OBSTACLE_STOP_CM + 5) {
                     timed_ = moveCm(cfg::SEARCH_FORWARD_CM, cfg::DRIVE_SPEED_PCT, in.calib.fwd_cps);
                     timedMoveBegin(timed_, in.now_ms);
-                } else {
-                    state_ = State::AVOID;
+                } else if (recovery_.start(RecoveryReason::Obstacle, in.now_ms)) {
+                    pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::Obstacle, 0);
+                    state_ = State::RECOVERY;
+                    timed_.active = false;
                 }
             }
         }
@@ -148,19 +206,22 @@ BrainOutput Brain::step(const BrainInput& in) {
     case State::APPROACH: {
         if (in.distance_cm < cfg::OBSTACLE_STOP_CM) {
             obstacle_count_++;
-            state_ = State::AVOID;
             pushEvent(out, EventType::obstacle, in.now_ms, in.distance_cm);
-            if (obstacle_count_ >= 2) {
-                session_.skipped++;
-                pushEvent(out, EventType::item_skipped, in.now_ms);
+            if (recovery_.start(RecoveryReason::Obstacle, in.now_ms)) {
+                pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::Obstacle, 0);
+                state_ = State::RECOVERY;
+                timed_.active = false;
             }
             break;
         }
         if (!valid) {
             lost_frames_++;
             if (lost_frames_ > cfg::TARGET_LOST_FRAMES) {
-                state_ = State::REACQUIRE;
-                reacquire_start_ms_ = in.now_ms;
+                if (recovery_.start(RecoveryReason::TargetLost, in.now_ms)) {
+                    pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::TargetLost, 0);
+                    state_ = State::RECOVERY;
+                    timed_.active = false;
+                }
             }
         } else {
             lost_frames_ = 0;
@@ -241,7 +302,13 @@ BrainOutput Brain::step(const BrainInput& in) {
             if (session_.collected >= session_.max_items) state_ = State::DONE;
         } else {
             retries_++;
-            if (retries_ < cfg::MAX_RETRIES) state_ = State::BACKUP;
+            if (retries_ < cfg::MAX_RETRIES) {
+                if (recovery_.start(RecoveryReason::ScoopFailed, in.now_ms)) {
+                    pushEvent(out, EventType::recovery_started, in.now_ms, (int)RecoveryReason::ScoopFailed, 0);
+                    state_ = State::RECOVERY;
+                    timed_.active = false;
+                }
+            }
             else {
                 session_.failed++;
                 pushEvent(out, EventType::item_failed, in.now_ms);
@@ -254,22 +321,28 @@ BrainOutput Brain::step(const BrainInput& in) {
         break;
     }
 
-    case State::BACKUP:
-        timed_ = moveCm(-cfg::RETRY_BACKUP_CM, cfg::CREEP_SPEED_PCT, in.calib.fwd_cps);
-        timedMoveBegin(timed_, in.now_ms);
-        if (timedMoveStep(timed_, in.now_ms)) state_ = State::APPROACH;
-        else out.motor = timed_.cmd;
+    case State::RECOVERY:
+        runRecoveryStep(out, in);
         break;
 
-    case State::AVOID: {
-        int deg = avoid_left_ ? cfg::AVOID_TURN_DEG : -cfg::AVOID_TURN_DEG;
-        avoid_left_ = !avoid_left_;
-        timed_ = turnDegrees(deg, cfg::TURN_SPEED_PCT, in.calib.turn_dps);
-        timedMoveBegin(timed_, in.now_ms);
-        if (timedMoveStep(timed_, in.now_ms)) state_ = State::SEARCH;
-        else out.motor = timed_.cmd;
+    case State::SAFE_PAUSE:
+        out.motor = {0, 0};
+        servo_deg_ = in.calib.servo_carry;
+        if (in.now_ms >= safe_pause_until_ms_) {
+            if (in.camera_ok && !in.health_critical && in.chip_temp_c <= cfg::OVERTEMP_C) {
+                state_ = state_before_pause_;
+                if (state_ == State::SAFE_PAUSE) state_ = State::SEARCH;
+            } else if (safe_pause_count_ > cfg::SAFE_PAUSE_MAX) {
+                state_ = State::DONE;
+                pushEvent(out, EventType::vision_unavailable, in.now_ms);
+            }
+        }
         break;
-    }
+
+    case State::BACKUP:
+    case State::AVOID:
+        state_ = State::SEARCH;
+        break;
 
     case State::DONE:
         out.motor = {0, 0};
@@ -289,5 +362,54 @@ BrainOutput Brain::step(const BrainInput& in) {
     out.mode = mode_;
     out.servo_deg = servo_deg_;
     out.session = session_;
+    out.recovery_reason = recovery_.reason();
+    out.recovery_step = recovery_.step();
+    out.recovery_attempt = recovery_.attempt();
     return out;
+}
+
+void Brain::runRecoveryStep(BrainOutput& out, const BrainInput& in) {
+    if (!recovery_.active()) {
+        state_ = State::SEARCH;
+        return;
+    }
+    auto finish = [&](RecoveryAdvance adv) {
+        if (adv == RecoveryAdvance::Continue) return;
+        if (adv == RecoveryAdvance::Success) {
+            pushEvent(out, EventType::recovery_success, in.now_ms);
+            state_ = State::SEARCH;
+            return;
+        }
+        if (adv == RecoveryAdvance::SkipItem) {
+            session_.skipped++;
+            pushEvent(out, EventType::item_skipped, in.now_ms);
+            pushEvent(out, EventType::target_lost, in.now_ms);
+            pushEvent(out, EventType::recovery_failed, in.now_ms);
+            state_ = State::SEARCH;
+            return;
+        }
+        if (adv == RecoveryAdvance::Failed) {
+            session_.failed++;
+            pushEvent(out, EventType::item_failed, in.now_ms);
+            pushEvent(out, EventType::recovery_failed, in.now_ms);
+            state_ = State::SEARCH;
+            retries_ = 0;
+            return;
+        }
+        pushEvent(out, EventType::recovery_failed, in.now_ms);
+        state_ = State::DONE;
+    };
+
+    if (!timed_.active) {
+        timed_ = recovery_.stepMove(in.calib);
+        if (timed_.duration_ms > 0) timedMoveBegin(timed_, in.now_ms);
+        else finish(recovery_.onStepDone(in.now_ms));
+        return;
+    }
+    if (!timedMoveStep(timed_, in.now_ms)) {
+        out.motor = timed_.cmd;
+        return;
+    }
+    timed_.active = false;
+    finish(recovery_.onStepDone(in.now_ms));
 }

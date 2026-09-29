@@ -82,7 +82,7 @@ void test_obstacle_avoid(void) {
     b.step(in);
     in.distance_cm = 10;
     auto o = b.step(in);
-    TEST_ASSERT_TRUE(o.state == State::AVOID || hasEvent(o, EventType::obstacle));
+    TEST_ASSERT_TRUE(o.state == State::AVOID || o.state == State::RECOVERY || hasEvent(o, EventType::obstacle));
 }
 
 void test_session_time_done(void) {
@@ -114,7 +114,8 @@ void test_camera_unavailable(void) {
     in.camera_ok = false;
     in.now_ms = 20;
     auto o = b.step(in);
-    TEST_ASSERT_TRUE(hasEvent(o, EventType::vision_unavailable) || o.state == State::DONE);
+    TEST_ASSERT_TRUE(hasEvent(o, EventType::vision_unavailable) || o.state == State::DONE ||
+                     o.state == State::SAFE_PAUSE);
 }
 
 void test_manual_expired(void) {
@@ -194,7 +195,7 @@ void test_target_lost_reacquire_search(void) {
     bool sawLost = false;
     for (int i = 0; i < 40; i++) {
         auto o = stepMs(b, in, 50);
-        if (o.state == State::REACQUIRE) sawReacquire = true;
+        if (o.state == State::REACQUIRE || o.state == State::RECOVERY) sawReacquire = true;
         if (hasEvent(o, EventType::target_lost)) sawLost = true;
     }
     in.now_ms += cfg::REACQUIRE_MS + 100;

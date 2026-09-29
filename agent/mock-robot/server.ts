@@ -95,6 +95,17 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/health") {
+    return json(res, 200, {
+      overall: estop ? "CRITICAL" : "OK",
+      checks: [
+        { name: "motor_lease", status: "OK", value: "ok" },
+        { name: "vision_heartbeat", status: "OK", value: "ok" },
+        { name: "mock", status: "OK", value: "ok" },
+      ],
+    });
+  }
+
   if (req.method === "GET" && url.pathname === "/api/status") {
     const body = statusSchema.parse({
       fw: "0.1.0-mock",

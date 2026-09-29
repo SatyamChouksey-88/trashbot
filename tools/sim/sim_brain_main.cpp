@@ -88,6 +88,8 @@ static const char* stateName(State s) {
     case State::VERIFY: return "VERIFY";
     case State::BACKUP: return "BACKUP";
     case State::AVOID: return "AVOID";
+    case State::RECOVERY: return "RECOVERY";
+    case State::SAFE_PAUSE: return "SAFE_PAUSE";
     case State::DONE: return "DONE";
     case State::ESTOP: return "ESTOP";
     }

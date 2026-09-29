@@ -97,6 +97,11 @@ void httpApiBegin(WebServer& server) {
         sendStatusJson(server);
     });
 
+    server.on("/api/health", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        sendHealthJson(server);
+    });
+
     server.on("/api/photo", HTTP_GET, [&]() {
         if (!checkToken(server)) return;
         sharedStateLock();
@@ -189,6 +194,10 @@ void httpApiBegin(WebServer& server) {
 
     server.on("/api/clean", HTTP_POST, [&]() {
         if (!checkToken(server)) return;
+        if (healthBlocksAuto(buildHealthInputs())) {
+            server.send(409, "application/json", "{\"error\":\"health_critical\"}");
+            return;
+        }
         JsonDocument doc;
         if (!parseBody(server, doc)) return;
         RobotCommand c{CmdType::Clean};

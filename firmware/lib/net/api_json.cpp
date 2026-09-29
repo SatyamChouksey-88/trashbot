@@ -1,8 +1,10 @@
 #include "api_json.h"
 #include "config.h"
+#include "motors.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
+#include <esp_system.h>
 
 const char* stateToString(State s) {
     switch (s) {
@@ -17,6 +19,8 @@ const char* stateToString(State s) {
     case State::VERIFY: return "VERIFY";
     case State::BACKUP: return "BACKUP";
     case State::AVOID: return "AVOID";
+    case State::RECOVERY: return "RECOVERY";
+    case State::SAFE_PAUSE: return "SAFE_PAUSE";
     case State::DONE: return "DONE";
     case State::ESTOP: return "ESTOP";
     }
@@ -46,8 +50,80 @@ const char* eventTypeToString(EventType t) {
     case EventType::low_battery: return "low_battery";
     case EventType::vision_unavailable: return "vision_unavailable";
     case EventType::calib_saved: return "calib_saved";
+    case EventType::motor_lease_expired: return "motor_lease_expired";
+    case EventType::task_timeout: return "task_timeout";
+    case EventType::stuck_detected: return "stuck_detected";
+    case EventType::recovery_started: return "recovery_started";
+    case EventType::recovery_success: return "recovery_success";
+    case EventType::recovery_failed: return "recovery_failed";
+    case EventType::safe_pause: return "safe_pause";
+    case EventType::invariant_violation: return "invariant_violation";
     }
     return "unknown";
+}
+
+static const char* resetReasonStr() {
+    switch (esp_reset_reason()) {
+    case ESP_RST_POWERON: return "power_on";
+    case ESP_RST_SW: return "software";
+    case ESP_RST_PANIC: return "panic";
+    case ESP_RST_INT_WDT: return "int_wdt";
+    case ESP_RST_TASK_WDT: return "task_wdt";
+    case ESP_RST_WDT: return "wdt";
+    case ESP_RST_BROWNOUT: return "brownout";
+    default: return "other";
+    }
+}
+
+HealthInputs buildHealthInputs() {
+    HealthInputs in{};
+    sharedStateLock();
+    auto& s = sharedStatus();
+    in.psram_ok = ESP.getPsramSize() > 0;
+    in.heap_free = ESP.getFreeHeap();
+    in.heap_min = ESP.getMinFreeHeap();
+    in.camera_ok = strcmp(s.camera, "error") != 0;
+    in.detector_ok = s.model_loaded || strcmp(s.detector, "fake") == 0;
+    in.vision_fps = s.vision_ms > 0 ? 1000.0f / (float)s.vision_ms : 0;
+    in.servo_ok = true;
+    in.motor_lease_ok = motorsLeaseOk();
+    in.wifi_ok = WiFi.status() == WL_CONNECTED || WiFi.getMode() == WIFI_AP;
+    in.temp_c = temperatureRead();
+    in.battery_v = s.battery_v;
+    in.battery_enabled = cfg::BATTERY_MONITOR_ENABLED;
+    uint32_t now = millis();
+    in.vision_hb_ok = s.heartbeat_vision_ms != 0 && now - s.heartbeat_vision_ms < cfg::VISION_HEARTBEAT_MS;
+    in.control_hb_ok = s.heartbeat_control_ms != 0 && now - s.heartbeat_control_ms < cfg::MOTOR_LEASE_MS * 2;
+    in.estop = s.estop;
+    in.uptime_ms = now;
+    in.reset_reason = resetReasonStr();
+    in.last_error = s.last_error;
+    sharedStateUnlock();
+    return in;
+}
+
+void sendHealthJson(WebServer& server) {
+    HealthInputs in = buildHealthInputs();
+    HealthCheckRow rows[16];
+    int n = healthBuildChecks(in, rows, 16);
+    HealthStatus overall = healthOverall(in);
+    JsonDocument doc;
+    doc["overall"] = overall == HealthStatus::Critical ? "CRITICAL"
+                     : overall == HealthStatus::Degraded ? "DEGRADED"
+                                                         : "OK";
+    JsonArray checks = doc["checks"].to<JsonArray>();
+    for (int i = 0; i < n; i++) {
+        JsonObject o = checks.add<JsonObject>();
+        o["name"] = rows[i].name;
+        o["status"] = rows[i].status == HealthStatus::Critical ? "CRITICAL"
+                      : rows[i].status == HealthStatus::Degraded ? "DEGRADED"
+                                                                 : "OK";
+        o["value"] = rows[i].value;
+        if (rows[i].detail && rows[i].detail[0]) o["detail"] = rows[i].detail;
+    }
+    String out;
+    serializeJson(doc, out);
+    server.send(200, "application/json", out);
 }
 
 void sendStatusJson(WebServer& server) {

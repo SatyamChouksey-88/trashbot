@@ -48,6 +48,13 @@ struct RobotStatus {
     char last_error[64]{};
     char session_label[32]{};
     float battery_v = -1.0f;
+    float motion_score = 0;
+    uint32_t heartbeat_vision_ms = 0;
+    uint32_t heartbeat_web_ms = 0;
+    uint32_t heartbeat_sound_ms = 0;
+    uint32_t heartbeat_control_ms = 0;
+    bool health_critical = false;
+    char health_overall[12] = "OK";
     bool use_fake_detector = true;
     uint8_t* photo = nullptr;
     size_t photo_len = 0;

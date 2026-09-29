@@ -49,6 +49,15 @@ Hardware tests are yours; mark pass/fail in the tables below.
 | Cluttered floor | Many objects | No false scoops | | | |
 | Dark vs light floor | Both surfaces | Stable detection | | | |
 
+## G8 — Reliability (software)
+
+| Check | How |
+|-------|-----|
+| Core recovery / stuck / health / invariant | `python tools/run_core_tests.py` (CI) |
+| Motor lease + tripwire | Firmware build; on-device: stall `controlTask` → wheels stop within 250 ms |
+| `GET /api/health` | Mock or robot; CRITICAL blocks `POST /api/clean` (409) |
+| SAFE_PAUSE | Documented motion heuristic in `MASTER_PROMPT_V3.md` §4.5 |
+
 ## Software sim (digital twin)
 
 Run without hardware:

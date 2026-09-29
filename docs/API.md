@@ -29,6 +29,12 @@ Manual mode only. Body: `{"left":-100..100,"right":-100..100,"duration_ms":100..
 
 Idle or manual only (409 in auto). See master prompt Section 7 for field names.
 
+## GET /api/health
+
+Returns `{ "overall": "OK" | "DEGRADED" | "CRITICAL", "checks": [{ "name", "status", "value", "detail?" }] }`.
+
+When `overall` is `CRITICAL`, `POST /api/clean` responds with **409** `{"error":"health_critical"}`.
+
 ## POST /api/clean
 
 Body: `{"max_items":1..20,"max_time_s":10..600,"label":"optional"}`

@@ -30,6 +30,8 @@ enum class State : uint8_t {
     VERIFY,
     BACKUP,
     AVOID,
+    RECOVERY,
+    SAFE_PAUSE,
     DONE,
     ESTOP
 };
@@ -55,7 +57,15 @@ enum class EventType : uint8_t {
     sound_trigger,
     low_battery,
     vision_unavailable,
-    calib_saved
+    calib_saved,
+    motor_lease_expired,
+    task_timeout,
+    stuck_detected,
+    recovery_started,
+    recovery_success,
+    recovery_failed,
+    safe_pause,
+    invariant_violation
 };
 
 struct Event {

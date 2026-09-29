@@ -18,6 +18,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <button type=button onclick="show('auto')">Auto</button>
 <button type=button onclick="show('cal')">Calibrate</button>
 <button type=button onclick="show('log')">Log</button>
+<button type=button onclick="show('health')">Health</button>
 </nav>
 <section id=drive class="tab active">
 <div id=status></div>
@@ -51,6 +52,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <button onclick="calib('self_echo_cm',{from:'current_distance'})">Self-echo (scoop down first)</button>
 </section>
 <section id=log class=tab><pre id=logpre></pre></section>
+<section id=health class=tab><pre id=healthpre>Loading…</pre><button onclick="loadHealth()">Refresh</button></section>
 <script>
 let holdT,activeTab='drive';
 function gspd(){return +document.getElementById('spd').value;}
@@ -68,12 +70,15 @@ async function estop(){await api('estop',{},'POST');}
 async function estopReset(){await api('estop/reset',{},'POST');}
 async function clean(){await api('clean',{max_items:+mi.value,max_time_s:+mt.value},'POST');}
 async function calib(key,body){await api('calib/'+key,body,'POST');alert('Saved '+key);}
+async function loadHealth(){try{const h=await api('health');
+healthpre.textContent=h.overall+'\n'+h.checks.map(c=>c.name+': '+c.status+' '+c.value).join('\n');}catch(e){healthpre.textContent='Health error';}}
 async function poll(){try{
 const s=await api('status');
 status.textContent='Mode '+s.mode+' | '+s.state+' | '+s.distance_cm+' cm'+(s.estop?' | ESTOP':'');
 sess.textContent=JSON.stringify(s.session,null,2);
 vis.textContent=(s.detector||'')+' '+s.vision_ms+'ms';
 if(activeTab==='cam')shot.src='/api/photo?'+Date.now();
+if(activeTab==='health')loadHealth();
 const lg=await api('log?since=0');
 logpre.textContent=lg.events.slice(-50).map(e=>e.seq+' '+e.type).join('\n');
 }catch(e){status.textContent='API error'}}

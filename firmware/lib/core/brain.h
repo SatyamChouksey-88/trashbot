@@ -1,5 +1,6 @@
 #pragma once
 #include "config.h"
+#include "recovery.h"
 #include "scoop_seq.h"
 #include "target.h"
 #include "timed_move.h"
@@ -42,6 +43,11 @@ struct BrainInput {
     BrainCommands commands{};
     BrainCalib calib{};
     bool camera_ok = true;
+    bool stuck_detected = false;
+    bool bumper_hit = false;
+    float motion_score = 0;
+    float chip_temp_c = 25;
+    bool health_critical = false;
 };
 
 struct SessionInfo {
@@ -60,6 +66,9 @@ struct BrainOutput {
     Event events[4]{};
     int event_count = 0;
     SessionInfo session{};
+    RecoveryReason recovery_reason = RecoveryReason::None;
+    int recovery_step = 0;
+    int recovery_attempt = 0;
 };
 
 class Brain {
@@ -101,6 +110,13 @@ private:
     uint32_t manual_until_ms_ = 0;
     MotorCmd manual_cmd_{};
     int servo_deg_ = 100;
+    RecoveryManager recovery_{};
+    uint32_t safe_pause_until_ms_ = 0;
+    int safe_pause_count_ = 0;
+    State state_before_pause_ = State::IDLE;
+    int last_distance_cm_ = 400;
+    uint32_t last_distance_ms_ = 0;
+    void runRecoveryStep(BrainOutput& out, const BrainInput& in);
     void pushEvent(BrainOutput& out, EventType t, uint32_t now, int32_t a = 0, int32_t b = 0);
     ScoopZone zone(const BrainCalib& c) const;
 };

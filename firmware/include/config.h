@@ -74,6 +74,42 @@ constexpr float BATTERY_DIVIDER_RATIO = (100.0f + 33.0f) / 33.0f;
 constexpr float BATTERY_STOP_V = 6.6f;
 // Logging
 constexpr int EVENT_RING_SIZE = 256;
+// G8 — motor lease + watchdog
+constexpr uint32_t MOTOR_LEASE_MS = 200;
+constexpr int CONTROL_WDT_S = 2;
+constexpr int VISION_WDT_S = 5;
+constexpr uint32_t VISION_HEARTBEAT_MS = 1500;
+// Stuck detection
+constexpr int STUCK_MIN_CMD_PCT = 20;
+constexpr uint32_t STUCK_TIME_MS = 2500;
+constexpr float STUCK_MOTION_MAX = 4.0f;
+constexpr int STUCK_MIN_PROGRESS_CM = 3;
+// Recovery
+constexpr int RECOVERY_MAX_ATTEMPTS = 3;
+constexpr uint32_t RECOVERY_TIMEOUT_MS = 15000;
+constexpr int RECOVERY_MAX_PER_SESSION = 10;
+// Safe pause
+constexpr int SUDDEN_DROP_CM = 25;
+constexpr float MOTION_WHILE_STILL = 12.0f;
+constexpr int OVERTEMP_C = 80;
+constexpr uint32_t SAFE_PAUSE_MS = 5000;
+constexpr int SAFE_PAUSE_MAX = 3;
+// Confidence (v3)
+constexpr float CONF_IGNORE_BELOW = 0.50f;
+constexpr float CONF_CONFIDENT_AT = 0.75f;
+constexpr float RECHECK_Y = 0.55f;
+constexpr int MAX_RECHECKS = 2;
+// Learning + history
+constexpr float BANDIT_EXPLORE = 0.10f;
+constexpr int MISTAKE_RING = 20;
+constexpr int MISSION_HISTORY = 20;
+// Hard bounds
+constexpr int OBSTACLE_STOP_CM_MIN = 12;
+constexpr int MOTOR_MAX_DUTY_MAX = 80;
+constexpr int SPEED_MAX_PCT = 80;
+// Feature flags
+constexpr bool LEARNING_ENABLED = false;
+constexpr bool DEBUG_API = false;
 } // namespace cfg
 
 #define TRASHBOT_EI_HEADER <TrashBot_inferencing.h>

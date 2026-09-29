@@ -16,7 +16,10 @@
 #include "status_led.h"
 #include "ultrasonic.h"
 #include "wifi_setup.h"
+#include "invariant_monitor.h"
+#include "stuck_detect.h"
 #include <WebServer.h>
+#include <esp_task_wdt.h>
 
 static WebServer server(cfg::HTTP_PORT);
 static Brain brain;
@@ -24,6 +27,8 @@ static FakeDetector fakeDetector;
 static Detector* activeDetector = &fakeDetector;
 static MotorCmd lastMotor{0, 0};
 static uint32_t lastDetectionMs = 0;
+static StuckState stuckState{};
+static bool leaseExpiredReported = false;
 
 static void applyBrainEvents(const BrainOutput& bout, uint32_t now) {
     for (int i = 0; i < bout.event_count; i++) {
@@ -87,10 +92,13 @@ static BrainCommands commandToBrain(const RobotCommand& cmd) {
 }
 
 static void controlTask(void*) {
+    esp_task_wdt_add(nullptr);
     TickType_t last = xTaskGetTickCount();
     for (;;) {
+        esp_task_wdt_reset();
         vTaskDelayUntil(&last, pdMS_TO_TICKS(20));
         uint32_t now = millis();
+        motorsRenewLease();
         ultrasonicTrigger();
         int dist = ultrasonicReadCm();
         if (bumperPressed()) dist = 0;
@@ -163,6 +171,16 @@ static void controlTask(void*) {
         bin.detections_age_ms = st.detections_age_ms;
         bin.servo_deg = st.scoop_deg;
         bin.camera_ok = strcmp(st.camera, "error") != 0;
+        bin.stuck_detected = stuckDetectTriggered(stuckState, now);
+        bin.bumper_hit = bumperPressed();
+        bin.motion_score = st.motion_score;
+        bin.chip_temp_c = temperatureRead();
+        bool vision_hb_ok =
+            st.heartbeat_vision_ms != 0 && now - st.heartbeat_vision_ms < cfg::VISION_HEARTBEAT_MS;
+        bin.health_critical = st.estop || !motorsLeaseOk() || !vision_hb_ok ||
+                              (cfg::BATTERY_MONITOR_ENABLED && st.battery_v > 0 && st.battery_v < cfg::BATTERY_STOP_V);
+        st.health_critical = bin.health_critical;
+        strncpy(st.health_overall, bin.health_critical ? "CRITICAL" : "OK", sizeof(st.health_overall) - 1);
         bin.commands = merged;
         auto bout = brain.step(bin);
         applyBrainEvents(bout, now);
@@ -179,8 +197,28 @@ static void controlTask(void*) {
         safety.dt_ms = 20;
         safety.bumperPressed = bumperPressed();
         MotorCmd filtered = filterMotor(bout.motor, lastMotor, safety);
+        stuckDetectUpdate(stuckState, now, filtered.left, filtered.right, st.motion_score, dist, dist < cfg::US_NO_ECHO_CM);
+        InvariantInputs inv{};
+        inv.requested = bout.motor;
+        inv.filtered = filtered;
+        inv.estop = st.estop;
+        inv.distance_cm = dist;
+        inv.obstacle_stop_cm = cfg::OBSTACLE_STOP_CM;
+        inv.max_duty_pct = bin.calib.max_duty;
+        inv.state = bout.state;
+        inv.manual_expired = bout.state != State::MANUAL;
+        InvariantId trip = checkInvariants(inv);
+        if (trip != InvariantId::None) {
+            filtered = {0, 0};
+            st.estop = true;
+            sharedEvents().push(EventType::invariant_violation, now, (int)trip);
+        }
         lastMotor = filtered;
         motorsApply(filtered, bin.calib.max_duty);
+        if (!motorsLeaseOk() && !leaseExpiredReported) {
+            sharedEvents().push(EventType::motor_lease_expired, now);
+            leaseExpiredReported = true;
+        }
         servoWriteDeg(bout.servo_deg);
         st.mode = bout.mode;
         st.state = bout.state;
@@ -189,13 +227,19 @@ static void controlTask(void*) {
         if (merged.start && merged.start_label) strncpy(st.session_label, merged.start_label, sizeof(st.session_label) - 1);
         strncpy(st.detector, activeDetector->name(), sizeof(st.detector) - 1);
         st.model_loaded = activeDetector->modelLoaded();
+        st.heartbeat_control_ms = now;
+        if (st.heartbeat_vision_ms != 0 && now - st.heartbeat_vision_ms > cfg::VISION_HEARTBEAT_MS) {
+            sharedEvents().push(EventType::task_timeout, now, 1);
+        }
         statusLedSetMode(bout.mode, bout.state);
         sharedStateUnlock();
     }
 }
 
 static void visionTask(void*) {
+    esp_task_wdt_add(nullptr);
     for (;;) {
+        esp_task_wdt_reset();
         Detections d{};
         uint32_t vms = 0;
         if (cameraProcessFrame(*activeDetector, d, vms)) {
@@ -203,6 +247,7 @@ static void visionTask(void*) {
             sharedStatus().detections = d;
             sharedStatus().detections_age_ms = 0;
             sharedStatus().vision_ms = vms;
+            sharedStatus().heartbeat_vision_ms = millis();
             lastDetectionMs = d.t_ms;
             sharedStateUnlock();
         }
@@ -213,6 +258,9 @@ static void visionTask(void*) {
 static void webTask(void*) {
     for (;;) {
         httpApiHandle(server);
+        sharedStateLock();
+        sharedStatus().heartbeat_web_ms = millis();
+        sharedStateUnlock();
         vTaskDelay(pdMS_TO_TICKS(2));
     }
 }
@@ -232,6 +280,9 @@ static void soundTask(void*) {
         bool idle = sharedStatus().mode == Mode::Idle && sharedStatus().state == State::IDLE;
         sharedStateUnlock();
         if (!idle) continue;
+        sharedStateLock();
+        sharedStatus().heartbeat_sound_ms = millis();
+        sharedStateUnlock();
         if (soundTriggerPoll(millis())) {
             RobotCommand c{CmdType::Clean};
             c.max_items = cfg::SESSION_MAX_ITEMS_DEFAULT;
