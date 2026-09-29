@@ -71,7 +71,10 @@ test.describe("TrashBot web UI", () => {
     await page.getByRole("button", { name: "Bring-up" }).click();
     await expect(page.getByRole("button", { name: "Finish bring-up" })).toBeVisible();
     const complete = page.waitForResponse((r) => r.url().includes("/api/bringup/complete") && r.ok());
+    const dialogPromise = page.waitForEvent("dialog");
     await page.getByRole("button", { name: "Finish bring-up" }).click();
+    const dialog = await dialogPromise;
+    await dialog.accept();
     await complete;
   });
 
