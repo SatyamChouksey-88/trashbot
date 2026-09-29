@@ -4,10 +4,10 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 
 ## 1. Tools on your PC
 
-1. Git, Python 3.10+, Node 20 LTS.
-2. `python -m pip install platformio` (use `python -m platformio`, not bare `pio`).
-3. Optional: C++ toolchain for firmware unit tests — LLVM, MSVC Build Tools, or WinLibs (if install fails, use WSL or skip; CI runs native tests on Linux).
-4. Verify: `python -m platformio run -d firmware -e xiao`, `python -m pytest tools -q`, `cd agent && npm ci && npm test`.
+1. Git, Python 3.10+, Node 20 LTS (no admin installers required on a locked-down laptop).
+2. `python -m pip install platformio ziglang` (use `python -m platformio`, not bare `pio`).
+3. Core firmware unit tests (no MSVC/WSL): `python tools/run_core_tests.py` (uses `python -m ziglang c++`). CI also runs `platformio test -e native` on Linux.
+4. Verify: `python -m platformio run -d firmware -e xiao`, `python tools/run_core_tests.py`, `python -m pytest tools -q`, `cd agent && npm ci && npm test`.
 
 ## 2. Parts and mechanical
 
@@ -46,8 +46,11 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 2. Clap-to-start from idle (tune `SOUND_TRIGGER_LEVEL` in `config.h` if needed).
 3. `python tools/log_report.py` on exported `/api/log` JSON for session stats.
 
-## 8. Gate 7 — agent on laptop
+## 8. Gate 7 — agent in Cursor (primary)
 
-1. Copy `secrets.h` with home `WIFI_SSID` / `WIFI_PASS` so robot and laptop share LAN.
-2. `cd agent && npm ci && npm run build && npm run pack` → install `agent.mcpb` (`docs/AGENT.md`).
-3. Claude: use **clean_room** prompt; confirm trash vs keep behaviour with eval photos in `agent/evals/`.
+1. `cd agent && npm ci && npm run build` (bundled `dist/index.js`).
+2. In a terminal: `npm run mock` (http://localhost:8787).
+3. Open this repo in **Cursor**; enable the **trashbot** MCP server from `.cursor/mcp.json` (Settings → MCP).
+4. In Cursor chat, run the **clean_room** prompt against the mock; later set `TRASHBOT_URL` to `http://192.168.4.1` or `http://trashbot.local` when the robot is on your LAN (`secrets.h` WiFi for home).
+
+**Optional (personal PC):** `npm run pack` → `trashbot.mcpb` for Claude Desktop — see `docs/AGENT.md`.

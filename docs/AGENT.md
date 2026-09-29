@@ -2,6 +2,19 @@
 
 Node 20+ MCP server in `agent/`. It talks to the robot over HTTP only; firmware safety is unchanged.
 
+## Gate 7 in Cursor (primary — office laptop)
+
+1. Build the bundled server: `cd agent && npm ci && npm run build`.
+2. Start the mock robot in a terminal: `npm run mock` (listens on http://localhost:8787).
+3. Enable MCP in **Cursor Settings → MCP**. This repo ships `.cursor/mcp.json`:
+   - Server name: `trashbot`
+   - Command: `node` with args `${workspaceFolder}/agent/dist/index.js`
+   - Env: `TRASHBOT_URL=http://localhost:8787`
+4. Reload MCP if needed; confirm `trashbot` shows tools.
+5. In chat, use the **`clean_room`** prompt (or ask the agent to run those steps). It will call tools against the mock until you point `TRASHBOT_URL` at a real robot.
+
+For a physical robot on your LAN later, change `TRASHBOT_URL` in `.cursor/mcp.json` to `http://trashbot.local` or `http://192.168.4.1`.
+
 ## Tools
 
 | Tool | Robot endpoint |
@@ -11,48 +24,32 @@ Node 20+ MCP server in `agent/`. It talks to the robot over HTTP only; firmware 
 | start_cleaning | POST /api/clean |
 | stop | POST /api/stop (retries) |
 | set_mode | POST /api/mode |
-| drive | POST /api/mode + POST /api/drive |
+| drive / move / turn / scoop | manual API routes |
 | get_events | GET /api/log |
-
-Prompt: `clean_room` (registered in the server).
 
 ## Environment
 
 - `TRASHBOT_URL` (default `http://trashbot.local`)
 - `TRASHBOT_TOKEN` optional
 
-## Gate 7 WiFi note
-
-Claude on your laptop needs internet. Put the robot on home WiFi (station mode via `firmware/include/secrets.h`) so the PC can reach both Claude and `trashbot.local`.
-
-## Install (.mcpb)
+## Pack for personal machines (optional)
 
 ```bash
 cd agent
-npm ci && npm run build && npm run pack
+npm run pack          # esbuild bundle → trashbot.mcpb
+npm run verify:mcpb   # smoke: mock + initialize + tools/list
 ```
 
-After `npm run pack`, install `agent/agent.mcpb` in Claude Desktop (see Anthropic “Getting Started with Local MCP Servers”). The bundle ships `dist/` + `package.json`; the Desktop installer should run `npm install` for MCP SDK dependencies. Do not commit API keys.
+The `.mcpb` contains a single bundled `dist/index.js` (all runtime deps inlined via esbuild).
 
-Manual fallback if packaging fails:
+### Claude Desktop (optional — personal PC only)
 
-```json
-{
-  "mcpServers": {
-    "trashbot": {
-      "command": "node",
-      "args": ["C:/path/to/physical/agent/dist/index.js"],
-      "env": { "TRASHBOT_URL": "http://trashbot.local" }
-    }
-  }
-}
-```
+Not available on locked-down work laptops. On your own machine you can install `trashbot.mcpb` per Anthropic’s local MCP guide, or use the same `node agent/dist/index.js` entry with env vars.
 
 ## Mock robot
 
 ```bash
 npm run mock
-TRASHBOT_URL=http://127.0.0.1:8787 npm start
 ```
 
 ## Evals

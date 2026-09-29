@@ -2,9 +2,14 @@ src
 test
 evals
 mock-robot
+scripts
 *.ts
+dist/*
+!dist/index.js
 vitest.config.ts
 tsconfig.json
 node_modules
 coverage
 .git
+agent.mcpb
+trashbot.mcpb

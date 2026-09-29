@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "trashbot": {
+      "command": "node",
+      "args": ["${workspaceFolder}/agent/dist/index.js"],
+      "env": {
+        "TRASHBOT_URL": "http://localhost:8787"
+      }
+    }
+  }
+}
