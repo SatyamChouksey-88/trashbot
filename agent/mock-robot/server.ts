@@ -14,6 +14,7 @@ type Mode = "idle" | "manual" | "auto";
 let mode: Mode = "idle";
 let state = "IDLE";
 let estop = false;
+let bringupDone = true;
 let seq = 0;
 let collected = 0;
 let failed = 0;
@@ -95,6 +96,36 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/post") {
+    return json(res, 200, {
+      ok: true,
+      reset_reason: "mock",
+      checks: { psram: true, nvs: true, camera: true, detector: true, ultrasonic: true, servo: true, wifi: true },
+    });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/bringup") {
+    return json(res, 200, {
+      motor_left_invert: false,
+      motor_right_invert: false,
+      motor_swap_sides: false,
+      camera_vflip: false,
+      camera_hmirror: false,
+      bringup_done: bringupDone,
+      calib_present: true,
+    });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/bringup/complete") {
+    bringupDone = true;
+    return json(res, 200, { ok: true, bringup_done: true });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/bringup") {
+    await readBody(req);
+    return json(res, 200, { ok: true });
+  }
+
   if (req.method === "GET" && url.pathname === "/api/health") {
     return json(res, 200, {
       overall: estop ? "CRITICAL" : "OK",
@@ -121,6 +152,9 @@ const server = http.createServer(async (req, res) => {
       camera: "mock",
       estop,
       uptime_ms: 1000,
+      api_version: 2,
+      bringup_done: bringupDone,
+      post_ok: true,
     });
     return json(res, 200, body);
   }
@@ -146,6 +180,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "POST" && url.pathname === "/api/clean") {
+    if (!bringupDone) {
+      return json(res, 409, { error: "preflight_failed", failed: ["bringup_required"] });
+    }
     const body = JSON.parse(await readBody(req));
     simulateSession(body.max_items ?? 5, body.max_time_s ?? 180);
     return json(res, 200, { ok: true });

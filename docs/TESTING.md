@@ -49,6 +49,14 @@ Hardware tests are yours; mark pass/fail in the tables below.
 | Cluttered floor | Many objects | No false scoops | | | |
 | Dark vs light floor | Both surfaces | Stable detection | | | |
 
+## G0 — Bring-up (software)
+
+| Check | How |
+|-------|-----|
+| POST / preflight logic | `python tools/run_core_tests.py` (`test_post_core`, `test_preflight`) |
+| Bring-up UI | Playwright: Bring-up tab + `POST /api/bringup/complete` (CI `e2e` job) |
+| Hardware G0 | Complete web **Bring-up** tab with wheels off the ground; confirm `bringup_done` in `/api/status` |
+
 ## G8 — Reliability (software)
 
 | Check | How |

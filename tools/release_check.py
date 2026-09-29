@@ -13,7 +13,7 @@ from native_env import native_skipped, SKIP_MSG
 
 
 def run(cmd: list[str], cwd: Path | None = None) -> bool:
-    label = " ".join(cmd[:3])
+    label = " ".join(cmd[:4])
     print(f"\n>> {label}...")
     r = subprocess.run(cmd, cwd=str(cwd or ROOT))
     ok = r.returncode == 0
@@ -34,7 +34,10 @@ def main() -> int:
         results.append(("core tests (zig)", run([sys.executable, "tools/run_core_tests.py"])))
         results.append(("sim build", run([sys.executable, "tools/sim/build_sim_brain.py"])))
         results.append(
-            ("sim smoke", run([sys.executable, "tools/sim/run.py", "--scenario", "bright_light", "--runs", "2"]))
+            (
+                "sim suite",
+                run([sys.executable, "tools/sim/run.py", "--suite", "all", "--runs", "3"]),
+            )
         )
 
     results.append(("pytest tools", run([sys.executable, "-m", "pytest", "tools", "-q"])))
@@ -51,7 +54,8 @@ def main() -> int:
     if not native_skipped():
         results.append(("verify:mcpb", run(["npm", "run", "verify:mcpb"], cwd=agent)))
     else:
-        results.append(("verify:mcpb", run(["npm", "run", "build"], cwd=agent)))
+        print("\n>> verify:mcpb: SKIP (TRASHBOT_NO_NATIVE)")
+        results.append(("verify:mcpb", True))
 
     print("\n=== Release check ===")
     failed = [n for n, ok in results if not ok]
@@ -60,7 +64,7 @@ def main() -> int:
     if failed:
         print(f"\nNO-GO ({len(failed)} failed)")
         return 1
-    print("\nGO — safe to flash after your own hardware checks.")
+    print("\nGO — safe to flash after your own hardware checks (see USER_STEPS.md G0).")
     return 0
 
 

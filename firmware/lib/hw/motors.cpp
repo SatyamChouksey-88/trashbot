@@ -1,4 +1,5 @@
 #include "motors.h"
+#include "bringup.h"
 #include "config.h"
 #include "motor_math.h"
 #include <Arduino.h>
@@ -66,9 +67,15 @@ void motorsApply(MotorCmd cmd, int maxDutyPct) {
         stopMotorsHw();
         return;
     }
+    BringupSettings b = bringupLoad();
     int l = cmd.left, r = cmd.right;
-    if (cfg::MOTOR_LEFT_INVERT) l = -l;
-    if (cfg::MOTOR_RIGHT_INVERT) r = -r;
+    if (b.motor_swap_sides) {
+        int t = l;
+        l = r;
+        r = t;
+    }
+    if (b.motor_left_invert) l = -l;
+    if (b.motor_right_invert) r = -r;
     cmd = applyCap({l, r}, maxDutyPct);
     setSide(cfg::PIN_AIN1, cfg::PIN_AIN2, cfg::PIN_PWMA, cfg::LEDC_CH_MOTOR_A, cmd.left);
     setSide(cfg::PIN_BIN1, cfg::PIN_BIN2, cfg::PIN_PWMB, cfg::LEDC_CH_MOTOR_B, cmd.right);

@@ -52,6 +52,14 @@ bool cameraBegin(char* sensorNameOut, int nameLen) {
     return true;
 }
 
+void cameraApplyOrientation(bool vflip, bool hmirror) {
+    sensor_t* s = esp_camera_sensor_get();
+    if (s) {
+        s->set_vflip(s, vflip ? 1 : 0);
+        s->set_hmirror(s, hmirror ? 1 : 0);
+    }
+}
+
 bool cameraCaptureJpeg(uint8_t** buf, size_t* len) {
     if (!ok) return false;
     camera_fb_t* fb = esp_camera_fb_get();

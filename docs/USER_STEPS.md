@@ -29,7 +29,16 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 3. Join `TrashBot-XXXX` WiFi, password `trashbot123`, open http://192.168.4.1.
 4. G1 checklist in `docs/TESTING.md`: drive, obstacle stop, dead-man, STOP, ESTOP.
 
-## 5. Calibration (web **Calibrate** tab)
+## 5. G0 — Bring-up wizard (web **Bring-up** tab)
+
+1. Put the robot on a box so the wheels are **off the ground**.
+2. Open **Bring-up** → pulse left/right wheels; toggle **invert** / **swap** until each side spins forward as labeled.
+3. Set servo angles (or use **Calibrate**), check ultrasonic at ~30 cm to a box, confirm camera snapshot is upright (flip checkbox if needed).
+4. Save scoop zone from a paper ball in the **Calibrate** tab.
+5. Click **Finish bring-up** (manual mode). `/api/status` should show `bringup_done: true` and `POST` ok in serial log.
+6. Auto clean stays blocked with **409** until bring-up and minimum calibration are done.
+
+## 6. Calibration (web **Calibrate** tab)
 
 1. Servo DOWN / CARRY / TIP angles, scoop zone from a detection, self-echo with scoop DOWN.
 2. Optional: measure turn and forward speeds (web prompts or manual notes → NVS keys).

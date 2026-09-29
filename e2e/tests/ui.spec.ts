@@ -61,6 +61,15 @@ test.describe("TrashBot web UI", () => {
     expect(posts.some((p) => p.includes("/api/calib/zone_xmin"))).toBeTruthy();
   });
 
+  test("Bring-up tab loads and complete endpoint", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Bring-up" }).click();
+    await expect(page.getByRole("button", { name: "Finish bring-up" })).toBeVisible();
+    const complete = page.waitForResponse((r) => r.url().includes("/api/bringup/complete") && r.ok());
+    await page.getByRole("button", { name: "Finish bring-up" }).click();
+    await complete;
+  });
+
   test("Camera and Log tabs render", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Camera" }).click();

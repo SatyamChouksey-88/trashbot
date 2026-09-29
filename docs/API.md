@@ -33,11 +33,24 @@ Idle or manual only (409 in auto). See master prompt Section 7 for field names.
 
 Returns `{ "overall": "OK" | "DEGRADED" | "CRITICAL", "checks": [{ "name", "status", "value", "detail?" }] }`.
 
-When `overall` is `CRITICAL`, `POST /api/clean` responds with **409** `{"error":"health_critical"}`.
+When `overall` is `CRITICAL`, `POST /api/clean` is blocked (see pre-flight below).
+
+## GET /api/post
+
+Boot self-test (POST) results: `{ "ok", "reset_reason", "checks": { ... } }`.
+
+## GET /api/bringup — POST /api/bringup
+
+Read or update motor invert/swap and camera flip flags (NVS).  
+`POST /api/bringup/complete` (manual mode) sets `bringup_done`.
 
 ## POST /api/clean
 
 Body: `{"max_items":1..20,"max_time_s":10..600,"label":"optional"}`
+
+Pre-flight: returns **409** `{"error":"preflight_failed","failed":["bringup_required",...]}` if health is CRITICAL, bring-up is incomplete, minimum calibration is missing, or battery is low (when enabled).
+
+`GET /api/status` includes `api_version: 2`, `bringup_done`, `post_ok`.
 
 ## POST /api/stop / POST /api/estop / POST /api/estop/reset
 

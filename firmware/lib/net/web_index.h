@@ -19,6 +19,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <button type=button onclick="show('cal')">Calibrate</button>
 <button type=button onclick="show('log')">Log</button>
 <button type=button onclick="show('health')">Health</button>
+<button type=button onclick="show('bring')">Bring-up</button>
 </nav>
 <section id=drive class="tab active">
 <div id=status></div>
@@ -39,6 +40,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <label><input type=checkbox id=fake> Fake detector demo (firmware flag via API later)</label>
 </section>
 <section id=auto class=tab>
+<p id=autowarn style="color:#c62828"></p>
 <label>Max items <input id=mi type=number value=5 min=1 max=20></label>
 <label>Max time(s) <input id=mt type=number value=180 min=10></label>
 <button onclick="clean()">Start clean</button><button onclick="stop()">Stop</button>
@@ -53,6 +55,18 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 </section>
 <section id=log class=tab><pre id=logpre></pre></section>
 <section id=health class=tab><pre id=healthpre>Loading…</pre><button onclick="loadHealth()">Refresh</button></section>
+<section id=bring class=tab>
+<p>Wheels off the ground. Manual mode only.</p>
+<button onclick="pulseLeft()">Pulse LEFT 30%</button>
+<button onclick="pulseRight()">Pulse RIGHT 30%</button>
+<label><input type=checkbox id=mli onchange="saveBring()"> Left invert</label>
+<label><input type=checkbox id=mri onchange="saveBring()"> Right invert</label>
+<label><input type=checkbox id=mswap onchange="saveBring()"> Swap sides</label>
+<label><input type=checkbox id=cvf onchange="saveBring()"> Camera flip</label>
+<p>Distance: <span id=bdist>—</span> cm (target ~30)</p>
+<button onclick="bringComplete()">Finish bring-up</button>
+<pre id=bringpre></pre>
+</section>
 <script>
 let holdT,activeTab='drive';
 function gspd(){return +document.getElementById('spd').value;}
@@ -72,13 +86,22 @@ async function clean(){await api('clean',{max_items:+mi.value,max_time_s:+mt.val
 async function calib(key,body){await api('calib/'+key,body,'POST');alert('Saved '+key);}
 async function loadHealth(){try{const h=await api('health');
 healthpre.textContent=h.overall+'\n'+h.checks.map(c=>c.name+': '+c.status+' '+c.value).join('\n');}catch(e){healthpre.textContent='Health error';}}
+async function loadBring(){const b=await api('bringup');mli.checked=b.motor_left_invert;mri.checked=b.motor_right_invert;
+mswap.checked=b.motor_swap_sides;cvf.checked=b.camera_vflip;bringpre.textContent=JSON.stringify(b,null,2);}
+async function saveBring(){await api('bringup',{motor_left_invert:mli.checked,motor_right_invert:mri.checked,motor_swap_sides:mswap.checked,camera_vflip:cvf.checked,camera_hmirror:cvf.checked},'POST');}
+async function pulseLeft(){await ensureManual();await api('drive',{left:30,right:0,duration_ms:300},'POST');}
+async function pulseRight(){await ensureManual();await api('drive',{left:0,right:30,duration_ms:300},'POST');}
+async function bringComplete(){await ensureManual();await api('bringup/complete',{},'POST');alert('Bring-up saved');loadBring();}
 async function poll(){try{
 const s=await api('status');
+autowarn.textContent=s.bringup_done?'':'Complete Bring-up before auto clean.';
 status.textContent='Mode '+s.mode+' | '+s.state+' | '+s.distance_cm+' cm'+(s.estop?' | ESTOP':'');
+bdist.textContent=s.distance_cm;
 sess.textContent=JSON.stringify(s.session,null,2);
 vis.textContent=(s.detector||'')+' '+s.vision_ms+'ms';
 if(activeTab==='cam')shot.src='/api/photo?'+Date.now();
 if(activeTab==='health')loadHealth();
+if(activeTab==='bring')loadBring();
 const lg=await api('log?since=0');
 logpre.textContent=lg.events.slice(-50).map(e=>e.seq+' '+e.type).join('\n');
 }catch(e){status.textContent='API error'}}

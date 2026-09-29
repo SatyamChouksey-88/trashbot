@@ -1,7 +1,11 @@
 #include "http_api.h"
 #include "api_json.h"
+#include "bringup.h"
 #include "calib.h"
+#include "camera.h"
 #include "config.h"
+#include "preflight_core.h"
+#include "post_report.h"
 #include "shared_state.h"
 #include "target.h"
 #include "web_index.h"
@@ -23,6 +27,31 @@ static bool checkToken(WebServer& server) {
 }
 
 static void enqueue(const RobotCommand& c) { xQueueSend(commandQueue(), &c, 0); }
+
+static bool rejectPreflight(WebServer& server) {
+    PreflightInputs pf{};
+    pf.health_critical = healthBlocksAuto(buildHealthInputs());
+    BringupSettings bu = bringupLoad();
+    pf.bringup_done = bu.bringup_done;
+    pf.calib_present = calibMinimumPresent();
+    pf.battery_monitor_enabled = cfg::BATTERY_MONITOR_ENABLED;
+    if (cfg::BATTERY_MONITOR_ENABLED) {
+        sharedStateLock();
+        float v = sharedStatus().battery_v;
+        sharedStateUnlock();
+        pf.battery_ok = v < 0 || v >= cfg::BATTERY_STOP_V;
+    }
+    PreflightResult pr = evaluatePreflight(pf);
+    if (pr.ok) return false;
+    JsonDocument doc;
+    doc["error"] = "preflight_failed";
+    JsonArray arr = doc["failed"].to<JsonArray>();
+    for (int i = 0; i < pr.failed_count; i++) arr.add(pr.failed[i]);
+    String out;
+    serializeJson(doc, out);
+    server.send(409, "application/json", out);
+    return true;
+}
 
 static bool parseBody(WebServer& server, JsonDocument& doc) {
     if (deserializeJson(doc, server.arg("plain"))) {
@@ -100,6 +129,52 @@ void httpApiBegin(WebServer& server) {
     server.on("/api/health", HTTP_GET, [&]() {
         if (!checkToken(server)) return;
         sendHealthJson(server);
+    });
+
+    server.on("/api/post", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        sendPostJson(server);
+    });
+
+    server.on("/api/bringup", HTTP_GET, [&]() {
+        if (!checkToken(server)) return;
+        BringupSettings bu = bringupLoad();
+        JsonDocument doc;
+        doc["motor_left_invert"] = bu.motor_left_invert;
+        doc["motor_right_invert"] = bu.motor_right_invert;
+        doc["motor_swap_sides"] = bu.motor_swap_sides;
+        doc["camera_vflip"] = bu.camera_vflip;
+        doc["camera_hmirror"] = bu.camera_hmirror;
+        doc["bringup_done"] = bu.bringup_done;
+        doc["calib_present"] = calibMinimumPresent();
+        String out;
+        serializeJson(doc, out);
+        server.send(200, "application/json", out);
+    });
+
+    server.on("/api/bringup", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        JsonDocument doc;
+        if (!parseBody(server, doc)) return;
+        BringupSettings bu = bringupLoad();
+        if (!doc["motor_left_invert"].isNull()) bu.motor_left_invert = doc["motor_left_invert"].as<bool>();
+        if (!doc["motor_right_invert"].isNull()) bu.motor_right_invert = doc["motor_right_invert"].as<bool>();
+        if (!doc["motor_swap_sides"].isNull()) bu.motor_swap_sides = doc["motor_swap_sides"].as<bool>();
+        if (!doc["camera_vflip"].isNull()) bu.camera_vflip = doc["camera_vflip"].as<bool>();
+        if (!doc["camera_hmirror"].isNull()) bu.camera_hmirror = doc["camera_hmirror"].as<bool>();
+        bringupSave(bu);
+        cameraApplyOrientation(bu.camera_vflip, bu.camera_hmirror);
+        server.send(200, "application/json", "{\"ok\":true}");
+    });
+
+    server.on("/api/bringup/complete", HTTP_POST, [&]() {
+        if (!checkToken(server)) return;
+        if (rejectUnlessManual(server, "bringup")) return;
+        bringupSetDone(true);
+        sharedStateLock();
+        sharedStatus().bringup_done = true;
+        sharedStateUnlock();
+        server.send(200, "application/json", "{\"ok\":true,\"bringup_done\":true}");
     });
 
     server.on("/api/photo", HTTP_GET, [&]() {
@@ -194,10 +269,7 @@ void httpApiBegin(WebServer& server) {
 
     server.on("/api/clean", HTTP_POST, [&]() {
         if (!checkToken(server)) return;
-        if (healthBlocksAuto(buildHealthInputs())) {
-            server.send(409, "application/json", "{\"error\":\"health_critical\"}");
-            return;
-        }
+        if (rejectPreflight(server)) return;
         JsonDocument doc;
         if (!parseBody(server, doc)) return;
         RobotCommand c{CmdType::Clean};

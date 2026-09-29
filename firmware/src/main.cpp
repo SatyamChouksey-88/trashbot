@@ -1,5 +1,7 @@
 #include "battery.h"
+#include "bringup.h"
 #include "bumper.h"
+#include "post_report.h"
 #include "brain.h"
 #include "calib.h"
 #include "camera.h"
@@ -298,6 +300,7 @@ void setup() {
     Serial.begin(115200);
     sharedStateBegin();
     calibBegin();
+    bringupBegin();
     motorsBegin();
     servoBegin();
     ultrasonicBegin();
@@ -307,12 +310,21 @@ void setup() {
     fakeDetector.begin();
     char sensor[16] = "error";
     bool camOk = cameraBegin(sensor, sizeof(sensor));
+    BringupSettings bu = bringupLoad();
+    cameraApplyOrientation(bu.camera_vflip, bu.camera_hmirror);
     sharedStateLock();
     if (camOk) strncpy(sharedStatus().camera, sensor, sizeof(sharedStatus().camera) - 1);
     strncpy(sharedStatus().fw, FW_VERSION, sizeof(sharedStatus().fw) - 1);
     sharedStateUnlock();
     char ip[32];
     wifiSetupBegin(ip, sizeof(ip));
+    PostReport post = runBootPost(camOk);
+    sharedStateLock();
+    sharedStatus().post_ok = post.result.ok;
+    sharedStatus().bringup_done = bu.bringup_done;
+    sharedStateUnlock();
+    Serial.printf("POST %s reset=%s cam=%d us=%d wifi=%d\n", post.result.ok ? "OK" : "FAIL", post.reset_reason,
+                  post.result.camera_ok, post.result.ultrasonic_ok, post.result.wifi_ok);
     httpApiBegin(server);
     sharedEvents().push(EventType::boot, millis());
     sharedEvents().push(EventType::wifi_ready, millis());

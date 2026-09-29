@@ -5,6 +5,7 @@
 
 void sendStatusJson(WebServer& server);
 void sendHealthJson(WebServer& server);
+void sendPostJson(WebServer& server);
 HealthInputs buildHealthInputs();
 const char* stateToString(State s);
 const char* eventTypeToString(EventType t);

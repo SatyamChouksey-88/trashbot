@@ -55,6 +55,8 @@ struct RobotStatus {
     uint32_t heartbeat_control_ms = 0;
     bool health_critical = false;
     char health_overall[12] = "OK";
+    bool post_ok = false;
+    bool bringup_done = false;
     bool use_fake_detector = true;
     uint8_t* photo = nullptr;
     size_t photo_len = 0;

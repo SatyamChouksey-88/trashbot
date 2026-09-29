@@ -1,6 +1,8 @@
 #include "api_json.h"
+#include "bringup.h"
 #include "config.h"
 #include "motors.h"
+#include "post_report.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -102,6 +104,29 @@ HealthInputs buildHealthInputs() {
     return in;
 }
 
+void sendPostJson(WebServer& server) {
+    const PostReport* post = postLastReport();
+    JsonDocument doc;
+    if (post) {
+        doc["ok"] = post->result.ok;
+        doc["reset_reason"] = post->reset_reason;
+        doc["finished_ms"] = post->finished_ms;
+        JsonObject checks = doc["checks"].to<JsonObject>();
+        checks["psram"] = post->result.psram_ok;
+        checks["nvs"] = post->result.nvs_ok;
+        checks["camera"] = post->result.camera_ok;
+        checks["detector"] = post->result.detector_ok;
+        checks["ultrasonic"] = post->result.ultrasonic_ok;
+        checks["servo"] = post->result.servo_ok;
+        checks["wifi"] = post->result.wifi_ok;
+    } else {
+        doc["ok"] = false;
+    }
+    String out;
+    serializeJson(doc, out);
+    server.send(200, "application/json", out);
+}
+
 void sendHealthJson(WebServer& server) {
     HealthInputs in = buildHealthInputs();
     HealthCheckRow rows[16];
@@ -130,7 +155,10 @@ void sendStatusJson(WebServer& server) {
     sharedStateLock();
     auto& s = sharedStatus();
     JsonDocument doc;
+    doc["api_version"] = 2;
     doc["fw"] = s.fw;
+    doc["bringup_done"] = s.bringup_done;
+    doc["post_ok"] = s.post_ok;
     doc["mode"] = s.mode == Mode::Auto ? "auto" : (s.mode == Mode::Manual ? "manual" : "idle");
     doc["state"] = stateToString(s.state);
     JsonObject sess = doc["session"].to<JsonObject>();
