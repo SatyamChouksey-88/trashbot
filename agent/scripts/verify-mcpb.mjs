@@ -16,11 +16,15 @@ const mcpbPath = join(agentRoot, "trashbot.mcpb");
 async function unpackMcpb(dest) {
   const zipCopy = join(dest, "pack.zip");
   await cp(mcpbPath, zipCopy);
-  await execFileAsync(
-    "powershell",
-    ["-NoProfile", "-Command", `Expand-Archive -LiteralPath '${zipCopy}' -DestinationPath '${dest}' -Force`],
-    { cwd: agentRoot },
-  );
+  if (process.platform === "win32") {
+    await execFileAsync(
+      "powershell",
+      ["-NoProfile", "-Command", `Expand-Archive -LiteralPath '${zipCopy}' -DestinationPath '${dest}' -Force`],
+      { cwd: agentRoot },
+    );
+  } else {
+    await execFileAsync("unzip", ["-q", zipCopy, "-d", dest], { cwd: agentRoot });
+  }
 }
 
 async function withMock(fn) {
@@ -41,14 +45,17 @@ async function mcpSmoke(entryJs) {
   const transport = new StdioClientTransport({
     command: process.execPath,
     args: [entryJs],
-    env: { ...process.env, TRASHBOT_URL: "http://127.0.0.1:8787" },
+    env: { ...process.env, TRASHBOT_URL: "http://127.0.0.1:8787", TRASHBOT_MODE: "read_only" },
     cwd: dirname(entryJs),
   });
   const client = new Client({ name: "verify-mcpb", version: "1.0" }, { capabilities: {} });
   await client.connect(transport);
   const { tools } = await client.listTools();
+  if (!tools?.some((t) => t.name === "run_command")) throw new Error("run_command tool missing");
+  const run = await client.callTool({ name: "run_command", arguments: { text: "ruko" } });
+  const text = run.content?.find((c) => c.type === "text")?.text ?? "";
+  if (!text) throw new Error("run_command returned empty");
   await client.close();
-  if (!tools?.length) throw new Error("tools/list returned no tools");
   return tools.length;
 }
 

@@ -46,6 +46,11 @@ def main() -> int:
     if not (lang / "node_modules").is_dir():
         results.append(("shared/lang npm ci", run(["npm", "ci"], cwd=lang)))
     results.append(("shared/lang npm test", run(["npm", "test"], cwd=lang)))
+    if native_skipped():
+        print("\n>> shared/lang test:fuzz: SKIP (office laptop — CI shared-lang job)")
+        results.append(("shared/lang test:fuzz", True))
+    else:
+        results.append(("shared/lang test:fuzz", run(["npm", "run", "test:fuzz"], cwd=lang)))
     results.append(("embed_lang --check", run([sys.executable, "tools/embed_lang.py", "--check"])))
     results.append(
         ("COMMANDS.md check", run(["node", "tools/gen-commands-doc.mjs", "--check"], cwd=lang)),

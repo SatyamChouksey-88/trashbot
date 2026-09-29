@@ -48,6 +48,33 @@ describe("run_command via executor", () => {
     expect(calls.some((c) => c.includes("/api/move"))).toBe(false);
   });
 
+  it("full mode posts move for 20 cm aage", async () => {
+    const moves: unknown[] = [];
+    const http = makeHttp(base);
+    const wrapped = async (m: string, p: string, b?: Record<string, unknown>) => {
+      if (p === "/api/move") moves.push(b);
+      return http(m, p, b);
+    };
+    const ex = createExecutor({ http: wrapped, mode: "full", sleep: async () => {} });
+    await ex.run("20 cm aage");
+    expect(moves.some((b) => (b as { distance_cm?: number })?.distance_cm === 20)).toBe(true);
+  });
+
+  it("ghumo then answer 2 turns right", async () => {
+    const turns: unknown[] = [];
+    const http = makeHttp(base);
+    const wrapped = async (m: string, p: string, b?: Record<string, unknown>) => {
+      if (p === "/api/turn") turns.push(b);
+      return http(m, p, b);
+    };
+    const ex = createExecutor({ http: wrapped, mode: "full", sleep: async () => {} });
+    const a = await ex.run("ghumo");
+    expect(a.needsAnswer).toBe(true);
+    await ex.run("2");
+    const last = turns.at(-1) as { degrees?: number };
+    expect(last?.degrees).toBeLessThan(0);
+  });
+
   it("read_only stop sends /api/stop", async () => {
     const calls: string[] = [];
     const http = makeHttp(base);

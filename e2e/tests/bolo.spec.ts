@@ -5,20 +5,16 @@ test.describe("Bolo UI on mock", () => {
 
   test("Bolo box renders on home page", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("#bolo")).toBeVisible();
+    await page.waitForSelector(".tb-bolo input", { timeout: 15_000 });
+    await expect(page.locator(".tb-bolo")).toBeVisible();
   });
 
   test("typing ruko triggers stop", async ({ page }) => {
-    const stops: string[] = [];
-    await page.route("**/api/stop", async (route) => {
-      stops.push("stop");
-      await route.continue();
-    });
+    const stopReq = page.waitForRequest((r) => r.url().includes("/api/stop") && r.method() === "POST");
     await page.goto("/");
-    const input = page.locator('.tb-bolo input[type="text"]');
-    await input.fill("ruko");
-    await input.press("Enter");
-    await page.waitForTimeout(800);
-    expect(stops.length).toBeGreaterThanOrEqual(1);
+    await page.waitForSelector(".tb-bolo input", { timeout: 15_000 });
+    await page.fill(".tb-bolo input", "ruko");
+    await page.locator(".tb-bolo button.send").click();
+    await stopReq;
   });
 });

@@ -64,3 +64,12 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 4. In Cursor chat, run the **clean_room** prompt against the mock; later set `TRASHBOT_URL` to `http://192.168.4.1` or `http://trashbot.local` when the robot is on your LAN (`secrets.h` WiFi for home).
 
 **Optional (personal PC):** `npm run pack` → `trashbot.mcpb` for Claude Desktop — see `docs/AGENT.md`.
+
+## 9. Gate G11 — Bolo on hardware
+
+1. Flash latest `xiao` firmware (includes Bolo box on the web page).
+2. Wheels **off the ground** first: type `50 cm aage` in Bolo, then `ruko` — motion must stop quickly.
+3. `aage mat jao` must not move the wheels.
+4. On the floor after calibration: `20 cm aage`, `90 degree left ghumo`, voice `kachra saaf karo` + `ruko`.
+5. Teach a phrase (confirm “yaad rakhun?”), reboot, confirm it still works; delete via Settings / aliases reset if needed.
+6. Full checklist: `docs/TESTING.md` § G11 and `docs/MASTER_PROMPT_V4.md` §8.
