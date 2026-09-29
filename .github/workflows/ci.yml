@@ -44,4 +44,18 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r tools/requirements.txt -r tools/requirements-dev.txt
+      - run: python tools/run_core_tests.py
       - run: python -m pytest tools -q
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: cd agent && npm ci
+      - run: cd agent && npm run mock &
+      - run: sleep 2
+      - run: cd e2e && npm ci && npx playwright install chromium
+      - run: cd e2e && TRASHBOT_URL=http://127.0.0.1:8787 npm test

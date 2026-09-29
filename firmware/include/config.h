@@ -7,6 +7,7 @@ constexpr int PIN_PWMA = 1, PIN_AIN1 = 2, PIN_AIN2 = 4;
 constexpr int PIN_PWMB = 5, PIN_BIN1 = 6, PIN_BIN2 = 7;
 constexpr int PIN_SERVO = 8, PIN_US_TRIG = 9, PIN_US_ECHO = 44;
 constexpr int PIN_BATTERY_ADC = 3, PIN_STATUS_LED = 21;
+constexpr int PIN_BUMPER = 6; // GPIO43 — boot log pin; use 1 kΩ series to GND if wired
 // LEDC
 constexpr int LEDC_CH_MOTOR_A = 0, LEDC_CH_MOTOR_B = 1, LEDC_CH_SERVO = 2; // camera uses ch7 + timer 3
 constexpr uint32_t MOTOR_PWM_HZ = 20000; constexpr uint8_t MOTOR_PWM_BITS = 10;
@@ -65,6 +66,8 @@ constexpr int HTTP_PORT = 80;
 constexpr bool SOUND_TRIGGER_ENABLED = true;
 constexpr int SOUND_TRIGGER_LEVEL = 12000;      // peak |sample| in a 20 ms window
 constexpr uint32_t SOUND_TRIGGER_COOLDOWN_MS = 3000;
+// Front bumper microswitch (optional)
+constexpr bool BUMPER_ENABLED = false;
 // Battery (optional)
 constexpr bool BATTERY_MONITOR_ENABLED = false;
 constexpr float BATTERY_DIVIDER_RATIO = (100.0f + 33.0f) / 33.0f;

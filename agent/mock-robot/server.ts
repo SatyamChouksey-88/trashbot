@@ -1,6 +1,10 @@
 import http from "node:http";
 import { PLACEHOLDER_JPEG_B64 } from "./placeholder.js";
+import { loadWebIndex } from "./webIndex.js";
 import { statusSchema, logSchema } from "../src/contract.js";
+
+const WEB_INDEX = loadWebIndex();
+const calibLog: Array<{ key: string; body: unknown }> = [];
 
 const PORT = Number(process.env.MOCK_PORT ?? 8787);
 const TOKEN = process.env.MOCK_TOKEN ?? "";
@@ -85,6 +89,12 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://127.0.0.1:${PORT}`);
   if (!auth(req, res)) return;
 
+  if (req.method === "GET" && url.pathname === "/") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(WEB_INDEX);
+    return;
+  }
+
   if (req.method === "GET" && url.pathname === "/api/status") {
     const body = statusSchema.parse({
       fw: "0.1.0-mock",
@@ -138,12 +148,14 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && url.pathname === "/api/estop") {
     estop = true;
+    state = "ESTOP";
     push("estop");
     return json(res, 200, { ok: true });
   }
 
   if (req.method === "POST" && url.pathname === "/api/estop/reset") {
     estop = false;
+    state = "IDLE";
     push("estop_reset");
     return json(res, 200, { ok: true });
   }
@@ -164,6 +176,18 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && url.pathname === "/api/scoop") {
     return json(res, 200, { ok: true });
+  }
+
+  if (req.method === "POST" && url.pathname.startsWith("/api/calib/")) {
+    const key = url.pathname.slice("/api/calib/".length);
+    const body = JSON.parse(await readBody(req));
+    calibLog.push({ key, body });
+    push("calib_saved");
+    return json(res, 200, { ok: true, key });
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/calib") {
+    return json(res, 200, { entries: calibLog });
   }
 
   json(res, 404, { error: "not found" });

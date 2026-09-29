@@ -9,6 +9,7 @@ MotorCmd filterMotor(MotorCmd requested, MotorCmd previous, const SafetyInputs& 
     if (in.estop || in.lowBattery) return {0, 0};
 
     int dist = effectiveDistance(in.distance_cm, in.scoopDown, in.scoopSelfEchoCm);
+    if (in.bumperPressed) dist = 0;
     MotorCmd out = requested;
     if (dist < in.obstacleStopCm && (out.left + out.right) > 0) {
         if (out.left > 0) out.left = 0;

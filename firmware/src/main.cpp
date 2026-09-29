@@ -1,4 +1,5 @@
 #include "battery.h"
+#include "bumper.h"
 #include "brain.h"
 #include "calib.h"
 #include "camera.h"
@@ -92,6 +93,7 @@ static void controlTask(void*) {
         uint32_t now = millis();
         ultrasonicTrigger();
         int dist = ultrasonicReadCm();
+        if (bumperPressed()) dist = 0;
 
         BrainCommands merged{};
         RobotCommand cmd{};
@@ -175,6 +177,7 @@ static void controlTask(void*) {
         safety.maxDutyPct = bin.calib.max_duty;
         safety.rampPctPerS = cfg::MOTOR_RAMP_PCT_PER_S;
         safety.dt_ms = 20;
+        safety.bumperPressed = bumperPressed();
         MotorCmd filtered = filterMotor(bout.motor, lastMotor, safety);
         lastMotor = filtered;
         motorsApply(filtered, bin.calib.max_duty);
@@ -247,6 +250,7 @@ void setup() {
     motorsBegin();
     servoBegin();
     ultrasonicBegin();
+    bumperInit();
     statusLedBegin();
     soundTriggerBegin();
     fakeDetector.begin();

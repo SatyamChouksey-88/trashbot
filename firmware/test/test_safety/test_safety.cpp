@@ -22,6 +22,18 @@ void test_forward_block(void) {
     TEST_ASSERT_TRUE(o.left > 0);
 }
 
+void test_bumper_blocks_forward(void) {
+    SafetyInputs in{};
+    in.distance_cm = 80;
+    in.bumperPressed = true;
+    in.obstacleStopCm = 15;
+    in.maxDutyPct = 100;
+    in.rampPctPerS = 1000;
+    in.dt_ms = 20;
+    auto o = filterMotor({50, 50}, {0, 0}, in);
+    TEST_ASSERT_EQUAL(0, o.left);
+}
+
 void test_scoop_echo(void) {
     SafetyInputs in{};
     in.distance_cm = 10;
@@ -39,6 +51,7 @@ int main() {
     UNITY_BEGIN();
     RUN_TEST(test_estop);
     RUN_TEST(test_forward_block);
+    RUN_TEST(test_bumper_blocks_forward);
     RUN_TEST(test_scoop_echo);
     return UNITY_END();
 }

@@ -6,6 +6,7 @@ struct SafetyInputs {
     bool scoopDown;
     bool estop;
     bool lowBattery;
+    bool bumperPressed;
     int obstacleStopCm;
     int scoopSelfEchoCm;
     int maxDutyPct;

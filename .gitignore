@@ -5,6 +5,7 @@ dist/
 tools/.core_test_build/
 tools/sim/sim_brain
 tools/sim/sim_brain.exe
+*.pdb
 dataset/*
 !dataset/README.md
 firmware/include/secrets.h

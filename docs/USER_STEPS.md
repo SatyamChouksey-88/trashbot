@@ -17,8 +17,8 @@ Work through in order. Software is already in this repo; you bring hardware, fla
 
 ## 3. Power and wiring
 
-1. Set buck #1 to **5.0 V**, buck #2 to **6.0 V** (multimeter before connecting).
-2. Wire per `docs/WIRING.md` (TB6612, servo on 6 V, common ground, ECHO divider).
+1. Fit a **2S Li-ion BMS** on the pack; set buck #1 to **5.0 V**, buck #2 to **6.0 V** (multimeter before connecting).
+2. Wire per `docs/WIRING.md` (TB6612, servo on 6 V, common ground, ECHO divider). Optional: front bumper on D6, battery divider on D2 (`config.h` flags default off).
 3. Power switch **OFF** when using USB-C for flashing.
 
 ## 4. First flash and G1
