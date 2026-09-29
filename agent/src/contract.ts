@@ -25,6 +25,8 @@ export const statusSchema = z.object({
   estop: z.boolean().optional(),
   session: z.record(z.unknown()).optional(),
   uptime_ms: z.number().optional(),
+  turn_left_sign: z.number().optional(),
+  features: z.array(z.string()).optional(),
 });
 
 export const logSchema = z.object({

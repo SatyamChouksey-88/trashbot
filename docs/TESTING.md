@@ -103,3 +103,13 @@ With `TRASHBOT_NO_NATIVE=1`, `run.py` skips the suite (CI builds `sim_brain` and
 |-------|-----|
 | `uncertain_skip` event | Core brain + sim `unknown_object_nearby` |
 | Agent lessons | `cd agent && npm test` (`lessons.test.ts`) |
+
+## G11 — Bolo (software)
+
+| Check | How |
+|-------|-----|
+| Parser + safety S1–S7 | `cd shared/lang && npm test` (359) |
+| Embedded JS fresh | `python tools/embed_lang.py --check` |
+| MCP `run_command` | `cd agent && npm test` (`bolo.test.ts`) |
+| E2E Bolo box | CI `e2e` job (`bolo.spec.ts`) |
+| Hardware G11 | `docs/MASTER_PROMPT_V4.md` §8 checklist (wheels up first) |

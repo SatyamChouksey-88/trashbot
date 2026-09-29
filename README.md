@@ -51,6 +51,16 @@ python tools/sim/run.py --scenario bright_light --gif docs/media/sim_demo.gif
 | G6 Extras | done | pending user test |
 | G7 Agent | done | pending user test |
 
+## Bolo — Hinglish + English commands
+
+On the robot web page, use the **Bolo** box at the top (type or use the phone keyboard mic). In Cursor, use `/trashbot` and natural commands, or MCP tool `run_command`.
+
+Examples: `kachra saaf karo`, `20 cm aage chalo`, `photo lo`, `battery kitni hai`, `ruko`.
+
+- Full cheat sheet: [docs/COMMANDS.md](docs/COMMANDS.md)
+- Try without hardware: `cd shared/lang && npm run dev` → http://localhost:8790
+- Future upgrades backlog: [docs/UPGRADES.md](docs/UPGRADES.md)
+
 ## Docs
 
 - [docs/MASTER_PROMPT.md](docs/MASTER_PROMPT.md) — full spec  

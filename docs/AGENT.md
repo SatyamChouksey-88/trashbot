@@ -32,6 +32,15 @@ For a physical robot on your LAN later, change `TRASHBOT_URL` in `.cursor/mcp.js
 | get_lessons | `agent/memory/lessons.json` (see `lessons.example.json`) |
 | record_lesson / record_user_correction | laptop memory (not blocked in `dry_run`) |
 
+## Talking to TrashBot in Hinglish / English
+
+- Cursor slash commands: `/trashbot`, `/ruko`, `/saaf-karo` (see `.cursor/commands/`).
+- Prefer MCP tool **`run_command`** with the user's exact words before chaining legacy tools.
+- Modes: `read_only` (info + **stop always works**), `dry_run` (default), `full` (motion).
+- Set `TRASHBOT_LANG=auto|en|hi` in `.cursor/mcp.json`.
+- Chat is **not** an emergency stop — use the phone **■ RUKO · STOP** button or power switch.
+- Operator behaviour when *you* chat with the robot: `docs/OPERATOR.md`.
+
 ## Lessons memory
 
 Confirmed lessons (`user_confirmed: true`) are applied in `plan_cleaning` and the `clean_room` prompt. Copy `agent/memory/lessons.example.json` to `lessons.json` locally (gitignored).

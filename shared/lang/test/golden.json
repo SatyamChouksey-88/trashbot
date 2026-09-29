@@ -1,0 +1,3644 @@
+[
+ {
+  "in": "ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "Ruko!",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "ruk jao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "rukooo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "RUKO RUKO",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "stop",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "STOP!!!",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "stopp",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "stp",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "rko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "sotp",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "notes": [
+   "fuzzy_stop"
+  ]
+ },
+ {
+  "in": "stpo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "notes": [
+   "fuzzy_stop"
+  ]
+ },
+ {
+  "in": "tahm",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "notes": [
+   "fuzzy_stop"
+  ]
+ },
+ {
+  "in": "wait",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "hold on",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "pause",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "bas",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "bas karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "bas bas",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "bas ho gaya",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "enough",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "band karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "bandh karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "off karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "turn off",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "switch off",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "so jao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "thamo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "thahro",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "रुको",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "रुक जाओ",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "बस",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "बंद करो",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "ruko mat",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "stop mat karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "why did you stop",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "kya tum ruk sakte ho?",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "aage jao, nahi ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "please stop the robot",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "robot bhai ruk jao yaar",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "stop and turn left",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "20 cm aage phir ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "emergency",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "emergency stop",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "e-stop",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "estop",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "bachao",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "इमरजेंसी",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "khatra hai ruko",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "emergency reset",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "ESTOP_RESET"
+   ]
+  ]
+ },
+ {
+  "in": "estop hatao",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "ESTOP_RESET"
+   ]
+  ]
+ },
+ {
+  "in": "reset estop",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "ESTOP_RESET"
+   ]
+  ]
+ },
+ {
+  "in": "emergency reset mat karo",
+  "kind": "command",
+  "intents": [
+   "ESTOP"
+  ]
+ },
+ {
+  "in": "kachra saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "kachra uthao",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "saaf karo na",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "safai karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "safai shuru karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "jhadu lagao",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "clean the room",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "clean up",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "pick up the trash",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "collect the garbage",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "3 kachre uthao",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 3,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "clean 3 items",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 3,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "2 minute saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 120
+   }
+  ]
+ },
+ {
+  "in": "5 kachre 2 minute me saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 120
+   }
+  ]
+ },
+ {
+  "in": "saaf karo 50",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 20,
+    "max_time_s": 180
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "30 minute saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 600
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "कचरा साफ करो",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "kamre ka kachra saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "aaj kachra saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "kachra saaf karo please bhai",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "safai chahiye",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ]
+ },
+ {
+  "in": "sofa ke paas saaf karo",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ],
+  "notes": [
+   "location_ignored"
+  ]
+ },
+ {
+  "in": "bed ke neeche saaf karo",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "clean near the sofa",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "kal saaf karna",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ],
+  "unknown": [
+   "kal"
+  ]
+ },
+ {
+  "in": "kya tum saaf kar sakte ho?",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ],
+  "notes": [
+   "ask_question"
+  ]
+ },
+ {
+  "in": "can you clean the room",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "saaf karoge?",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "start",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "shuru karo",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "chalu karo",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "floor saaf hai",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "saaf ho gaya",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "kachra hai",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "maine saaf kar diya",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "the floor is clean",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "kachra reh gaya",
+  "kind": "info",
+  "reply": "statement_noted"
+ },
+ {
+  "in": "aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "aage chalo",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "20 cm aage chalo",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "aage 20 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "20cm aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "forward 20 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "move forward 20 centimeters",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "go ahead 15 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 15
+   }
+  ]
+ },
+ {
+  "in": "seedha jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "सीधा चलो",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "आगे 20 सेमी",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "आगे २० सेमी",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "do cm aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 2
+   }
+  ]
+ },
+ {
+  "in": "bees cm aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "aadha meter aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 50
+   }
+  ]
+ },
+ {
+  "in": "ek meter aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 50
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "aage 1 meter",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 50
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "200 cm aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 50
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "2 step aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "ek kadam aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "aage 12.5 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 13
+   }
+  ]
+ },
+ {
+  "in": "thoda aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 5
+   }
+  ]
+ },
+ {
+  "in": "zara aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 5
+   }
+  ]
+ },
+ {
+  "in": "zyada aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 25
+   }
+  ]
+ },
+ {
+  "in": "bahut aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 25
+   }
+  ]
+ },
+ {
+  "in": "dheere aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10,
+    "speed": 25
+   }
+  ]
+ },
+ {
+  "in": "tez aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10,
+    "speed": 60
+   }
+  ]
+ },
+ {
+  "in": "jaldi aage aao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10,
+    "speed": 60
+   }
+  ]
+ },
+ {
+  "in": "move ahead slowly",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10,
+    "speed": 25
+   }
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "aage jao na",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "peeche",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 10
+   }
+  ],
+  "notes": [
+   "back_no_sensor"
+  ]
+ },
+ {
+  "in": "peeche jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "thoda peeche",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 5
+   }
+  ]
+ },
+ {
+  "in": "go back a little",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 5
+   }
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "reverse 10 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "peeche 50 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 20
+   }
+  ],
+  "notes": [
+   "clamped",
+   "back_no_sensor"
+  ]
+ },
+ {
+  "in": "पीछे जाओ",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "come back",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "back",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "10 inch aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 25
+   }
+  ]
+ },
+ {
+  "in": "1 foot aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 30
+   }
+  ]
+ },
+ {
+  "in": "-20 cm aage",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ]
+ },
+ {
+  "in": "aage 999999999999 cm",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 50
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "2 baar aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ],
+  "notes": [
+   "times_ignored"
+  ]
+ },
+ {
+  "in": "phir se aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "phir aage jao",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 10
+   }
+  ]
+ },
+ {
+  "in": "left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "right",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "left ghumo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "left mudo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "turn left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "turn left 90",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "90 degree left ghumo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "left me 90 degree",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "90° left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "right 30",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 30
+   }
+  ]
+ },
+ {
+  "in": "thoda right mudo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 20
+   }
+  ]
+ },
+ {
+  "in": "turn right a bit",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 20
+   }
+  ]
+ },
+ {
+  "in": "zyada left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "pura left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ]
+ },
+ {
+  "in": "daayen ghumo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "baayein mudo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "बाएं घूमो",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "दाएं मुड़ो",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "palat jao",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "u-turn",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "u turn",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "turn around",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "pura ghoom jao",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "aadha chakkar",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ]
+ },
+ {
+  "in": "ek chakkar lagao",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "left 270",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 180
+   }
+  ],
+  "notes": [
+   "clamped"
+  ]
+ },
+ {
+  "in": "right 45 dheere",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45,
+    "speed": 25
+   }
+  ]
+ },
+ {
+  "in": "rigth ghumo",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "lefft",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ]
+ },
+ {
+  "in": "scoop neeche karo",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "down"
+   }
+  ]
+ },
+ {
+  "in": "scoop down",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "down"
+   }
+  ]
+ },
+ {
+  "in": "scoop upar karo",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "carry"
+   }
+  ]
+ },
+ {
+  "in": "lift the scoop",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "carry"
+   }
+  ]
+ },
+ {
+  "in": "scoop khali karo",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "tip"
+   }
+  ]
+ },
+ {
+  "in": "dump the scoop",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "tip"
+   }
+  ]
+ },
+ {
+  "in": "scoop palto",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "tip"
+   }
+  ]
+ },
+ {
+  "in": "tip",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "tip"
+   }
+  ]
+ },
+ {
+  "in": "scoop",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "cycle"
+   }
+  ]
+ },
+ {
+  "in": "scoop test karo",
+  "kind": "command",
+  "intents": [
+   "SCOOP"
+  ],
+  "params": [
+   {
+    "action": "cycle"
+   }
+  ]
+ },
+ {
+  "in": "scoop upar neeche",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "SCOOP"
+   ],
+   [
+    "SCOOP"
+   ]
+  ]
+ },
+ {
+  "in": "chalo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ],
+  "reply": "clarify_move"
+ },
+ {
+  "in": "go",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "jao",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "ghumo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "TURN"
+   ]
+  ],
+  "reply": "clarify_turn"
+ },
+ {
+  "in": "turn",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "wapas aao",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "hato",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "left right",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "aage peeche",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "left jao aage",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "MOVE"
+   ],
+   [
+    "TURN",
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "left 20 cm",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN",
+    "MOVE"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "aage jao aur kachra uthao",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "CLEAN"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "aage ki photo lo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "PHOTO"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "battery kitni hai aur saaf karo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "BATTERY"
+   ],
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "20 cm",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "90 degree",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "chalo na jaldi",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "idhar aao",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ],
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "kitchen me jao",
+  "kind": "info",
+  "reply": "cant_navigate"
+ },
+ {
+  "in": "sofa ki taraf aage jao",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "MOVE"
+   ]
+  ],
+  "notes": [
+   "location_ignored"
+  ]
+ },
+ {
+  "in": "aage mat jao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "reply": "negation_stop"
+ },
+ {
+  "in": "mat chalo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "reply": "negation_stop"
+ },
+ {
+  "in": "don't move",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "do not go forward",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "dnt go forward",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "aage nahi jana",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "aage nahe jana",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "aage nhai jana",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "notes": [
+   "fuzzy_negation"
+  ]
+ },
+ {
+  "in": "aage na jao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "kachra mat uthao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "safai mat karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "left mat mudo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "scoop neeche mat karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "mat",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "nahi nahi",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "no",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "cancel",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "मत जाओ",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "never turn left",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "photo mat lo",
+  "kind": "info",
+  "reply": "ok_not_doing"
+ },
+ {
+  "in": "ye kachra nahi hai",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "yeh kachra nahin hai",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "ye mera hai",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "isko mat uthao",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "this is not trash",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "that is mine",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "don't pick this up",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "keep this",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "kachra nahi hai",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "यह कचरा नहीं है",
+  "kind": "command",
+  "intents": [
+   "STOP",
+   "MARK_KEEP"
+  ]
+ },
+ {
+  "in": "ye kachra hai",
+  "kind": "command",
+  "intents": [
+   "MARK_TRASH"
+  ]
+ },
+ {
+  "in": "ye bhi kachra hai",
+  "kind": "command",
+  "intents": [
+   "MARK_TRASH"
+  ]
+ },
+ {
+  "in": "this is trash",
+  "kind": "command",
+  "intents": [
+   "MARK_TRASH"
+  ]
+ },
+ {
+  "in": "photo lo",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "photo khicho",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "kya dikh raha hai",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "what do you see",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ],
+  "lang": "en"
+ },
+ {
+  "in": "take a photo",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "kachra dikhao",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "फोटो लो",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "kya haal hai",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "status",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "status batao",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "kya chal raha hai",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "sab theek hai?",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "what are you doing",
+  "kind": "command",
+  "intents": [
+   "STATUS"
+  ]
+ },
+ {
+  "in": "battery kitni hai",
+  "kind": "command",
+  "intents": [
+   "BATTERY"
+  ]
+ },
+ {
+  "in": "battery level",
+  "kind": "command",
+  "intents": [
+   "BATTERY"
+  ]
+ },
+ {
+  "in": "बैटरी कितनी है",
+  "kind": "command",
+  "intents": [
+   "BATTERY"
+  ]
+ },
+ {
+  "in": "charge kitna hai",
+  "kind": "command",
+  "intents": [
+   "BATTERY"
+  ]
+ },
+ {
+  "in": "kitna kachra uthaya",
+  "kind": "command",
+  "intents": [
+   "REPORT"
+  ]
+ },
+ {
+  "in": "kitne kachre uthaye",
+  "kind": "command",
+  "intents": [
+   "REPORT"
+  ]
+ },
+ {
+  "in": "hisaab batao",
+  "kind": "command",
+  "intents": [
+   "REPORT"
+  ]
+ },
+ {
+  "in": "report",
+  "kind": "command",
+  "intents": [
+   "REPORT"
+  ]
+ },
+ {
+  "in": "how many did you collect",
+  "kind": "command",
+  "intents": [
+   "REPORT"
+  ]
+ },
+ {
+  "in": "kya galti hui",
+  "kind": "command",
+  "intents": [
+   "MISTAKES"
+  ]
+ },
+ {
+  "in": "kyun ruka",
+  "kind": "command",
+  "intents": [
+   "MISTAKES"
+  ]
+ },
+ {
+  "in": "kachra kyun nahi uthaya",
+  "kind": "command",
+  "intents": [
+   "MISTAKES"
+  ]
+ },
+ {
+  "in": "what went wrong",
+  "kind": "command",
+  "intents": [
+   "MISTAKES"
+  ]
+ },
+ {
+  "in": "tabiyat kaisi hai",
+  "kind": "command",
+  "intents": [
+   "HEALTH"
+  ]
+ },
+ {
+  "in": "koi dikkat hai",
+  "kind": "command",
+  "intents": [
+   "HEALTH"
+  ]
+ },
+ {
+  "in": "health check",
+  "kind": "command",
+  "intents": [
+   "HEALTH"
+  ]
+ },
+ {
+  "in": "madad",
+  "kind": "command",
+  "intents": [
+   "HELP"
+  ]
+ },
+ {
+  "in": "help",
+  "kind": "command",
+  "intents": [
+   "HELP"
+  ]
+ },
+ {
+  "in": "kaise use karu",
+  "kind": "command",
+  "intents": [
+   "HELP"
+  ]
+ },
+ {
+  "in": "commands",
+  "kind": "command",
+  "intents": [
+   "HELP"
+  ]
+ },
+ {
+  "in": "hinglish me bolo",
+  "kind": "command",
+  "intents": [
+   "LANG"
+  ],
+  "params": [
+   {
+    "lang": "hi"
+   }
+  ]
+ },
+ {
+  "in": "english me bolo",
+  "kind": "command",
+  "intents": [
+   "LANG"
+  ],
+  "params": [
+   {
+    "lang": "en"
+   }
+  ]
+ },
+ {
+  "in": "reply in english",
+  "kind": "command",
+  "intents": [
+   "LANG"
+  ],
+  "params": [
+   {
+    "lang": "en"
+   }
+  ]
+ },
+ {
+  "in": "haan",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  },
+  "notes": [
+   "confirmed"
+  ]
+ },
+ {
+  "in": "ok",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "theek hai",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "haan ji",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "हां",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "nahi",
+  "kind": "cancelled",
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "rehne do",
+  "kind": "cancelled",
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "haan",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "TURN"
+   ],
+   [
+    "TURN"
+   ]
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  },
+  "reply": "pick_one"
+ },
+ {
+  "in": "haan",
+  "kind": "info",
+  "reply": "confirm_expired",
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 900000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "haan",
+  "kind": "info",
+  "reply": "no_pending"
+ },
+ {
+  "in": "haan ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "haan",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "MOVE",
+       "params": {
+        "direction": "forward",
+        "distance_cm": 999
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  },
+  "params": [
+   {
+    "distance_cm": 50
+   }
+  ]
+ },
+ {
+  "in": "haan",
+  "kind": "unknown",
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "FLY",
+       "params": {}
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "2",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  },
+  "notes": [
+   "picked"
+  ]
+ },
+ {
+  "in": "doosra wala",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "right",
+    "degrees": 45
+   }
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "option 1",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "first",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "3",
+  "kind": "unknown",
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "2 ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "opts": {
+   "pending": {
+    "suggestions": [
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "left",
+        "degrees": 45
+       }
+      }
+     ],
+     [
+      {
+       "intent": "TURN",
+       "params": {
+        "direction": "right",
+        "degrees": 45
+       }
+      }
+     ]
+    ],
+    "at": 995000
+   },
+   "now": 1000000
+  }
+ },
+ {
+  "in": "chotu kaam pe lag jao",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "aliases": [
+    {
+     "phrase": "chotu kaam pe lag jao",
+     "steps": [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    }
+   ]
+  },
+  "notes": [
+   "alias"
+  ]
+ },
+ {
+  "in": "chotu lag jao bhai",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "opts": {
+   "aliases": [
+    {
+     "phrase": "chotu kaam pe lag jao",
+     "steps": [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "in": "chotu ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "opts": {
+   "aliases": [
+    {
+     "phrase": "chotu ruko",
+     "steps": [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "in": "chotu aage badh",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "opts": {
+   "aliases": [
+    {
+     "phrase": "chotu aage badh",
+     "steps": [
+      {
+       "intent": "MOVE",
+       "params": {
+        "direction": "forward",
+        "distance_cm": 999
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "params": [
+   {
+    "distance_cm": 50
+   }
+  ]
+ },
+ {
+  "in": "chotu kaam pe lag jao?",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ],
+  "opts": {
+   "aliases": [
+    {
+     "phrase": "chotu kaam pe lag jao",
+     "steps": [
+      {
+       "intent": "CLEAN",
+       "params": {}
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "in": "dobara",
+  "kind": "command",
+  "intents": [
+   "MOVE"
+  ],
+  "params": [
+   {
+    "direction": "forward",
+    "distance_cm": 20
+   }
+  ],
+  "opts": {
+   "lastSteps": [
+    {
+     "intent": "MOVE",
+     "params": {
+      "direction": "forward",
+      "distance_cm": 20
+     }
+    }
+   ]
+  },
+  "notes": [
+   "repeat"
+  ]
+ },
+ {
+  "in": "phir se",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 90
+   }
+  ],
+  "opts": {
+   "lastSteps": [
+    {
+     "intent": "TURN",
+     "params": {
+      "direction": "left",
+      "degrees": 90
+     }
+    }
+   ]
+  }
+ },
+ {
+  "in": "again",
+  "kind": "command",
+  "intents": [
+   "PHOTO"
+  ],
+  "opts": {
+   "lastSteps": [
+    {
+     "intent": "PHOTO",
+     "params": {}
+    }
+   ]
+  }
+ },
+ {
+  "in": "dobara",
+  "kind": "info",
+  "reply": "repeat_nothing"
+ },
+ {
+  "in": "dobara",
+  "kind": "info",
+  "reply": "repeat_nothing",
+  "opts": {
+   "lastSteps": [
+    {
+     "intent": "STOP",
+     "params": {}
+    }
+   ]
+  }
+ },
+ {
+  "in": "20 cm aage jao phir left ghumo",
+  "kind": "command",
+  "intents": [
+   "MOVE",
+   "TURN"
+  ],
+  "notes": [
+   "sequence"
+  ]
+ },
+ {
+  "in": "aage jao then turn left",
+  "kind": "command",
+  "intents": [
+   "MOVE",
+   "TURN"
+  ]
+ },
+ {
+  "in": "left ghumo phir 20 cm aage phir photo lo",
+  "kind": "command",
+  "intents": [
+   "TURN",
+   "MOVE",
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "aage jao uske baad photo lo",
+  "kind": "command",
+  "intents": [
+   "MOVE",
+   "PHOTO"
+  ]
+ },
+ {
+  "in": "aage jao phir saaf karo",
+  "kind": "info",
+  "reply": "sequence_not_allowed"
+ },
+ {
+  "in": "a phir b phir c phir d",
+  "kind": "info",
+  "reply": "sequence_too_long"
+ },
+ {
+  "in": "aage jao phir blah",
+  "kind": "unknown",
+  "reply": "sequence_part_unclear"
+ },
+ {
+  "in": "aage jao phir mat jao",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ]
+ },
+ {
+  "in": "aage phir left?",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "MOVE",
+    "TURN"
+   ]
+  ]
+ },
+ {
+  "in": "forwrd 10",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ]
+  ],
+  "reply": "did_you_mean"
+ },
+ {
+  "in": "forwad",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "safi karo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "sfai karo",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "CLEAN"
+   ]
+  ]
+ },
+ {
+  "in": "bateri",
+  "kind": "clarify",
+  "sugg": [
+   [
+    "BATTERY"
+   ]
+  ]
+ },
+ {
+  "in": "xyz",
+  "kind": "unknown"
+ },
+ {
+  "in": "",
+  "kind": "empty"
+ },
+ {
+  "in": "   ",
+  "kind": "empty"
+ },
+ {
+  "in": "!!!",
+  "kind": "empty"
+ },
+ {
+  "in": "hello",
+  "kind": "unknown"
+ },
+ {
+  "in": "dance karo",
+  "kind": "unknown"
+ },
+ {
+  "in": "follow me",
+  "kind": "unknown"
+ },
+ {
+  "in": "0 cm aage",
+  "kind": "unknown",
+  "reply": "bad_number"
+ },
+ {
+  "in": "aage 1e5",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "MOVE"
+   ]
+  ],
+  "notes": [
+   "ask_numbers"
+  ]
+ },
+ {
+  "in": "aage 20 30 cm",
+  "kind": "confirm",
+  "sugg": [
+   [
+    "MOVE"
+   ]
+  ]
+ },
+ {
+  "in": "stop karo",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "stop",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "stop",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "opts": {
+   "lastLang": "en"
+  },
+  "lang": "en"
+ },
+ {
+  "in": "left",
+  "kind": "command",
+  "intents": [
+   "TURN"
+  ],
+  "params": [
+   {
+    "direction": "left",
+    "degrees": 45
+   }
+  ],
+  "opts": {
+   "lastLang": "en"
+  },
+  "lang": "en"
+ },
+ {
+  "in": "ruko",
+  "kind": "command",
+  "intents": [
+   "STOP"
+  ],
+  "opts": {
+   "lang": "en"
+  },
+  "lang": "en"
+ },
+ {
+  "in": "saaf karo",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ],
+  "lang": "hi"
+ },
+ {
+  "in": "clean",
+  "kind": "command",
+  "intents": [
+   "CLEAN"
+  ],
+  "params": [
+   {
+    "max_items": 5,
+    "max_time_s": 180
+   }
+  ],
+  "lang": "en"
+ }
+]

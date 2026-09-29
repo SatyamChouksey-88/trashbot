@@ -2,7 +2,7 @@
 
 ## Progress log
 
-**v3 active** — executing `docs/MASTER_PROMPT_V3.md` (phases A–I).
+**v4 active** — executing `docs/MASTER_PROMPT_V4.md` (phases J–N). v3 (A–I) complete.
 
 | Date | Phase | Notes |
 |------|-------|-------|
@@ -15,6 +15,7 @@
 | 2026-09-29 | v3-G | Recipe bandit, `/api/learning`, mistake stubs, eval_model + model_gate. |
 | 2026-09-29 | v3-H | E2E health + learning tabs. |
 | 2026-09-29 | v3-I | `V3_FINAL_REPORT.md`, docs pass, release_check GO (software). |
+| 2026-09-30 | v4-J..N | Bolo shared/lang, firmware embed + aliases, MCP run_command, CI G11. |
 | 2026-09-29 | 0–7 | Software build complete. Native Unity on Windows host blocked (no g++). Hardware tests pending user. |
 
 ## Phase checklist
@@ -39,6 +40,14 @@
 - [x] **G** — Learning bandit + model gate
 - [x] **H** — E2E expansion (bring-up, health, learning)
 - [x] **I** — Final release_check, CHANGELOG, Section 16 report
+
+### v4 phases (MASTER_PROMPT_V4.md §12)
+
+- [x] **J** — Package check-in (`shared/lang`, docs, cursor commands)
+- [x] **K** — Firmware `/lang.mjs`, Bolo UI, aliases API, `TURN_LEFT_SIGN`
+- [x] **L** — Agent `run_command`, aliases tools, mode fix
+- [x] **M** — OPERATOR.md, COMMANDS.md, README Bolo section
+- [x] **N** — CI shared-lang, e2e bolo, release_check
 
 ## Definition of done (software)
 

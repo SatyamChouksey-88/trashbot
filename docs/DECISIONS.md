@@ -18,3 +18,8 @@
 | 2026-09-29 | Sim `max_violations` on bumper/corner | Bumper forces dist=0 while brain may still command turn-in-place | Tighten when G8 safety + brain cap asymmetric wheels (see I1) |
 | 2026-09-29 | On-robot uncertain → skip after rechecks | MASTER_PROMPT_V3 §7; agent judges photos in MCP only | Tune `RECHECK_Y` / `MAX_RECHECKS` in `config.h` |
 | 2026-09-29 | `MISTAKE_CAPTURE` default off | PSRAM ring + JPEG capture needs hardware soak | Enable flag after field testing |
+| 2026-09-30 | Parser on phone/laptop only | v4 §0.5 — firmware serves JS + alias data only | Never add lexicon to ESP32 |
+| 2026-09-30 | No in-page Web Speech mic | Robot HTTP AP has no HTTPS | Use Gboard keyboard mic |
+| 2026-09-30 | `TURN_LEFT_SIGN = +1` | `turnDegrees(+deg)` drives left>0, right<0 | Fix inversion in bring-up, not sign |
+| 2026-09-30 | `stop`/`estop` in every MCP mode | Safety over read_only | `toolGuard` always allows stop |
+| 2026-09-30 | Agent `move` schema −20..50 cm | Matches Bolo rear limit | Firmware API unchanged |

@@ -24,6 +24,7 @@
 #include "profile_store.h"
 #include "stuck_detect.h"
 #include "learning_store.h"
+#include "alias_store.h"
 #include "recipe_bandit.h"
 #include <WebServer.h>
 #include <esp_task_wdt.h>
@@ -361,6 +362,7 @@ void setup() {
     sharedStateBegin();
     calibBegin();
     bringupBegin();
+    aliasStoreBegin();
     missionStoreBegin();
     profileStoreBegin();
     profileLoadSlot(profileActiveSlot());

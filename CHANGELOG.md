@@ -11,3 +11,4 @@
 - v3-G: Recipe bandit core, learning/mistake APIs, `eval_model.py` / `model_gate.py`.
 - v3-H: Playwright health + learning tabs.
 - v3-I: `docs/reports/V3_FINAL_REPORT.md`, plan checklist complete.
+- v4: Bolo Hinglish/English commands (`shared/lang`), web Bolo box, learned aliases API, MCP `run_command`.

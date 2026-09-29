@@ -22,4 +22,9 @@ describe("agent modes", () => {
     const g = guardTool("drive");
     expect(g.blocked).toMatch(/read_only/);
   });
+
+  it("read_only allows stop", () => {
+    vi.stubEnv("TRASHBOT_MODE", "read_only");
+    expect(guardTool("stop")).toEqual({});
+  });
 });

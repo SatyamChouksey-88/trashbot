@@ -13,6 +13,8 @@
 #include "shared_state.h"
 #include "target.h"
 #include "web_index.h"
+#include "web_lang.h"
+#include "aliases_api.h"
 #include <ArduinoJson.h>
 #include <cmath>
 #include <cstring>
@@ -124,6 +126,15 @@ static void handleCalibPost(WebServer& server, const String& key) {
 
 void httpApiBegin(WebServer& server) {
     server.on("/", [&]() { server.send_P(200, "text/html", WEB_INDEX); });
+
+    server.on("/lang.mjs", HTTP_GET, [&]() {
+        server.sendHeader("Cache-Control", "no-cache");
+        server.send_P(200, "text/javascript; charset=utf-8", WEB_LANG_MJS);
+    });
+    server.on("/bolo-ui.mjs", HTTP_GET, [&]() {
+        server.sendHeader("Cache-Control", "no-cache");
+        server.send_P(200, "text/javascript; charset=utf-8", WEB_BOLO_UI_MJS);
+    });
 
     server.on("/api/status", HTTP_GET, [&]() {
         if (!checkToken(server)) return;
@@ -418,6 +429,8 @@ void httpApiBegin(WebServer& server) {
         }
         server.send(200, "application/json", "{\"ok\":true,\"queued\":false}");
     });
+
+    registerAliasesRoutes(server, checkToken);
 
     server.on("/api/log", HTTP_GET, [&]() {
         if (!checkToken(server)) return;

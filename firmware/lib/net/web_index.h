@@ -10,7 +10,14 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 #status{font-size:1rem;margin:8px 0;line-height:1.4}
 .danger{background:#c62828;color:#fff}
+#bolo{margin-bottom:12px}
 </style></head><body>
+<div id=bolo></div>
+<script type=module>
+import * as L from '/lang.mjs';
+import { mountBolo } from '/bolo-ui.mjs';
+mountBolo(document.getElementById('bolo'), { L });
+</script>
 <h1>TrashBot</h1>
 <nav>
 <button type=button onclick="show('drive')">Drive</button>
@@ -28,7 +35,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <div class=grid>
 <button onmousedown="hold(0,gspd())" onmouseup="stop()" ontouchstart="hold(0,gspd())" ontouchend="stop()">FWD</button>
 <button onmousedown="hold(-gspd(),0)" onmouseup="stop()">LEFT</button>
-<button class=danger onclick="stop()">STOP</button>
+<button class=danger onclick="stop()">■ RUKO · STOP</button>
 <button onmousedown="hold(gspd(),0)" onmouseup="stop()">RIGHT</button>
 <button onmousedown="hold(0,-gspd())" onmouseup="stop()">BACK</button>
 </div>
@@ -44,7 +51,7 @@ button,input,select{font-size:18px;padding:12px;margin:4px;touch-action:manipula
 <p id=autowarn style="color:#c62828"></p>
 <label>Max items <input id=mi type=number value=5 min=1 max=20></label>
 <label>Max time(s) <input id=mt type=number value=180 min=10></label>
-<button onclick="clean()">Start clean</button><button onclick="stop()">Stop</button>
+<button onclick="clean()">Saaf karo · Clean</button><button onclick="stop()">Stop</button>
 <pre id=sess></pre>
 </section>
 <section id=cal class=tab>

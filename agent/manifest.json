@@ -13,7 +13,8 @@
       "args": ["${__dirname}/dist/index.js"],
       "env": {
         "TRASHBOT_URL": "${user_config.robot_url}",
-        "TRASHBOT_TOKEN": "${user_config.token}"
+        "TRASHBOT_TOKEN": "${user_config.token}",
+        "TRASHBOT_LANG": "${user_config.lang}"
       }
     }
   },
@@ -29,6 +30,12 @@
       "title": "API token (optional)",
       "description": "Value for X-TrashBot-Token if configured in secrets.h",
       "sensitive": true
+    },
+    "lang": {
+      "type": "string",
+      "title": "Language",
+      "description": "auto, en, or hi for Bolo replies",
+      "default": "auto"
     }
   }
 }

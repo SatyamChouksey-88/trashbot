@@ -1,7 +1,15 @@
 import http from "node:http";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { PLACEHOLDER_JPEG_B64 } from "./placeholder.js";
 import { loadWebIndex } from "./webIndex.js";
 import { statusSchema, logSchema } from "../src/contract.js";
+
+const repoRoot = join(import.meta.dirname, "..", "..");
+const WEB_LANG = readFileSync(join(repoRoot, "shared/lang/trashbot-lang.mjs"), "utf8");
+const WEB_BOLO_UI = readFileSync(join(repoRoot, "shared/lang/web/bolo-ui.mjs"), "utf8");
+type AliasRow = { phrase: string; steps: unknown[] };
+const aliases: AliasRow[] = [];
 
 const WEB_INDEX = loadWebIndex();
 const calibLog: Array<{ key: string; body: unknown }> = [];
@@ -102,6 +110,50 @@ function simulateSession(maxItems: number, maxTimeS: number) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://127.0.0.1:${PORT}`);
   if (!auth(req, res)) return;
+
+  if (req.method === "GET" && url.pathname === "/lang.mjs") {
+    res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-cache" });
+    res.end(WEB_LANG);
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/bolo-ui.mjs") {
+    res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-cache" });
+    res.end(WEB_BOLO_UI);
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/aliases") {
+    return json(res, 200, { aliases, max: 50 });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/aliases") {
+    const body = JSON.parse(await readBody(req));
+    const phrase = String(body.phrase ?? "");
+    const steps = body.steps;
+    const idx = aliases.findIndex((a) => a.phrase === phrase);
+    const replaced = idx >= 0;
+    if (replaced) aliases[idx] = { phrase, steps };
+    else {
+      if (aliases.length >= 50) return json(res, 409, { error: "full" });
+      aliases.push({ phrase, steps });
+    }
+    return json(res, 200, { ok: true, replaced, count: aliases.length });
+  }
+
+  if (req.method === "DELETE" && url.pathname === "/api/aliases") {
+    const phrase = url.searchParams.get("phrase") ?? "";
+    const idx = aliases.findIndex((a) => a.phrase === phrase);
+    const removed = idx >= 0;
+    if (removed) aliases.splice(idx, 1);
+    return json(res, 200, { ok: true, removed });
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/aliases/reset") {
+    aliases.length = 0;
+    await readBody(req);
+    return json(res, 200, { ok: true });
+  }
 
   if (req.method === "GET" && url.pathname === "/") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -214,6 +266,8 @@ const server = http.createServer(async (req, res) => {
       api_version: 2,
       bringup_done: bringupDone,
       post_ok: true,
+      turn_left_sign: 1,
+      features: ["bolo", "aliases"],
     });
     return json(res, 200, body);
   }

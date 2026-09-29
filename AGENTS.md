@@ -31,4 +31,6 @@ A feature is done only when it has: (1) config flag/value in `config.h` (experim
 
 ## Resume
 
-If interrupted, re-read `docs/MASTER_PROMPT.md`, `docs/MASTER_PROMPT_V3.md`, and `docs/PLAN.md`, then continue the first unfinished v3 phase.
+If interrupted, re-read `docs/MASTER_PROMPT.md`, `docs/MASTER_PROMPT_V3.md`, `docs/MASTER_PROMPT_V4.md`, and `docs/PLAN.md`, then continue the first unfinished phase.
+
+Operating the robot from chat: see `docs/OPERATOR.md` (operator role ≠ build role; while building, never ask).

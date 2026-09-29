@@ -1,0 +1,21 @@
+{
+  "name": "trashbot-lang",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TrashBot 'Bolo' bilingual (Hinglish + English) command parser. Zero dependencies.",
+  "type": "module",
+  "main": "trashbot-lang.mjs",
+  "types": "trashbot-lang.d.mts",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/parser.test.mjs test/properties.test.mjs test/lexicon.test.mjs test/executor.test.mjs",
+    "test:fuzz": "node tools/fuzz.mjs 50000 3",
+    "docs": "node tools/gen-commands-doc.mjs",
+    "docs:check": "node tools/gen-commands-doc.mjs --check",
+    "test:web": "node --test web/test/bolo-ui.e2e.mjs",
+    "dev": "node web/dev-server.mjs"
+  }
+}

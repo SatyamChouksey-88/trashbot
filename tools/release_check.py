@@ -42,6 +42,15 @@ def main() -> int:
 
     results.append(("pytest tools", run([sys.executable, "-m", "pytest", "tools", "-q"])))
 
+    lang = ROOT / "shared" / "lang"
+    if not (lang / "node_modules").is_dir():
+        results.append(("shared/lang npm ci", run(["npm", "ci"], cwd=lang)))
+    results.append(("shared/lang npm test", run(["npm", "test"], cwd=lang)))
+    results.append(("embed_lang --check", run([sys.executable, "tools/embed_lang.py", "--check"])))
+    results.append(
+        ("COMMANDS.md check", run(["node", "tools/gen-commands-doc.mjs", "--check"], cwd=lang)),
+    )
+
     agent = ROOT / "agent"
     results.append(("agent build", run(["npm", "run", "build"], cwd=agent)))
     results.append(("agent test", run(["npm", "test"], cwd=agent)))

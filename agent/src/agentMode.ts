@@ -6,16 +6,20 @@ export function getAgentMode(): AgentMode {
   return "dry_run";
 }
 
+export function isSafetyTool(name: string): boolean {
+  return name === "stop" || name === "estop" || name === "run_command";
+}
+
 export function isMotionTool(name: string): boolean {
   return [
     "start_cleaning",
-    "stop",
     "set_mode",
     "drive",
     "move",
     "turn",
     "scoop",
-    "estop",
+    "add_alias",
+    "remove_alias",
   ].includes(name);
 }
 
@@ -28,5 +32,7 @@ export function isReadOnlyTool(name: string): boolean {
     "get_mission",
     "get_lessons",
     "plan_cleaning",
+    "list_aliases",
+    "run_command",
   ].includes(name);
 }

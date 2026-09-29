@@ -108,6 +108,9 @@ constexpr int OBSTACLE_STOP_CM_MIN = 12;
 constexpr int MOTOR_MAX_DUTY_MAX = 80;
 constexpr int SPEED_MAX_PCT = 80;
 // Feature flags
+// Positive /api/turn degrees => left turn (see timed_move::turnDegrees).
+constexpr int TURN_LEFT_SIGN = 1;
+constexpr bool ALIASES_ENABLED = true;
 constexpr bool LEARNING_ENABLED = false;
 constexpr bool MISTAKE_CAPTURE = false;
 constexpr bool DEBUG_API = false;

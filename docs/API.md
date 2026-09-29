@@ -85,3 +85,18 @@ Keys: `zone_xmin`, `zone_xmax`, `zone_ymin`, `servo_down`, `servo_carry`, `servo
 - `POST /api/mistakes/flag` — queue user/agent flag (503 when capture disabled).
 
 Event types: `uncertain_skip`, `learning_update`.
+
+## Bolo (v4)
+
+Static JS (no token): `GET /lang.mjs`, `GET /bolo-ui.mjs`.
+
+`/api/status` adds `turn_left_sign` (+1 = positive `/api/turn` degrees turns left) and `features: ["bolo","aliases"]`.
+
+### Learned phrases
+
+- `GET /api/aliases` — `{ "aliases": [{ "phrase", "steps": [{ "intent", "params": {} }] }], "max": 50 }`
+- `POST /api/aliases` — body `{ phrase, steps }` (max 2 KB)
+- `DELETE /api/aliases?phrase=...`
+- `POST /api/aliases/reset`
+
+Events: `alias_saved`, `alias_removed`, `aliases_reset`.

@@ -48,6 +48,9 @@ const char* eventTypeToString(EventType t) {
     case EventType::item_skipped: return "item_skipped";
     case EventType::uncertain_skip: return "uncertain_skip";
     case EventType::learning_update: return "learning_update";
+    case EventType::alias_saved: return "alias_saved";
+    case EventType::alias_removed: return "alias_removed";
+    case EventType::aliases_reset: return "aliases_reset";
     case EventType::session_done: return "session_done";
     case EventType::estop: return "estop";
     case EventType::estop_reset: return "estop_reset";
@@ -160,6 +163,10 @@ void sendStatusJson(WebServer& server) {
     auto& s = sharedStatus();
     JsonDocument doc;
     doc["api_version"] = 2;
+    doc["turn_left_sign"] = cfg::TURN_LEFT_SIGN;
+    JsonArray feats = doc["features"].to<JsonArray>();
+    feats.add("bolo");
+    feats.add("aliases");
     doc["fw"] = s.fw;
     doc["bringup_done"] = s.bringup_done;
     doc["post_ok"] = s.post_ok;
