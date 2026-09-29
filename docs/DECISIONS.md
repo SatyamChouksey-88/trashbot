@@ -24,4 +24,4 @@
 | 2026-09-30 | `stop`/`estop` in every MCP mode | Safety over read_only | `toolGuard` always allows stop |
 | 2026-09-30 | Agent `move` schema −20..50 cm | Matches Bolo rear limit | Firmware API unchanged |
 
-**Git remote (`origin`).** `origin` → GitHub exists and is used for CI (`SatyamChouksey-88/trashbot`). This is a personal project; only the owner decides when to push. Office-laptop and IT policy may block or restrict `git push` — run pushes from a machine and network where that is allowed, after local tests pass.
+**Git remote (`origin`).** `origin` → GitHub is used for CI and code backup (`SatyamChouksey-88/trashbot`). This is a personal project; pushes are by the owner's instruction (2026-09-30). No `secrets.h`, WiFi passwords, tokens, or API keys are committed. Office IT policy may still restrict `git push` on some machines — use a network where push is allowed after local tests pass.
