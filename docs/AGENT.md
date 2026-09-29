@@ -32,7 +32,7 @@ cd agent
 npm ci && npm run build && npm run pack
 ```
 
-After `npm run pack`, install `agent/agent.mcpb` in Claude Desktop (see Anthropic “Getting Started with Local MCP Servers”). Do not commit API keys.
+After `npm run pack`, install `agent/agent.mcpb` in Claude Desktop (see Anthropic “Getting Started with Local MCP Servers”). The bundle ships `dist/` + `package.json`; the Desktop installer should run `npm install` for MCP SDK dependencies. Do not commit API keys.
 
 Manual fallback if packaging fails:
 
