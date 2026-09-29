@@ -23,7 +23,7 @@
 
 ## Blockers (fix before treating software as “release ready”)
 
-**Status: all three FIXED** in commit **`d819208`** (post-audit blocker patch).
+**Status: all three FIXED** in commit **`7d038ef`** (post-audit blocker patch).
 
 1. **CI `e2e` job** — **FIXED.** `e2e/tests/ui.spec.ts` uses `data-testid` (`drive-stop`, `auto-clean`, `calib-zone-xmin`, `drive-estop`) on `web_index.h` without changing visible labels. Calibrate test waits for `dialog` before accept. Re-verify on CI after push.
 2. **`PIN_BUMPER` pin map** — **FIXED.** `PIN_BUMPER = 43` (`config.h`); `test_pin_map` Unity + `tools/tests/test_pin_map.py` assert unique GPIOs and bumper ≠ echo (44).
@@ -45,7 +45,7 @@
 ## Notes
 
 - v3 phases A–I and v4 J–N are marked complete in `docs/PLAN.md`; hardware gates remain user-pending.
-- Pre-fix CI: all jobs **success** except **e2e** on `main` push `2ee4fcc`. Post-fix e2e: see latest Actions run after `d819208`.
+- Pre-fix CI: all jobs **success** except **e2e** on `main` push `2ee4fcc`. Post-fix e2e: see latest Actions run after `7d038ef`.
 
 ---
 
