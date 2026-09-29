@@ -339,11 +339,13 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "POST" && url.pathname === "/api/move") {
+    if (estop) return json(res, 409, { error: "estop_active" });
     const body = JSON.parse(await readBody(req));
     return json(res, 200, { ok: true, duration_ms: Math.abs(body.distance_cm ?? 10) * 40 });
   }
 
   if (req.method === "POST" && url.pathname === "/api/turn") {
+    if (estop) return json(res, 409, { error: "estop_active" });
     return json(res, 200, { ok: true, duration_ms: 500 });
   }
 

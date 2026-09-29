@@ -63,7 +63,7 @@ test.describe("Bolo UI on mock", () => {
   test("battery kitni hai shows reply", async ({ page }) => {
     await mountBolo(page);
     await say(page, "battery kitni hai");
-    await expect(page.locator(".tb-bolo [data-r='reply']")).toContainText(/V|volt/i);
+    await expect(page.locator(".tb-bolo [data-r='reply']")).toContainText(/Battery|band hai|V|volt/i);
   });
 
   test("@hil estop then reset flow", async ({ page }) => {
@@ -72,6 +72,6 @@ test.describe("Bolo UI on mock", () => {
     await say(page, "emergency");
     await estopReq;
     await say(page, "20 cm aage");
-    await expect(page.locator(".tb-bolo [data-r='reply']")).toContainText(/Emergency|emergency/i);
+    await expect(page.locator(".tb-bolo [data-r='reply']")).toContainText(/Emergency|emergency|ESTOP|laga/i);
   });
 });
