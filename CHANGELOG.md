@@ -1,14 +1,20 @@
 # Changelog
 
-## 0.1.0 (in progress)
+All notable changes to this project are documented here.
 
-- v3-A: EPDR native skip, agent modes, MCP tools.
-- v3-B: Digital twin JSON scenarios and fault injection.
-- v3-C: G8 reliability (motor lease, recovery, health, tripwire).
-- v3-D: G0 POST boot self-test, bring-up wizard API/UI, pre-flight before auto clean, release_check GO/NO-GO.
-- v3-E: Mission records + history, event reason codes, profile slots (tile/carpet/custom).
-- v3-F: Confidence zones (`uncertain_skip`), agent `lessons.json` + MCP lesson tools.
-- v3-G: Recipe bandit core, learning/mistake APIs, `eval_model.py` / `model_gate.py`.
-- v3-H: Playwright health + learning tabs.
-- v3-I: `docs/reports/V3_FINAL_REPORT.md`, plan checklist complete.
-- v4: Bolo Hinglish/English commands (`shared/lang`), web Bolo box, learned aliases API, MCP `run_command`.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [0.1.0] - 2026-09-30
+
+### Added
+
+- ESP32-S3 Sense firmware: drive, vision (FakeDetector + Edge Impulse hook), autonomy brain, safety layer, web UI, HTTP API.
+- v3: digital-twin simulator, reliability (motor lease, watchdog, stuck recovery, health API), missions, learning bandit, expanded CI.
+- v4 Bolo: Hinglish/English command parser (`shared/lang`), phone Bolo box, learned phrase aliases, MCP `run_command`.
+- MCP agent with `read_only` / `dry_run` / `full` modes; mock robot for tests.
+
+### Known limitations
+
+- **Hardware not field-tested** — software gates are CI-backed; G0–G11 on a physical robot are pending the owner.
+- Edge Impulse model not shipped in-repo; use `FakeDetector` until `TrashBot_inferencing` is added locally.
+- Optional battery monitor and bumper are off by default until wired and enabled in `config.h`.
