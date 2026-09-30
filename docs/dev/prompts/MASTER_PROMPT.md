@@ -78,7 +78,7 @@ First read the whole document once. Then save it **verbatim** as `docs/dev/promp
 | TypeScript or JavaScript for the agent? | TypeScript, Node ≥ 20, ESM. |
 | Test frameworks? | Firmware: PlatformIO Unity in the `native` env. Agent: vitest. Python tools: pytest. |
 | No host C++ compiler for native tests (Windows)? | Try installing one non-interactively (for example WinLibs or MSYS2 via winget). If that's impossible, keep the tests, document the install in `USER_STEPS.md`, and continue. |
-| Git identity not set? | Set it for this repo only: name `Satyam Chouksey`, email `satyamchouksey9907@gmail.com`. |
+| Git identity not set? | Set it for this repo only (`git config user.name` / `user.email`). Use your GitHub noreply email if you want privacy; never put real emails in committed docs. |
 | Push to GitHub / create a remote? | Never. Local commits only. |
 | Licence for our code? | MIT — `LICENSE` at the root, "Copyright (c) 2026 Satyam Chouksey". Third-party code keeps its own licence in `THIRD_PARTY_NOTICES.md`. |
 | Can I delete files? | Only `references/` and files you created. Never anything outside the project folder. |

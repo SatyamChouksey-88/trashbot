@@ -202,7 +202,9 @@ python tools/embed_lang.py --check
 cd shared/lang && npm run docs:check && npm run test:fuzz
 ```
 
-Jobs: `shared-lang`, `firmware-build`, `firmware-test`, `tools`, `agent`, `agent-verify`, `e2e`. Rules: [AGENTS.md](AGENTS.md).
+Jobs: `shared-lang`, `firmware-build`, `firmware-test`, `tools`, `agent`, `agent-verify`, `e2e`, `secret-scan`. Rules: [AGENTS.md](AGENTS.md).
+
+**What runs without hardware:** PlatformIO `native` unit tests (`firmware/lib/core`), Python sim scenarios (`tools/sim`), agent vitest + MCP bundle verify, Playwright against the mock robot (`e2e/`). Gate checklists for the physical robot: [docs/reference/TESTING.md](docs/reference/TESTING.md).
 
 ## Safety & limitations
 
