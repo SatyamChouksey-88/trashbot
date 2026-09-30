@@ -1,0 +1,24 @@
+---
+description: Portfolio safety and quality rules for public GitHub work
+globs: ""
+alwaysApply: true
+---
+
+# Portfolio safety (SatyamChouksey-88)
+
+## Hard rules
+
+1. **No destructive git ops without explicit "yes"** — no delete/move/rename, history rewrite, force-push, branch delete, or repo visibility changes without listing exactly what will happen first.
+2. **Branch only** — work on `chore/portfolio-polish-<yyyy-mm-dd>`; never commit directly to `main`/`master`. Hand off PR title, body, and `gh pr create`; merge only when CI is green.
+3. **No secrets in repo** — no API keys, tokens, passwords, `.env` with real values. Use `.env.example` and GitHub Actions `secrets.*` only.
+4. **No employer/client confidential content** — no real client/employer names, internal URLs, Jira keys, trade/customer data, or internal business rules. Public demos and synthetic data only. If found, stop and report (file + line); do not silently edit.
+5. **No personal data in public repos** — no phone, home address, personal email, CV/resume files, or DOB. Report and propose removal.
+6. **No invented metrics** — test counts and coverage in README must come from running the suite or counting tests; otherwise mark "not verified".
+7. **No fake badges, stars, or feature claims.**
+8. **Small, reviewable commits** — Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `ci:`, `chore:`, `refactor:`).
+
+## TrashBot-specific (this repo)
+
+- Route motor commands through `safety_logic`; do not bypass safety from web, API, or MCP.
+- Never commit `firmware/include/secrets.h` or datasets.
+- CI/agent sessions: build and test only; no firmware upload or serial monitor unless the user flashes locally.
