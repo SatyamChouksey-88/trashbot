@@ -4,195 +4,210 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Hardware](https://img.shields.io/badge/hardware-not%20field--tested-orange)
 
-A small wheeled bin that finds lightweight trash on the floor, scoops it in, and tips it into its own compartment — using on-device vision and safety-first firmware.
+**Physical AI robot dustbin** — a small four-wheel robot with a bin on top and a front scoop. It watches the floor with an on-board camera, finds light trash (paper, wrappers, chips packets), drives to it, scoops, tips into the bin, and repeats. **Safety logic lives on the robot**; a bad command or a disconnected laptop cannot bypass motor limits.
+
+**Full project guide (Word, v1.0):** [TrashBot_Project_Guide.docx](TrashBot_Project_Guide.docx) — wiring figures, phone UI, Bolo cheat sheet, gates checklist, and “who does what”. This README is the GitHub entry point; the guide is the deep dive.
 
 ## Demo
 
 ![Sim demo](docs/media/sim_demo.gif)
 
-The clip is from the **digital-twin simulator** (no physical robot). It shows detect → approach → scoop → recover from faults.
+Digital-twin simulator (no physical robot): detect → approach → scoop → fault recovery.
 
-## Features
+## What makes TrashBot different
 
-- Finds and scoops **small, light** floor trash into its onboard bin (not a room vacuum).
-- On-device vision: **Edge Impulse FOMO** on **Seeed XIAO ESP32S3 Sense** (QVGA → 96×96); `FakeDetector` for dev without a model.
-- **Safety-first firmware**: every motor command passes `safety_logic`; e-stop, obstacle stop, duty caps, manual command expiry, watchdogs, stuck recovery.
-- **Phone web UI** on the robot’s Wi‑Fi — no internet or CDN required.
-- **Bolo** commands in Hinglish, English, and Devanagari (type or Gboard voice).
-- Optional **AI agent** via MCP (`run_command`, status, photos) from Cursor or any MCP client.
-- **Simulator + CI** for regression before hardware tests.
+| | |
+|---|---|
+| **On-device vision** | Edge Impulse FOMO on the ESP32-S3 Sense — no cloud needed to spot trash. |
+| **Safety first** | Every motor command through `safety_logic`: obstacle stop, command expiry, motor lease, watchdog, stuck recovery. |
+| **Bolo** | Hinglish, English, Devanagari — e.g. `kachra saaf karo`, `20 cm aage chalo`, `रुको`. |
+| **Optional agent** | MCP server on your laptop (`read_only` / `dry_run` / `full`); firmware still decides motion. |
+| **Test before solder** | Simulator, 16 JSON fault scenarios, unit tests, Playwright, CI on every push. |
 
-## How it works
+## One cleaning run (what happens)
+
+1. You start **Saaf karo · Clean** on the phone, via Bolo, or from the agent.
+2. Pre-flight: health, bring-up done, battery OK.
+3. Robot scans, locks onto trash, approaches with ultrasonic obstacle stop.
+4. Scoop DOWN → creep → CARRY; vision checks if the item left the floor.
+5. TIP into the bin; repeat until item or time limit — or stop / estop / fault.
+
+## How it fits together
 
 ```mermaid
 flowchart LR
-  subgraph robot [Robot]
+  subgraph robot [On the robot]
     CAM[Camera + FOMO]
-    BR[Brain + safety]
-    CAM --> BR
+    BR[Brain + safety_logic]
+    API[Web + HTTP API]
+    CAM --> BR --> API
   end
-  BR --> API[HTTP API]
-  API --> MCP[MCP server]
-  MCP --> CLIENT[Any MCP client e.g. Cursor]
+  PHONE[Phone browser]
+  LAPTOP[MCP agent on laptop]
+  EI[Edge Impulse training]
+  PHONE --> API
+  LAPTOP --> API
+  EI -.->|model flash| CAM
 ```
 
-- **Camera + FOMO** — center-cropped frames, object detections with scores and positions.
-- **Brain + safety** — state machine for search, approach, scoop; `safety_logic` filters all motion.
-- **HTTP API** — same JSON the web UI and Bolo use (`/api/drive`, `/api/clean`, `/api/stop`, …).
-- **MCP server** — TypeScript agent tools that call the API (modes: read-only, dry-run, full).
-- **MCP client** — optional; sends natural language that becomes API calls (never bypasses firmware safety).
+| Piece | Role |
+|-------|------|
+| Camera + FOMO | Bounding boxes on floor trash (96×96 pipeline). |
+| Brain + safety | Search, approach, scoop sequence; vets every motor command. |
+| HTTP API | `/api/*` — shared by phone UI, Bolo, and agent tools. |
+| TB6612 + 4 motors | Differential drive. |
+| MG996R servo | Scoop DOWN / CARRY / TIP. |
+| HC-SR04 | Forward distance; obstacle stop. |
+| `agent/` | MCP tools + modes; calls the same API as the phone. |
 
-## Project status
+## Project status (Sept 2026)
 
-| Gate | Software (CI) | Hardware |
-|------|-----------------|----------|
-| G1 Drive | Done | **Not field-tested** |
-| G2 Vision | Done | **Not field-tested** |
-| G3 Chase | Done | **Not field-tested** |
-| G4 Scoop | Done | **Not field-tested** |
-| G5 Full auto | Done | **Not field-tested** |
-| G6 Extras | Done | **Not field-tested** |
-| G7 Agent | Done | **Not field-tested** |
-| G11 Bolo | Done | **Not field-tested** |
+Software is **built, simulated, and CI-tested**. **Hardware is not field-tested yet.** “Done” below means software only.
 
-**Honest note:** this repository is built and tested in software (firmware build, unit tests, simulator, Playwright on a mock). No complete end-to-end run on a physical robot is claimed here.
+| Gate | Meaning | Software | Hardware |
+|------|---------|----------|----------|
+| G0 | Boot self-test (POST) | Done | Pending |
+| G1 | Drive, STOP, estop | Done | Pending |
+| G2 | Vision (your EI model) | Done* | Pending |
+| G3–G5 | Search, scoop, full auto | Done (sim) | Pending |
+| G6 | Battery, bumper, profiles | Done | Pending |
+| G7 | MCP agent | Done (mock) | Pending |
+| G11 | Bolo commands | Done | Pending |
+
+\*Ships with `FakeDetector` until you add `TrashBot_inferencing` from Edge Impulse project **TrashBot**.
+
+Gate checklists: [docs/reference/TESTING.md](docs/reference/TESTING.md) and the Word guide §10.
 
 ## Hardware
 
-Approximate BOM (INR; prices vary — verify before buying):
+**~₹3,500–4,500** total (India, approximate — verify listings).
 
-| Part | ~INR |
-|------|------|
-| XIAO ESP32S3 Sense | 1,585 |
-| 4WD chassis + TT motors | 500–650 |
-| TB6612FNG driver | 160–200 |
-| MG996R servo (180°) | 210 |
-| HC-SR04 + 1k/2k resistors | 100 |
-| 2× 18650, holder, BMS/charger | 500–800 |
-| 2× buck (5 V logic, 6 V servo) | 200–400 |
-| Wire, switch, caps, bin | 200–300 |
+| Part | ~INR | Notes |
+|------|------|--------|
+| XIAO ESP32S3 Sense | 1,585 | Camera + PSRAM |
+| 4WD chassis + TT motors | 500–650 | |
+| TB6612FNG | 160–200 | |
+| MG996R servo | 210 | 180° scoop |
+| HC-SR04 + 1k/2k | 100 | Divider on ECHO |
+| 2× 18650 + BMS/charger | 500–800 | **Protected cells, 2S** |
+| 2× buck converters | 200–400 | 5 V logic, **6 V servo** |
+| Bin, wire, switch, caps | 200–300 | **Power switch = real e-stop** |
 
-**Pin map (XIAO D → GPIO → function)** — see `firmware/include/config.h` and [Wiring](docs/getting-started/WIRING.md):
+**Wiring rules:** common GND; servo on **6 V buck only**; ECHO divided 5 V → 3.3 V; bulk cap near servo and motors. Details: [docs/getting-started/WIRING.md](docs/getting-started/WIRING.md).
 
-| D | GPIO | Function |
-|---|------|----------|
-| D0 | 1 | Motor A PWM |
-| D1 | 2 | Motor A IN1 |
-| D2 | 4 | Motor A IN2 |
+**Pin map** (`firmware/include/config.h`):
+
+| XIAO | GPIO | Function |
+|------|------|----------|
+| D0 | 1 | PWMA |
+| D1 | 2 | AIN1 |
+| D2 | 4 | AIN2 |
 | D3 | 3 | Battery ADC (optional) |
-| D4 | 5 | Motor B PWM |
-| D5 | 6 | Motor B IN1 |
-| D6 | 43 | Bumper input (optional) |
-| D7 | 44 | Ultrasonic ECHO |
+| D4 | 5 | PWMB |
+| D5 | 6 | BIN1 |
+| D6 | 43 | Bumper (optional, off by default) |
+| D7 | 44 | US ECHO |
 | D8 | 8 | Servo |
-| D9 | 9 | Ultrasonic TRIG |
+| D9 | 9 | US TRIG |
 | D10 | 21 | Status LED |
 
-**Power:** use protected 18650 cells, correct polarity, a proper BMS/charger, and **never charge unattended**. Servo runs from a **separate 6 V** supply (not the XIAO 5 V pin).
+GPIO uniqueness is enforced by automated tests (`tools/tests/test_pin_map.py`).
 
-## Quick start (software only)
+## Phone UI (no internet)
 
-**Windows (PowerShell)** and **Linux/macOS** — from repo root:
+Connect to Wi‑Fi `TrashBot-XXXX`, open http://192.168.4.1. All assets are on the robot.
+
+| Area | You use it for |
+|------|----------------|
+| **Bolo box** (top) | Type or Gboard mic — `ruko`, `kachra saaf karo`, … |
+| **■ RUKO · STOP** | Fastest software stop |
+| **Drive** | D-pad, speed, estop (latched) |
+| **Auto** | Saaf karo · Clean, session stats |
+| **Health / Bring-up** | POST, calibration wizard |
+| **Learning** | Recipe scores, phrases, reset |
+
+## Bolo (commands)
+
+| Intent | Hinglish examples | English examples |
+|--------|-------------------|------------------|
+| Stop | `ruko`, `ruk jao`, `रुको` | `stop`, `wait` |
+| Clean | `kachra saaf karo` | `clean the room` |
+| Move | `20 cm aage chalo` | `forward 20 cm` |
+| Turn | `90 degree left ghumo` | `turn left 90` |
+| Photo / status | `photo lo`, `kya haal hai` | `take a photo`, `status` |
+
+**Safety (always on):** stop words win; `mat` / `nahi` / `don't` + motion → stop; typos ask, never move; limits (e.g. back 20 cm, forward 50 cm). **Chat is not an e-stop** — use STOP or the power switch.
+
+Full cheat sheet: [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md). Cursor: `/trashbot`, `/ruko`, `/saaf-karo`.
+
+## AI agent (optional)
+
+`agent/` is an MCP server. Set in `.cursor/mcp.json`:
+
+| `TRASHBOT_MODE` | Behavior |
+|-----------------|----------|
+| `read_only` | Status, photo, health only; **stop/estop always work** |
+| `dry_run` (default) | Says what it would do — no motion POSTs |
+| `full` | Drives the robot — use only when safe |
+
+Recommended: **days in `dry_run`**, then wheels-up `full`, then short floor tests with power switch handy. [docs/reference/AGENT.md](docs/reference/AGENT.md).
+
+**Teaching (summary):** (1) You train vision in Edge Impulse and flash the model. (2) “Ye kachra nahi hai” saves mistake frames for retrain. (3) Scoop **recipe bandit** picks among 16 safe recipes. (4) New phrases saved on the robot after you confirm “haan”. Details in the Word guide §8.
+
+## Who does what
+
+| Cursor / repo (software) | You (hardware & data) |
+|--------------------------|------------------------|
+| Firmware, agent, Bolo, tests, CI, docs | Buy parts, wire, assemble scoop |
+| Simulator and gate software | Flash firmware (USB, personal PC) |
+| | 200–300 photos + Edge Impulse **TrashBot** project |
+| | Pass gates G0→G11 on the real floor |
+
+## Quick start — software
 
 ```bash
 python -m pip install platformio
 python -m platformio run -d firmware -e xiao
-```
-
-```bash
 python -m pip install -r tools/requirements.txt -r tools/requirements-dev.txt
 python -m pytest tools/tests -q
-```
-
-```bash
 cd agent && npm ci && npm run build && npm test
-```
-
-```bash
 cd shared/lang && npm ci && npm test
 ```
 
-Simulator (needs native build — usually **CI only**; on restricted machines set `TRASHBOT_NO_NATIVE=1`):
+Restricted machine (no native `.exe`): set `TRASHBOT_NO_NATIVE=1` — zig/sim run in CI.
 
-```bash
-python tools/sim/build_sim_brain.py
-python tools/sim/run.py --scenario bright_light --gif docs/media/sim_demo.gif
-```
+Preview Bolo without hardware: `cd shared/lang && npm run dev` → http://localhost:8790
 
-Bolo UI without hardware:
+## Quick start — hardware
 
-```bash
-cd shared/lang && npm run dev
-```
+1. [USER_STEPS](docs/getting-started/USER_STEPS.md) — parts → wire → flash.  
+2. `secrets.h` from `secrets.example.h` (never commit).  
+3. Bring-up tab → G1 drive → photos → model → G2–G5 → G11 Bolo.
 
-Open http://localhost:8790
+## Repository layout
 
-## Quick start (hardware)
-
-1. Assemble chassis and set buck voltages **before** wiring the XIAO — [USER_STEPS](docs/getting-started/USER_STEPS.md).
-2. Wire per [WIRING.md](docs/getting-started/WIRING.md) (common GND, echo divider, 6 V servo).
-3. Copy `firmware/include/secrets.example.h` → `secrets.h` (never commit); flash firmware.
-4. Join robot Wi‑Fi `TrashBot-XXXX` / default AP password in docs; open http://192.168.4.1.
-5. Complete **Bring-up** tab; calibrate servo and scoop zone.
-6. First supervised clean (wheels up, then floor) — [TESTING.md](docs/reference/TESTING.md).
-
-## Bolo commands
-
-Examples: `kachra saaf karo`, `20 cm aage chalo`, `ruko`, `photo lo`, `battery kitni hai`, `clean the room`.
-
-**Safety:** stop words always win — any phrase containing `ruko` / `stop` / `रुको` sends stop first.
-
-Full list: [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md).
-
-## AI agent (optional)
-
-The `agent/` package is an MCP server over the robot HTTP API.
-
-| Mode | Behavior |
-|------|----------|
-| `read_only` | Status, photos, health — no motion |
-| `dry_run` | Describes motion but does not POST drive/move/turn (default) |
-| `full` | Executes motion (use only when the robot is safe to move) |
-
-Cursor: `.cursor/mcp.json` runs `node agent/dist/index.js` with `TRASHBOT_URL` and `TRASHBOT_MODE`. Any MCP-compatible desktop app can use the same entrypoint or the `.mcpb` bundle from `npm run pack` in `agent/`.
-
-Details: [docs/reference/AGENT.md](docs/reference/AGENT.md).
-
-## Repository structure
-
-| Path | Role |
-|------|------|
-| `firmware/` | ESP32 Arduino/PlatformIO firmware |
+| Folder | Contents |
+|--------|----------|
+| `firmware/` | ESP32 code; `lib/core` = testable logic |
 | `agent/` | MCP server + mock robot |
-| `shared/lang/` | Bolo parser and executor (pre-tested) |
-| `e2e/` | Playwright tests (mock robot) |
-| `tools/` | Simulator, dataset scripts, `release_check.py` |
-| `dataset/` | Dataset readme only (binaries gitignored) |
+| `shared/lang/` | Bolo parser, executor, UI script |
+| `tools/` | Simulator, dataset scripts, [tools/README.md](tools/README.md) |
+| `e2e/` | Playwright tests |
 | `docs/` | [Documentation index](docs/README.md) |
-| `.github/` | CI workflows |
-| `.cursor/` | Slash commands and operator rule |
 
-## Development
+## Development & CI
 
 ```bash
-python -m platformio run -d firmware -e xiao
-python -m pytest tools/tests -q
-cd agent && npm test
-cd shared/lang && npm test && npm run test:fuzz && npm run docs:check
 python tools/embed_lang.py --check
+cd shared/lang && npm run docs:check && npm run test:fuzz
 ```
 
-**CI jobs:** `shared-lang`, `firmware-build`, `firmware-test` (Unity), `tools` (core + sim + pytest), `agent`, `agent-verify` (MCPB smoke), `e2e`.
+Jobs: `shared-lang`, `firmware-build`, `firmware-test`, `tools`, `agent`, `agent-verify`, `e2e`. Rules: [AGENTS.md](AGENTS.md).
 
-Contributing: branch from `main`, keep tests green, follow [AGENTS.md](AGENTS.md). Push after local checks pass; never commit secrets.
+## Safety & limitations
 
-## Safety and limitations
+Indoor use; small light items only; not unsupervised around kids/pets. Model must match your home clutter. **Stop order:** power switch → **■ RUKO · STOP** → Bolo `ruko` (not chat latency).
 
-- Not a toy for unsupervised use around children or pets.
-- Scoop is for **small, light** items; heavy or sharp objects can jam the mechanism.
-- Vision needs reasonable indoor lighting; model must be trained for your floor/clutter.
-- **Real stop:** phone **■ RUKO · STOP**, e-stop, or **power switch** — chat is not an emergency stop.
+## Licence & credits
 
-## Credits and licence
-
-MIT — see [LICENSE](LICENSE). Third-party licences: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Dataset credit: TACO and projects listed in [docs/project/REFERENCES.md](docs/project/REFERENCES.md).
+MIT — [LICENSE](LICENSE). Third-party: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). References: [docs/project/REFERENCES.md](docs/project/REFERENCES.md). TACO and other datasets noted there.
